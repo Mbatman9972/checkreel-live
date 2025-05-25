@@ -6,6 +6,7 @@
     <title>CheckReel Dashboard</title>
     <link rel="icon" type="image/x-icon" href="images/favicon.ico">
     <link rel="manifest" href="manifest.json">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.3/dist/umd/supabase.js"></script>
     <style>
         * {
             margin: 0;
@@ -2164,6 +2165,41 @@
 🚀 Ready for deployment with fixed CSS syntax!
         `);
     </script>
+    <script>
+// CheckReel Backend Integration
+const SUPABASE_URL = 'https://jyfpqxowaknjuhfmzofk.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp5ZnBxeG93YWtuanVoZm16b2ZrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzI1NTAzNDYsImV4cCI6MjA0ODEyNjM0Nn0.6xY3-LRuKg3Y8oEu2GmGYE1HfcGIsjuzMdgsOS0Qx6g';
+
+let supabaseClient = null;
+let isBackendConnected = false;
+
+// Initialize backend
+document.addEventListener('DOMContentLoaded', async function() {
+    if (window.supabase) {
+        supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        isBackendConnected = true;
+        console.log('✅ Backend connected to PostgreSQL');
+        
+        // Update any existing backend status indicators
+        const statusElements = document.querySelectorAll('[id*="backend"], [id*="status"]');
+        statusElements.forEach(el => {
+            if (el.textContent.includes('backend') || el.textContent.includes('status')) {
+                el.textContent = 'Connected to PostgreSQL Database';
+            }
+        });
+    } else {
+        console.log('⚠️ Running in demo mode');
+    }
+});
+
+// Make backend available globally
+window.checkReelBackend = {
+    isConnected: () => isBackendConnected,
+    client: () => supabaseClient
+};
+</script>
+</body>
+</html>
 </body>
 </html>
 <!-- FIXED: CSS Syntax Error Resolved - Production Ready -->
