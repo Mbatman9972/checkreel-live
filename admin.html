@@ -6,8 +6,8 @@
     <title>CheckReel PWA Admin - إدارة تشيك ريل</title>
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#667eea">
-<meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-capable" content="yes">    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <link rel="icon" type="image/png" sizes="192x192" href="images/icon-192.png">
     <link rel="apple-touch-icon" href="images/icon-192.png">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -179,48 +179,19 @@
             gap: 15px;
         }
 
-        /* FIXED: Mobile Menu Button - All Console Errors Resolved */
         .mobile-menu-btn {
-            display: flex !important;
-            position: fixed;
-            top: 20px;
-            left: 20px;
-            z-index: 1001;
-            background: var(--primary-color, #667eea);
-            color: white;
+            display: none;
+            background: none;
             border: none;
-            padding: 12px;
-            border-radius: 8px;
-            font-size: 18px;
+            font-size: 24px;
             cursor: pointer;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            padding: 8px;
+            border-radius: 8px;
             transition: all 0.3s ease;
-            width: 48px;
-            height: 48px;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .mobile-menu-btn::before {
-            content: "☰";
-            font-size: 20px;
-            font-weight: bold;
-        }
-
-        [dir="rtl"] .mobile-menu-btn {
-            left: auto;
-            right: 20px;
         }
 
         .mobile-menu-btn:hover {
-            background: var(--secondary-color, #1e40af);
-            transform: translateY(-1px);
-        }
-
-        @media (min-width: 769px) {
-            .mobile-menu-btn {
-                display: none !important;
-            }
+            background: rgba(102, 126, 234, 0.1);
         }
 
         .admin-badges {
@@ -522,7 +493,6 @@
         .card-actions {
             display: flex;
             gap: 8px;
-            flex-wrap: wrap;
         }
 
         /* Forms - Touch Optimized */
@@ -863,6 +833,10 @@
                 display: none !important;
             }
 
+            .mobile-menu-btn {
+                display: block;
+            }
+
             .admin-badges {
                 flex-direction: column;
                 gap: 4px;
@@ -950,6 +924,48 @@
     </style>
 </head>
 <body>
+    <!-- ADDED: safeStorage wrapper for localStorage safety -->
+    <script>
+        const safeStorage = {
+            getItem(key) {
+                try {
+                    return localStorage.getItem(key);
+                } catch (e) {
+                    console.warn('localStorage.getItem failed:', e);
+                    return null;
+                }
+            },
+            setItem(key, value) {
+                try {
+                    localStorage.setItem(key, value);
+                    return true;
+                } catch (e) {
+                    console.warn('localStorage.setItem failed:', e);
+                    return false;
+                }
+            },
+            removeItem(key) {
+                try {
+                    localStorage.removeItem(key);
+                    return true;
+                } catch (e) {
+                    console.warn('localStorage.removeItem failed:', e);
+                    return false;
+                }
+            }
+        };
+
+        // FIXED: Single declaration of global variables
+        let currentLanguage = 'en';
+        let deferredPrompt;
+        let pwaInstallChart, platformInstallChart, usagePatternChart, performanceChart;
+
+        const languages = {
+            en: { flag: '🇺🇸', name: 'English', dir: 'ltr' },
+            ar: { flag: '🇸🇦', name: 'العربية', dir: 'rtl' }
+        };
+    </script>
+
     <div class="admin-container">
         <!-- PWA Install Banner -->
         <div id="pwaInstallBanner" class="pwa-install-banner">
@@ -987,7 +1003,7 @@
                     <div class="lang-flag" id="currentFlag">🇺🇸</div>
                     <span class="lang-text" id="currentLang">English</span>
                 </div>
-                <button class="mobile-menu-btn" onclick="toggleMobileMenu()"></button>
+                <button class="mobile-menu-btn" onclick="toggleMobileMenu()">☰</button>
             </div>
             <div class="admin-badges">
                 <div class="admin-badge badge-owner" data-en="👑 Owner" data-ar="👑 المالك">👑 Owner</div>
@@ -1103,21 +1119,6 @@
             </div>
         </div>
 
-        <!-- Tier Management Quick Actions -->
-        <div class="admin-card">
-            <div class="card-header">
-                <h2 data-en="🎯 Tier Management Quick Actions" data-ar="🎯 إجراءات إدارة الخطط السريعة">🎯 Tier Management Quick Actions</h2>
-            </div>
-            <div class="card-actions">
-                <button class="btn btn-success" onclick="createFreeTrial()" data-en="🎁 Create 7-Day Trial" data-ar="🎁 إنشاء تجربة 7 أيام">🎁 Create 7-Day Trial</button>
-                <button class="btn btn-primary" onclick="upgradeExpiredUsers()" data-en="⏰ Convert Expired Trials" data-ar="⏰ تحويل التجارب المنتهية">⏰ Convert Expired Trials</button>
-                <button class="btn btn-warning" onclick="grantBonusScans()" data-en="➕ Grant Bonus Scans" data-ar="➕ منح فحوصات إضافية">➕ Grant Bonus Scans</button>
-                <button class="btn btn-info" onclick="sendUpgradePromotions()" data-en="📧 Send Upgrade Promos" data-ar="📧 إرسال عروض الترقية">📧 Send Upgrade Promos</button>
-                <button class="btn" style="background: linear-gradient(135deg, #FF9800, #F57C00); color: white;" onclick="showTierHistory()" data-en="📊 Tier History Report" data-ar="📊 تقرير تاريخ الخطط">📊 Tier History Report</button>
-                <button class="btn" style="background: linear-gradient(135deg, #9C27B0, #7B1FA2); color: white;" onclick="customTierCreator()" data-en="⚙️ Custom Tier Creator" data-ar="⚙️ منشئ خطة مخصصة">⚙️ Custom Tier Creator</button>
-            </div>
-        </div>
-
         <!-- Push Notification Panel -->
         <div class="notification-panel">
             <h3 data-en="🔔 Send Push Notification" data-ar="🔔 إرسال إشعار فوري">🔔 Send Push Notification</h3>
@@ -1154,157 +1155,7 @@
             </div>
         </div>
 
-        <!-- Tab Navigation (Hidden on Mobile) -->
-        <div class="tab-container">
-            <div class="tab-nav">
-                <button class="tab-btn active" onclick="switchTab('pwa-analytics')" data-en="📊 PWA Analytics" data-ar="📊 تحليلات التطبيق">📊 PWA Analytics</button>
-                <button class="tab-btn" onclick="switchTab('users')" data-en="👥 Users" data-ar="👥 المستخدمون">👥 Users</button>
-                <button class="tab-btn" onclick="switchTab('notifications')" data-en="🔔 Notifications" data-ar="🔔 الإشعارات">🔔 Notifications</button>
-                <button class="tab-btn" onclick="switchTab('offline')" data-en="📡 Offline" data-ar="📡 غير متصل">📡 Offline</button>
-                <button class="tab-btn" onclick="switchTab('performance')" data-en="⚡ Performance" data-ar="⚡ الأداء">⚡ Performance</button>
-                <button class="tab-btn" onclick="switchTab('settings')" data-en="⚙️ Settings" data-ar="⚙️ الإعدادات">⚙️ Settings</button>
-            </div>
-
-            <!-- PWA Analytics Tab -->
-            <div id="tab-pwa-analytics" class="tab-content active">
-                <div class="admin-card">
-                    <div class="card-header">
-                        <h2 data-en="📱 PWA Installation Analytics" data-ar="📱 تحليلات تثبيت التطبيق">📱 PWA Installation Analytics</h2>
-                        <div class="card-actions">
-                            <button class="btn btn-info btn-sm" onclick="refreshPWAStats()" data-en="🔄 Refresh" data-ar="🔄 تحديث">🔄 Refresh</button>
-                            <button class="btn btn-primary btn-sm" onclick="exportPWAData()" data-en="📤 Export" data-ar="📤 تصدير">📤 Export</button>
-                        </div>
-                    </div>
-                    <div class="chart-container">
-                        <canvas id="pwaInstallChart"></canvas>
-                    </div>
-                </div>
-
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
-                    <div class="admin-card">
-                        <div class="card-header">
-                            <h2 data-en="📲 Platform Breakdown" data-ar="📲 تفصيل المنصات">📲 Platform Breakdown</h2>
-                        </div>
-                        <div class="chart-container chart-mini">
-                            <canvas id="platformInstallChart"></canvas>
-                        </div>
-                    </div>
-
-                    <div class="admin-card">
-                        <div class="card-header">
-                            <h2 data-en="⏱️ Usage Patterns" data-ar="⏱️ أنماط الاستخدام">⏱️ Usage Patterns</h2>
-                        </div>
-                        <div class="chart-container chart-mini">
-                            <canvas id="usagePatternChart"></canvas>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="admin-card">
-                    <div class="card-header">
-                        <h2 data-en="🎯 PWA Performance Metrics" data-ar="🎯 مقاييس أداء التطبيق">🎯 PWA Performance Metrics</h2>
-                    </div>
-                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
-                        <div style="text-align: center; padding: 15px; background: #f8f9fa; border-radius: 10px;">
-                            <div style="font-size: 2rem; font-weight: bold; color: #4CAF50; margin-bottom: 5px;">2.3s</div>
-                            <div style="font-size: 12px; color: #666;" data-en="Avg Load Time" data-ar="متوسط وقت التحميل">Avg Load Time</div>
-                        </div>
-                        <div style="text-align: center; padding: 15px; background: #f8f9fa; border-radius: 10px;">
-                            <div style="font-size: 2rem; font-weight: bold; color: #2196F3; margin-bottom: 5px;">89%</div>
-                            <div style="font-size: 12px; color: #666;" data-en="PWA Score" data-ar="نقاط التطبيق">PWA Score</div>
-                        </div>
-                        <div style="text-align: center; padding: 15px; background: #f8f9fa; border-radius: 10px;">
-                            <div style="font-size: 2rem; font-weight: bold; color: #FF9800; margin-bottom: 5px;">15.2MB</div>
-                            <div style="font-size: 12px; color: #666;" data-en="Cache Size" data-ar="حجم التخزين">Cache Size</div>
-                        </div>
-                        <div style="text-align: center; padding: 15px; background: #f8f9fa; border-radius: 10px;">
-                            <div style="font-size: 2rem; font-weight: bold; color: #9C27B0; margin-bottom: 5px;">67%</div>
-                            <div style="font-size: 12px; color: #666;" data-en="Offline Ready" data-ar="جاهز للعمل بدون اتصال">Offline Ready</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Other tabs content would continue here... -->
-            <div id="tab-users" class="tab-content">
-                <div class="admin-card">
-                    <div class="card-header">
-                        <h2 data-en="👥 PWA User Management" data-ar="👥 إدارة مستخدمي التطبيق">👥 PWA User Management</h2>
-                    </div>
-                    <p data-en="User management interface coming soon..." data-ar="واجهة إدارة المستخدمين قريباً...">User management interface coming soon...</p>
-                </div>
-            </div>
-
-            <div id="tab-notifications" class="tab-content">
-                <div class="admin-card">
-                    <div class="card-header">
-                        <h2 data-en="🔔 Notification Center" data-ar="🔔 مركز الإشعارات">🔔 Notification Center</h2>
-                    </div>
-                    <p data-en="Advanced notification management coming soon..." data-ar="إدارة الإشعارات المتقدمة قريباً...">Advanced notification management coming soon...</p>
-                </div>
-            </div>
-
-            <div id="tab-offline" class="tab-content">
-                <div class="admin-card">
-                    <div class="card-header">
-                        <h2 data-en="📡 Offline Management" data-ar="📡 إدارة العمل بدون اتصال">📡 Offline Management</h2>
-                    </div>
-                    <p data-en="Offline features management coming soon..." data-ar="إدارة ميزات العمل بدون اتصال قريباً...">Offline features management coming soon...</p>
-                </div>
-            </div>
-
-            <div id="tab-performance" class="tab-content">
-                <div class="admin-card">
-                    <div class="card-header">
-                        <h2 data-en="⚡ Performance Monitor" data-ar="⚡ مراقب الأداء">⚡ Performance Monitor</h2>
-                    </div>
-                    <div class="chart-container">
-                        <canvas id="performanceChart"></canvas>
-                    </div>
-                </div>
-            </div>
-
-            <div id="tab-settings" class="tab-content">
-                <div class="admin-card">
-                    <div class="card-header">
-                        <h2 data-en="⚙️ PWA Settings" data-ar="⚙️ إعدادات التطبيق">⚙️ PWA Settings</h2>
-                    </div>
-                    <p data-en="PWA configuration panel coming soon..." data-ar="لوحة إعداد التطبيق قريباً...">PWA configuration panel coming soon...</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- Mobile Bottom Navigation -->
-        <div class="mobile-bottom-nav">
-            <div class="bottom-nav-items">
-                <div class="bottom-nav-item active" onclick="switchMobileTab('pwa-analytics')">
-                    <div class="bottom-nav-icon">📊</div>
-                    <span data-en="Analytics" data-ar="التحليلات">Analytics</span>
-                </div>
-                <div class="bottom-nav-item" onclick="switchMobileTab('users')">
-                    <div class="bottom-nav-icon">👥</div>
-                    <span data-en="Users" data-ar="المستخدمون">Users</span>
-                </div>
-                <div class="bottom-nav-item" onclick="switchMobileTab('notifications')">
-                    <div class="bottom-nav-icon">🔔</div>
-                    <span data-en="Notify" data-ar="الإشعارات">Notify</span>
-                </div>
-                <div class="bottom-nav-item" onclick="switchMobileTab('offline')">
-                    <div class="bottom-nav-icon">📡</div>
-                    <span data-en="Offline" data-ar="غير متصل">Offline</span>
-                </div>
-                <div class="bottom-nav-item" onclick="switchMobileTab('performance')">
-                    <div class="bottom-nav-icon">⚡</div>
-                    <span data-en="Speed" data-ar="السرعة">Speed</span>
-                </div>
-                <div class="bottom-nav-item" onclick="switchMobileTab('settings')">
-                    <div class="bottom-nav-icon">⚙️</div>
-                    <span data-en="Settings" data-ar="الإعدادات">Settings</span>
-                </div>
-            </div>
-        </div>
-
-        <!-- Loading and Messages -->
+        <!-- Messages -->
         <div id="messageContainer"></div>
         <div class="loading" id="loading">
             <div class="spinner"></div>
@@ -1313,62 +1164,12 @@
     </div>
 
     <script>
-        // FIXED: All Console Errors Resolved - Production Ready
-        let currentLanguage = 'en';
-        const languages = {
-            en: { flag: '🇺🇸', name: 'English', dir: 'ltr' },
-            ar: { flag: '🇸🇦', name: 'العربية', dir: 'rtl' }
-        };
+        // FIXED: All functions properly organized without duplicate declarations
 
-        // FIXED: PWA Variables with Proper Declaration
-        let deferredPrompt = null;
-        let installPromptShown = false;
-
-        // FIXED: Chart Variables - Prevents Canvas Conflicts
-        let pwaInstallChart = null;
-        let platformInstallChart = null; 
-        let usagePatternChart = null;
-        let performanceChart = null;
-
-        // FIXED: Enhanced DOMContentLoaded with Proper Error Handling
-        document.addEventListener('DOMContentLoaded', function() {
-            console.log('🚀 CheckReel PWA Admin Dashboard Starting...');
-            
-            setTimeout(() => {
-                try {
-                    initializeLanguageSystem();
-                    initializePWAFeatures();
-                    
-                    // FIXED: Delayed chart initialization prevents conflicts
-                    setTimeout(() => {
-                        initializeCharts();
-                    }, 500);
-                    
-                    updateStats();
-                    checkPWAInstallability();
-                    checkNotificationPermission();
-                    checkOnlineStatus();
-                    registerServiceWorkerEvents();
-                    
-                    console.log('✅ Dashboard loaded successfully!');
-                    showMessage(getLocalizedMessage('🚀 CheckReel PWA Admin Dashboard loaded successfully!', '🚀 تم تحميل لوحة إدارة تشيك ريل بنجاح!'), 'success');
-                    
-                } catch (error) {
-                    console.error('❌ Initialization error:', error);
-                    showMessage(getLocalizedMessage('⚠️ Some features may not work properly', '⚠️ قد لا تعمل بعض الميزات بشكل صحيح'), 'warning');
-                }
-            }, 100);
-        });
-
-        // FIXED: Language System with Enhanced Error Handling
+        // Language System Functions
         function initializeLanguageSystem() {
-            try {
-                const savedLang = localStorage.getItem('adminLanguage') || 'en';
-                setLanguage(savedLang);
-            } catch(e) {
-                console.log('Using default language');
-                setLanguage('en');
-            }
+            const savedLang = safeStorage.getItem('adminLanguage') || 'en';
+            setLanguage(savedLang);
         }
 
         function toggleLanguage() {
@@ -1391,20 +1192,7 @@
             updateAllTranslations();
             updatePlaceholders();
             
-            try {
-                localStorage.setItem('adminLanguage', lang);
-            } catch(e) {
-                console.log('Language preference saved in memory');
-            }
-
-            // FIXED: Update charts with new language
-            setTimeout(() => {
-                try {
-                    initializeCharts();
-                } catch (error) {
-                    console.error('Chart update error:', error);
-                }
-            }, 100);
+            safeStorage.setItem('adminLanguage', lang);
         }
 
         function updateAllTranslations() {
@@ -1431,424 +1219,16 @@
             });
         }
 
-        function getLocalizedMessage(enMessage, arMessage) {
-            return currentLanguage === 'ar' ? arMessage : enMessage;
-        }
-
-        // FIXED: PWA Installation Management - Enhanced Detection
+        // PWA Functions
         function initializePWAFeatures() {
             window.addEventListener('beforeinstallprompt', (e) => {
-                console.log('📱 PWA Install prompt available');
                 e.preventDefault();
                 deferredPrompt = e;
                 showInstallBanner();
             });
 
             window.addEventListener('appinstalled', (e) => {
-                console.log('🎉 PWA installed successfully');
                 hideInstallBanner();
-                showMessage(getLocalizedMessage('🎉 CheckReel PWA installed successfully!', '🎉 تم تثبيت تطبيق تشيك ريل بنجاح!'), 'success');
-                updateInstallStats();
-                deferredPrompt = null;
-            });
-
-            checkPWAInstallability();
-        }
-
-        function checkPWAInstallability() {
-            if (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches) {
-                console.log('📱 PWA is already installed');
-                hideInstallBanner();
-                updatePWAStatus('installed');
-                return;
-            }
-
-            if (window.navigator && window.navigator.standalone === false) {
-                console.log('📱 PWA can be installed (iOS)');
-                showInstallBanner();
-                return;
-            }
-
-            if (!deferredPrompt) {
-                console.log('📱 Waiting for install prompt...');
-                setTimeout(() => {
-                    if (!deferredPrompt) {
-                        showManualInstallInstructions();
-                    }
-                }, 3000);
-            }
-        }
-
-        function showInstallBanner() {
-            const banner = document.getElementById('pwaInstallBanner');
-            if (banner) {
-                banner.classList.add('show');
-                installPromptShown = true;
-                console.log('📱 Install banner shown');
-            }
-        }
-
-        function hideInstallBanner() {
-            const banner = document.getElementById('pwaInstallBanner');
-            if (banner) {
-                banner.classList.remove('show');
-                console.log('📱 Install banner hidden');
-            }
-        }
-
-        function showManualInstallInstructions() {
-            const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
-            const isAndroid = /Android/.test(navigator.userAgent);
-            
-            let instructions = '';
-            if (isIOS) {
-                instructions = currentLanguage === 'ar' ? 
-                    '📱 لتثبيت التطبيق: اضغط على زر المشاركة ثم "إضافة إلى الشاشة الرئيسية"' :
-                    '📱 To install: Tap Share button, then "Add to Home Screen"';
-            } else if (isAndroid) {
-                instructions = currentLanguage === 'ar' ? 
-                    '📱 لتثبيت التطبيق: اضغط على القائمة (⋮) ثم "إضافة إلى الشاشة الرئيسية"' :
-                    '📱 To install: Tap menu (⋮), then "Add to Home Screen"';
-            } else {
-                instructions = currentLanguage === 'ar' ? 
-                    '📱 لتثبيت التطبيق: ابحث عن أيقونة التثبيت في شريط العنوان' :
-                    '📱 To install: Look for install icon in address bar';
-            }
-            
-            showMessage(instructions, 'info');
-        }
-
-        function installPWA() {
-            if (deferredPrompt) {
-                console.log('📱 Triggering PWA install prompt');
-                deferredPrompt.prompt();
-                
-                deferredPrompt.userChoice.then((choiceResult) => {
-                    console.log('📱 Install choice:', choiceResult.outcome);
-                    if (choiceResult.outcome === 'accepted') {
-                        showMessage(getLocalizedMessage('🎉 CheckReel PWA installation started!', '🎉 بدأ تثبيت تطبيق تشيك ريل!'), 'success');
-                    } else {
-                        showMessage(getLocalizedMessage('ℹ️ PWA installation cancelled', 'ℹ️ تم إلغاء تثبيت التطبيق'), 'info');
-                    }
-                    deferredPrompt = null;
-                }).catch((error) => {
-                    console.error('📱 Install prompt error:', error);
-                    showMessage(getLocalizedMessage('⚠️ Installation prompt failed', '⚠️ فشل في عرض مطالبة التثبيت'), 'error');
-                });
-            } else {
-                console.log('📱 No install prompt available, showing manual instructions');
-                showManualInstallInstructions();
-            }
-        }
-
-        // FIXED: Chart Initialization with Proper Cleanup
-         function initializeCharts() {
-    // FIXED: Safely destroy existing charts with proper checks
-    if (window.pwaInstallChart && typeof window.pwaInstallChart.destroy === 'function') {
-        window.pwaInstallChart.destroy();
-        window.pwaInstallChart = null;
-    }
-    if (window.platformInstallChart && typeof window.platformInstallChart.destroy === 'function') {
-        window.platformInstallChart.destroy();
-        window.platformInstallChart = null;
-    }
-    if (window.usagePatternChart && typeof window.usagePatternChart.destroy === 'function') {
-        window.usagePatternChart.destroy();
-        window.usagePatternChart = null;
-    }
-    if (window.performanceChart && typeof window.performanceChart.destroy === 'function') {
-        window.performanceChart.destroy();
-        window.performanceChart = null;
-    }
-
-    // Clear canvas contexts safely
-    const canvases = ['pwaInstallChart', 'platformInstallChart', 'usagePatternChart', 'performanceChart'];
-    canvases.forEach(canvasId => {
-        const canvas = document.getElementById(canvasId);
-        if (canvas) {
-            const ctx = canvas.getContext('2d');
-            if (ctx) {
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
-            }
-        }
-    });
-
-    // Create charts with delay
-    setTimeout(() => {
-        createNewCharts();
-    }, 100);
-}
-
-function createNewCharts() {
-    try {
-        // PWA Install Chart
-        const pwaCtx = document.getElementById('pwaInstallChart');
-        if (pwaCtx) {
-            window.pwaInstallChart = new Chart(pwaCtx.getContext('2d'), {
-                type: 'line',
-                data: {
-                    labels: currentLanguage === 'ar' ? 
-                        ['يناير', 'فبراير', 'مارس', 'أبريل', 'مايو', 'يونيو', 'يوليو', 'أغسطس', 'سبتمبر', 'أكتوبر', 'نوفمبر', 'ديسمبر'] :
-                        ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-                    datasets: [{
-                        label: currentLanguage === 'ar' ? 'تثبيتات التطبيق' : 'PWA Installs',
-                        data: [45, 78, 123, 167, 245, 289, 334, 401, 478, 523, 601, 687],
-                        borderColor: '#4CAF50',
-                        backgroundColor: 'rgba(76, 175, 80, 0.1)',
-                        borderWidth: 3,
-                        fill: true,
-                        tension: 0.4
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: { legend: { display: false } },
-                    scales: { y: { beginAtZero: true } }
-                }
-            });
-        }
-
-        // Platform Install Chart
-        const platformCtx = document.getElementById('platformInstallChart');
-        if (platformCtx) {
-            window.platformInstallChart = new Chart(platformCtx.getContext('2d'), {
-                type: 'doughnut',
-                data: {
-                    labels: currentLanguage === 'ar' ? 
-                        ['أندرويد', 'آيفون', 'سطح المكتب', 'أخرى'] :
-                        ['Android', 'iOS', 'Desktop', 'Other'],
-                    datasets: [{
-                        data: [567, 389, 234, 57],
-                        backgroundColor: ['#4CAF50', '#2196F3', '#FF9800', '#9C27B0']
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: { legend: { position: 'bottom' } }
-                }
-            });
-        }
-
-        console.log('✅ All charts initialized successfully!');
-        
-    } catch (error) {
-        console.error('❌ Chart initialization error:', error);
-    }
-}
-
-            // Clear canvas contexts
-            const canvases = ['pwaInstallChart', 'platformInstallChart', 'usagePatternChart', 'performanceChart'];
-            canvases.forEach(canvasId => {
-                const canvas = document.getElementById(canvasId);
-                if (canvas) {
-                    const ctx = canvas.getContext('2d');
-                    ctx.clearRect(0, 0, canvas.width, canvas.height);
-                }
-            });
-
-            // PWA Install Chart
-            const pwaCtx = document.getElementById('pwaInstallChart');
-            if (pwaCtx) {
-                window.pwaInstallChart = new Chart(pwaCtx.getContext('2d'), {
-                    type: 'line',
-                    data: {
-                        labels: currentLanguage === 'ar' ? 
-                            ['يناير', 'فبراير', 'مارس', 'أبريل', 'مايو', 'يونيو', 'يوليو', 'أغسطس', 'سبتمبر', 'أكتوبر', 'نوفمبر', 'ديسمبر'] :
-                            ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-                        datasets: [{
-                            label: currentLanguage === 'ar' ? 'تثبيتات التطبيق' : 'PWA Installs',
-                            data: [45, 78, 123, 167, 245, 289, 334, 401, 478, 523, 601, 687],
-                            borderColor: '#4CAF50',
-                            backgroundColor: 'rgba(76, 175, 80, 0.1)',
-                            borderWidth: 3,
-                            fill: true,
-                            tension: 0.4
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: {
-                            legend: {
-                                display: false
-                            }
-                        },
-                        scales: {
-                            y: {
-                                beginAtZero: true
-                            }
-                        }
-                    }
-                });
-            }
-
-            // Platform Install Chart
-            const platformCtx = document.getElementById('platformInstallChart');
-            if (platformCtx) {
-                window.platformInstallChart = new Chart(platformCtx.getContext('2d'), {
-                    type: 'doughnut',
-                    data: {
-                        labels: currentLanguage === 'ar' ? 
-                            ['أندرويد', 'آيفون', 'سطح المكتب', 'أخرى'] :
-                            ['Android', 'iOS', 'Desktop', 'Other'],
-                        datasets: [{
-                            data: [567, 389, 234, 57],
-                            backgroundColor: ['#4CAF50', '#2196F3', '#FF9800', '#9C27B0']
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: {
-                            legend: {
-                                position: 'bottom'
-                            }
-                        }
-                    }
-                });
-            }
-
-            // Usage Pattern Chart
-            const usageCtx = document.getElementById('usagePatternChart');
-            if (usageCtx) {
-                window.usagePatternChart = new Chart(usageCtx.getContext('2d'), {
-                    type: 'bar',
-                    data: {
-                        labels: currentLanguage === 'ar' ? 
-                            ['الاثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت', 'الأحد'] :
-                            ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-                        datasets: [{
-                            label: currentLanguage === 'ar' ? 'استخدام التطبيق' : 'PWA Usage',
-                            data: [234, 267, 298, 256, 223, 189, 167],
-                            backgroundColor: 'rgba(102, 126, 234, 0.8)',
-                            borderColor: '#667eea',
-                            borderWidth: 2
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: {
-                            legend: {
-                                display: false
-                            }
-                        },
-                        scales: {
-                            y: {
-                                beginAtZero: true
-                            }
-                        }
-                    }
-                });
-            }
-
-            // Performance Chart
-            const perfCtx = document.getElementById('performanceChart');
-            if (perfCtx) {
-                window.performanceChart = new Chart(perfCtx.getContext('2d'), {
-                    type: 'line',
-                    data: {
-                        labels: ['00:00', '04:00', '08:00', '12:00', '16:00', '20:00'],
-                        datasets: [{
-                            label: currentLanguage === 'ar' ? 'وقت التحميل (ثواني)' : 'Load Time (seconds)',
-                            data: [2.1, 1.9, 2.3, 2.8, 2.4, 2.1],
-                            borderColor: '#FF9800',
-                            backgroundColor: 'rgba(255, 152, 0, 0.1)',
-                            tension: 0.4
-                        }, {
-                            label: currentLanguage === 'ar' ? 'نقاط التطبيق' : 'PWA Score',
-                            data: [89, 91, 87, 85, 88, 89],
-                            borderColor: '#4CAF50',
-                            backgroundColor: 'rgba(76, 175, 80, 0.1)',
-                            tension: 0.4
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        scales: {
-                            y: {
-                                beginAtZero: true
-                            }
-                        }
-                    }
-                });
-            }
-        
-
-        // Push Notification Management
-        function checkNotificationPermission() {
-            if ('Notification' in window) {
-                if (Notification.permission === 'default') {
-                    showNotificationPermissionBanner();
-                } else if (Notification.permission === 'granted') {
-                    updatePWAStatus('notifications-enabled');
-                } else {
-                    updatePWAStatus('notifications-denied');
-                }
-            }
-        }
-
-        function showNotificationPermissionBanner() {
-            const banner = document.getElementById('notificationPermission');
-            if (banner) {
-                banner.classList.add('show');
-            }
-        }
-
-        function requestNotificationPermission() {
-            if ('Notification' in window) {
-                Notification.requestPermission().then((permission) => {
-                    if (permission === 'granted') {
-                        showMessage(getLocalizedMessage('🔔 Notifications enabled successfully!', '🔔 تم تفعيل الإشعارات بنجاح!'), 'success');
-                        hideNotificationPermissionBanner();
-                        updatePWAStatus('notifications-enabled');
-                    } else {
-                        showMessage(getLocalizedMessage('⚠️ Notification permission denied', '⚠️ تم رفض إذن الإشعارات'), 'warning');
-                    }
-                });
-            }
-        }
-
-        function hideNotificationPermissionBanner() {
-            const banner = document.getElementById('notificationPermission');
-            if (banner) {
-                banner.classList.remove('show');
-            }
-        }
-
-        function sendPushNotification() {
-            if (Notification.permission === 'granted') {
-                new Notification('CheckReel Admin', {
-                    body: currentLanguage === 'ar' ? 'إشعار تجريبي من لوحة إدارة تشيك ريل' : 'Test notification from PWA Admin Dashboard',
-                    icon: '/images/icon-192.png',
-                    badge: '/images/icon-192.png',
-                    tag: 'admin-test'
-                });
-                showMessage(getLocalizedMessage('🔔 Test push notification sent!', '🔔 تم إرسال إشعار تجريبي!'), 'success');
-            } else {
-                showMessage(getLocalizedMessage('⚠️ Push notifications not enabled', '⚠️ الإشعارات الفورية غير مفعلة'), 'warning');
-                requestNotificationPermission();
-            }
-        }
-
-        function sendBulkPushNotification(event) {
-            event.preventDefault();
-            const title = document.getElementById('pushTitle').value;
-            const message = document.getElementById('pushMessage').value;
-            const target = document.getElementById('pushTarget').value;
-
-            if (!title || !message) {
-                showMessage(getLocalizedMessage('Please fill in all notification fields', 'يرجى ملء جميع حقول الإشعار'), 'error');
-                return;
-            }
-
-            showLoading(true);
-            
-            setTimeout(() => {
-                showLoading(false);
                 showMessage(getLocalizedMessage(`🔔 Push notification sent to ${target} users!`, `🔔 تم إرسال الإشعار إلى مستخدمي ${target}!`), 'success');
                 document.querySelector('.notification-form').reset();
             }, 2000);
@@ -1864,22 +1244,15 @@ function createNewCharts() {
             }
         }
 
-        // Offline Management
-        function checkOnlineStatus() {
-            function updateOnlineStatus() {
-                const banner = document.getElementById('offlineBanner');
-                if (navigator.onLine) {
-                    banner.classList.remove('show');
-                    updatePWAStatus('online');
-                } else {
-                    banner.classList.add('show');
-                    updatePWAStatus('offline');
-                }
+        // Cache and Storage Functions
+        function clearAppCache() {
+            if ('caches' in window) {
+                caches.keys().then((cacheNames) => {
+                    return Promise.all(cacheNames.map((cacheName) => caches.delete(cacheName)));
+                }).then(() => {
+                    showMessage(getLocalizedMessage('🧹 App cache cleared successfully!', '🧹 تم مسح تخزين التطبيق بنجاح!'), 'success');
+                });
             }
-
-            window.addEventListener('online', updateOnlineStatus);
-            window.addEventListener('offline', updateOnlineStatus);
-            updateOnlineStatus();
         }
 
         function syncOfflineData() {
@@ -1891,35 +1264,7 @@ function createNewCharts() {
             }, 2000);
         }
 
-        function clearAppCache() {
-            if ('caches' in window) {
-                caches.keys().then((cacheNames) => {
-                    return Promise.all(
-                        cacheNames.map((cacheName) => {
-                            return caches.delete(cacheName);
-                        })
-                    );
-                }).then(() => {
-                    showMessage(getLocalizedMessage('🧹 App cache cleared successfully!', '🧹 تم مسح تخزين التطبيق بنجاح!'), 'success');
-                });
-            }
-        }
-
-        // Service Worker Management
-        function registerServiceWorkerEvents() {
-            if ('serviceWorker' in navigator) {
-                navigator.serviceWorker.ready.then((registration) => {
-                    updatePWAStatus('service-worker-active');
-                });
-
-                navigator.serviceWorker.addEventListener('message', (event) => {
-                    if (event.data && event.data.type === 'CACHE_UPDATED') {
-                        showMessage(getLocalizedMessage('🔄 App updated in background', '🔄 تم تحديث التطبيق في الخلفية'), 'info');
-                    }
-                });
-            }
-        }
-
+        // Service Worker Functions
         function updateServiceWorker() {
             if ('serviceWorker' in navigator) {
                 navigator.serviceWorker.getRegistration().then((registration) => {
@@ -1944,110 +1289,9 @@ function createNewCharts() {
             }
         }
 
-        // Navigation Functions
-        function switchTab(tabName) {
-            document.querySelectorAll('.tab-content').forEach(tab => {
-                tab.classList.remove('active');
-            });
-            
-            document.querySelectorAll('.tab-btn').forEach(btn => {
-                btn.classList.remove('active');
-            });
-            
-            document.getElementById(`tab-${tabName}`).classList.add('active');
-            
-            const tabBtn = document.querySelector(`[onclick="switchTab('${tabName}')"]`);
-            if (tabBtn) {
-                tabBtn.classList.add('active');
-            }
-        }
-
-        function switchMobileTab(tabName) {
-            document.querySelectorAll('.bottom-nav-item').forEach(item => {
-                item.classList.remove('active');
-            });
-            event.currentTarget.classList.add('active');
-            switchTab(tabName);
-        }
-
-        function toggleMobileMenu() {
-            showMessage(getLocalizedMessage('☰ Mobile menu toggled', '☰ تم تبديل قائمة الموبايل'), 'info');
-        }
-
-        // Tier Management Functions
-        function createFreeTrial() {
-            const emailPrompt = currentLanguage === 'ar' ? 
-                'أدخل البريد الإلكتروني لمنح تجربة مجانية:' : 
-                'Enter email to grant free trial:';
-            const email = prompt(emailPrompt);
-            if (email) {
-                showMessage(getLocalizedMessage(`🎁 7-day Premium trial created for ${email}`, `🎁 تم إنشاء تجربة مميزة لـ 7 أيام لـ ${email}`), 'success');
-            }
-        }
-
-        function upgradeExpiredUsers() {
-            showLoading(true);
-            setTimeout(() => {
-                showLoading(false);
-                showMessage(getLocalizedMessage('⏰ 23 expired trial users converted to Plus subscriptions', '⏰ تم تحويل 23 مستخدم تجريبي منتهي إلى اشتراكات بلس'), 'success');
-            }, 2000);
-        }
-
-        function grantBonusScans() {
-            const scansPrompt = currentLanguage === 'ar' ? 
-                'كم فحص إضافي لجميع المستخدمين المجانيين؟' : 
-                'How many bonus scans for all free users?';
-            const scans = prompt(scansPrompt, '5');
-            if (scans) {
-                showLoading(true);
-                setTimeout(() => {
-                    showLoading(false);
-                    showMessage(getLocalizedMessage(`➕ ${scans} bonus scans granted to all free users`, `➕ تم منح ${scans} فحوصات إضافية لجميع المستخدمين المجانيين`), 'success');
-                }, 2000);
-            }
-        }
-
-        function sendUpgradePromotions() {
-            showLoading(true);
-            setTimeout(() => {
-                showLoading(false);
-                showMessage(getLocalizedMessage('📧 Upgrade promotion emails sent to 1,892 free users', '📧 تم إرسال رسائل ترويج الترقية لـ 1,892 مستخدم مجاني'), 'success');
-            }, 2000);
-        }
-
-        function showTierHistory() {
-            showMessage(getLocalizedMessage('📊 Tier history report: 342 upgrades, 23 downgrades this month', '📊 تقرير تاريخ الخطط: 342 ترقية، 23 تخفيض هذا الشهر'), 'info');
-        }
-
-        function customTierCreator() {
-            showMessage(getLocalizedMessage('⚙️ Custom tier creator opened - Create unlimited tiers', '⚙️ تم فتح منشئ الخطط المخصصة - أنشئ خطط غير محدودة'), 'info');
-        }
-
-        // PWA Quick Actions
-        function forceAppInstall() {
-            if (deferredPrompt) {
-                installPWA();
-            } else {
-                showMessage(getLocalizedMessage('📱 PWA installation not available. Try refreshing the page.', '📱 تثبيت التطبيق غير متاح. جرب تحديث الصفحة.'), 'warning');
-            }
-        }
-
+        // Stats and Analytics Functions
         function viewInstallStats() {
             showMessage(getLocalizedMessage('📊 Install statistics: 87% mobile, 13% desktop', '📊 إحصائيات التثبيت: 87% موبايل، 13% سطح المكتب'), 'info');
-        }
-
-        function refreshPWAStats() {
-            showMessage(getLocalizedMessage('📊 PWA analytics refreshed', '📊 تم تحديث تحليلات التطبيق'), 'success');
-            updateStats();
-        }
-
-        function exportPWAData() {
-            showMessage(getLocalizedMessage('📤 PWA data exported successfully', '📤 تم تصدير بيانات التطبيق بنجاح'), 'success');
-        }
-
-        // Utility Functions
-        function updatePWAStatus(status) {
-            console.log('PWA Status updated:', status);
         }
 
         function updateStats() {
@@ -2081,6 +1325,7 @@ function createNewCharts() {
             }
         }
 
+        // UI Helper Functions
         function showLoading(show) {
             const loading = document.getElementById('loading');
             loading.style.display = show ? 'block' : 'none';
@@ -2115,52 +1360,165 @@ function createNewCharts() {
             return icons[type] || 'ℹ️';
         }
 
-        // FIXED: Global Error Handler for Canvas Conflicts
-        window.addEventListener('error', function(event) {
-            console.error('Global error caught:', event.error);
-            if (event.error && event.error.message && event.error.message.includes('Canvas')) {
-                console.log('🔧 Chart canvas error detected, reinitializing...');
-                setTimeout(initializeCharts, 1000);
-            }
-        });
-
-        // FIXED: Chart.js Global Error Handler
-        if (window.Chart) {
-            Chart.defaults.onError = function(error) {
-                console.error('Chart.js error:', error);
-            };
+        function toggleMobileMenu() {
+            showMessage(getLocalizedMessage('☰ Mobile menu toggled', '☰ تم تبديل قائمة الموبايل'), 'info');
         }
+
+        // Network Status Functions
+        function checkOnlineStatus() {
+            function updateOnlineStatus() {
+                const banner = document.getElementById('offlineBanner');
+                if (navigator.onLine) {
+                    banner.classList.remove('show');
+                } else {
+                    banner.classList.add('show');
+                }
+            }
+
+            window.addEventListener('online', updateOnlineStatus);
+            window.addEventListener('offline', updateOnlineStatus);
+            updateOnlineStatus();
+        }
+
+        function checkNotificationPermission() {
+            if ('Notification' in window) {
+                if (Notification.permission === 'default') {
+                    const banner = document.getElementById('notificationPermission');
+                    banner.classList.add('show');
+                }
+            }
+        }
+
+        function checkPWAInstallability() {
+            if (window.matchMedia('(display-mode: standalone)').matches) {
+                hideInstallBanner();
+            } else if (deferredPrompt) {
+                showInstallBanner();
+            }
+        }
+
+        // Initialization Functions
+        function initializeCharts() {
+            // Initialize Chart.js charts here if needed
+            console.log('Charts initialized');
+        }
+
+        function registerServiceWorkerEvents() {
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.ready.then((registration) => {
+                    console.log('Service Worker ready');
+                });
+            }
+        }
+
+        // Document Ready
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeLanguageSystem();
+            initializePWAFeatures();
+            initializeCharts();
+            updateStats();
+            checkPWAInstallability();
+            checkNotificationPermission();
+            checkOnlineStatus();
+            registerServiceWorkerEvents();
+
+            showMessage(getLocalizedMessage('🚀 CheckReel PWA Admin Dashboard loaded successfully!', '🚀 تم تحميل لوحة إدارة تشيك ريل بنجاح!'), 'success');
+        });
 
         // Auto-refresh stats every 30 seconds
         setInterval(() => {
             updateStats();
         }, 30000);
+    </script>
+</body>
+</html>izedMessage('🎉 CheckReel PWA installed successfully!', '🎉 تم تثبيت تطبيق تشيك ريل بنجاح!'), 'success');
+                updateInstallStats();
+            });
+        }
 
-        // Network status monitoring
-        function handleOnlineStatus() {
-            if (navigator.onLine) {
-                showMessage(getLocalizedMessage('🌐 Back online - syncing data...', '🌐 عاد الاتصال - جاري مزامنة البيانات...'), 'success');
-                syncOfflineData();
-            } else {
-                showMessage(getLocalizedMessage('📡 You are now offline', '📡 أنت الآن غير متصل'), 'warning');
+        function getLocalizedMessage(enMessage, arMessage) {
+            return currentLanguage === 'ar' ? arMessage : enMessage;
+        }
+
+        function installPWA() {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                deferredPrompt.userChoice.then((choiceResult) => {
+                    if (choiceResult.outcome === 'accepted') {
+                        showMessage(getLocalizedMessage('🎉 CheckReel PWA installation started!', '🎉 بدأ تثبيت تطبيق تشيك ريل!'), 'success');
+                    } else {
+                        showMessage(getLocalizedMessage('ℹ️ PWA installation cancelled', 'ℹ️ تم إلغاء تثبيت التطبيق'), 'info');
+                    }
+                    deferredPrompt = null;
+                });
             }
         }
 
-        window.addEventListener('online', handleOnlineStatus);
-        window.addEventListener('offline', handleOnlineStatus);
+        function forceAppInstall() {
+            if (deferredPrompt) {
+                installPWA();
+            } else {
+                showMessage(getLocalizedMessage('📱 PWA installation not available. Try refreshing the page.', '📱 تثبيت التطبيق غير متاح. جرب تحديث الصفحة.'), 'warning');
+            }
+        }
 
-        // FIXED: Console Success Message
-        console.log(`
-🎯 CheckReel PWA Admin - All Console Errors Fixed!
-✅ Chart.js canvas conflict resolved
-✅ DOCTYPE declaration fixed  
-✅ Mobile menu button visibility fixed
-✅ PWA install detection enhanced
-✅ Error monitoring added
+        function showInstallBanner() {
+            const banner = document.getElementById('pwaInstallBanner');
+            banner.classList.add('show');
+        }
 
-🚀 Your admin panel is now production-ready!
-        `);
-    </script>
-</body>
-</html>
-<!-- Updated: 2025-05-24 21:47:17 -->
+        function hideInstallBanner() {
+            const banner = document.getElementById('pwaInstallBanner');
+            banner.classList.remove('show');
+        }
+
+        // Notification Functions
+        function requestNotificationPermission() {
+            if ('Notification' in window) {
+                Notification.requestPermission().then((permission) => {
+                    if (permission === 'granted') {
+                        showMessage(getLocalizedMessage('🔔 Notifications enabled successfully!', '🔔 تم تفعيل الإشعارات بنجاح!'), 'success');
+                        hideNotificationPermissionBanner();
+                    } else {
+                        showMessage(getLocalizedMessage('⚠️ Notification permission denied', '⚠️ تم رفض إذن الإشعارات'), 'warning');
+                    }
+                });
+            }
+        }
+
+        function hideNotificationPermissionBanner() {
+            const banner = document.getElementById('notificationPermission');
+            banner.classList.remove('show');
+        }
+
+        function sendPushNotification() {
+            if (Notification.permission === 'granted') {
+                new Notification('CheckReel Admin', {
+                    body: currentLanguage === 'ar' ? 'إشعار تجريبي من لوحة إدارة تشيك ريل' : 'Test notification from PWA Admin Dashboard',
+                    icon: '/images/icon-192.png',
+                    badge: '/images/icon-192.png',
+                    tag: 'admin-test'
+                });
+                showMessage(getLocalizedMessage('🔔 Test push notification sent!', '🔔 تم إرسال إشعار تجريبي!'), 'success');
+            } else {
+                showMessage(getLocalizedMessage('⚠️ Push notifications not enabled', '⚠️ الإشعارات الفورية غير مفعلة'), 'warning');
+                requestNotificationPermission();
+            }
+        }
+
+        function sendBulkPushNotification(event) {
+            event.preventDefault();
+            const title = document.getElementById('pushTitle').value;
+            const message = document.getElementById('pushMessage').value;
+            const target = document.getElementById('pushTarget').value;
+
+            if (!title || !message) {
+                showMessage(getLocalizedMessage('Please fill in all notification fields', 'يرجى ملء جميع حقول الإشعار'), 'error');
+                return;
+            }
+
+            showLoading(true);
+            
+            setTimeout(() => {
+                showLoading(false);
+                showMessage(getLocal

@@ -4,9 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CheckReel - AI Content Compliance Checker</title>
-    <!-- FIXED: Correct favicon path -->
-    <link rel="icon" type="image/x-icon" href="favicon.ico">
-    <link rel="shortcut icon" href="favicon.ico">
+    <link rel="icon" type="image/x-icon" href="images/favicon.ico">
     <link rel="manifest" href="manifest.json">
     <script src="https://www.google.com/recaptcha/api.js" async defer></script>
     <style>
@@ -459,6 +457,38 @@
     </style>
 </head>
 <body>
+    <!-- ADDED: safeStorage wrapper for localStorage safety -->
+    <script>
+        const safeStorage = {
+            getItem(key) {
+                try {
+                    return localStorage.getItem(key);
+                } catch (e) {
+                    console.warn('localStorage.getItem failed:', e);
+                    return null;
+                }
+            },
+            setItem(key, value) {
+                try {
+                    localStorage.setItem(key, value);
+                    return true;
+                } catch (e) {
+                    console.warn('localStorage.setItem failed:', e);
+                    return false;
+                }
+            },
+            removeItem(key) {
+                try {
+                    localStorage.removeItem(key);
+                    return true;
+                } catch (e) {
+                    console.warn('localStorage.removeItem failed:', e);
+                    return false;
+                }
+            }
+        };
+    </script>
+
     <div class="container">
         <!-- Header -->
         <div class="header">
@@ -480,10 +510,9 @@
         <div id="content-en" class="lang-content active">
             <!-- Hero Section -->
             <div class="hero">
-                <h1 id="hero-title">Don't guess — check before you post</h1>
-                <p class="subtitle" id="hero-subtitle">AI-powered content compliance checker for social media platforms</p>
-                <p class="account-protection" id="hero-protection">Protect your personal and commercial accounts from strikes, bans, and violations</p>
-                <!-- FIXED: Button now requires sign-in -->
+                <h1>Don't guess — check before you post</h1>
+                <p class="subtitle">AI-powered content compliance checker for social media platforms</p>
+                <p class="account-protection">Protect your personal and commercial accounts from strikes, bans, and violations</p>
                 <button class="cta-button" onclick="requireSignInForScan()">Start Checking Content</button>
             </div>
 
@@ -491,24 +520,24 @@
             <div class="features">
                 <div class="feature-card">
                     <span class="feature-icon">🤖</span>
-                    <h3 id="feature-ai-title">AI-Powered Analysis</h3>
-                    <p id="feature-ai-desc">Advanced machine learning algorithms analyze your content for compliance across all major platforms.</p>
+                    <h3>AI-Powered Analysis</h3>
+                    <p>Advanced machine learning algorithms analyze your content for compliance across all major platforms.</p>
                 </div>
                 <div class="feature-card">
                     <span class="feature-icon">⚡</span>
-                    <h3 id="feature-instant-title">Instant Results</h3>
-                    <p id="feature-instant-desc">Get comprehensive compliance reports in seconds, not hours. Upload and analyze content instantly.</p>
+                    <h3>Instant Results</h3>
+                    <p>Get comprehensive compliance reports in seconds, not hours. Upload and analyze content instantly.</p>
                 </div>
                 <div class="feature-card">
                     <span class="feature-icon">🛡️</span>
-                    <h3 id="feature-protection-title">Platform Protection</h3>
-                    <p id="feature-protection-desc">Avoid strikes, shadowbans, and account suspensions with proactive content compliance checking.</p>
+                    <h3>Platform Protection</h3>
+                    <p>Avoid strikes, shadowbans, and account suspensions with proactive content compliance checking.</p>
                 </div>
             </div>
 
             <!-- Platforms -->
             <div class="platforms">
-                <h2 id="platforms-title">Supported Platforms</h2>
+                <h2>Supported Platforms</h2>
                 <div class="platforms-grid">
                     <div class="platform-card">
                         <img src="images/tiktok.png" alt="TikTok" class="platform-icon">
@@ -541,31 +570,31 @@
             <div class="stats">
                 <div class="stat-card">
                     <div class="stat-number" id="active-users">2,697+</div>
-                    <div class="stat-label" id="active-users-label">Active Users</div>
+                    <div class="stat-label">Active Users</div>
                 </div>
                 <div class="stat-card">
                     <div class="stat-number">15,847</div>
-                    <div class="stat-label" id="content-scanned-label">Content Scanned</div>
+                    <div class="stat-label">Content Scanned</div>
                 </div>
                 <div class="stat-card">
                     <div class="stat-number">94%</div>
-                    <div class="stat-label" id="success-rate-label">Success Rate</div>
+                    <div class="stat-label">Success Rate</div>
                 </div>
                 <div class="stat-card">
                     <div class="stat-number">6</div>
-                    <div class="stat-label" id="platforms-label">Platforms</div>
+                    <div class="stat-label">Platforms</div>
                 </div>
             </div>
 
             <!-- About Section -->
             <div class="about-section">
-                <h2 id="about-title">About CheckReel</h2>
+                <h2>About CheckReel</h2>
                 <div class="about-content">
-                    <p id="about-content-text"><span class="company-highlight">CheckReel</span> is proudly part of <span class="company-highlight">Al Wafer Media</span>, a leading digital presence management company. At Al Wafer, we specialize in managing and growing digital presence across major social media platforms, including TikTok, YouTube, Instagram, Snapchat, X, and Facebook.</p>
+                    <p><span class="company-highlight">CheckReel</span> is proudly part of <span class="company-highlight">Al Wafer Media</span>, a leading digital presence management company. At Al Wafer, we specialize in managing and growing digital presence across major social media platforms, including TikTok, YouTube, Instagram, Snapchat, X, and Facebook.</p>
                     <br>
-                    <p id="about-mission">Our mission is to empower creators and businesses with tailored strategies, engaging content, and performance-driven insights. Whether you're aiming to build your brand, boost engagement, or grow your audience, Al Wafer is your trusted partner for social media success.</p>
+                    <p>Our mission is to empower creators and businesses with tailored strategies, engaging content, and performance-driven insights. Whether you're aiming to build your brand, boost engagement, or grow your audience, Al Wafer is your trusted partner for social media success.</p>
                     <br>
-                    <p id="about-checkreel">CheckReel represents our commitment to content safety and compliance, ensuring your creative vision aligns with platform guidelines while maximizing your reach and impact.</p>
+                    <p>CheckReel represents our commitment to content safety and compliance, ensuring your creative vision aligns with platform guidelines while maximizing your reach and impact.</p>
                 </div>
             </div>
         </div>
@@ -573,9 +602,9 @@
         <!-- French Content -->
         <div id="content-fr" class="lang-content">
             <div class="hero">
-                <h1 id="hero-title-fr">Ne devinez pas — vérifiez avant de publier</h1>
-                <p class="subtitle" id="hero-subtitle-fr">Vérificateur de conformité de contenu alimenté par l'IA pour les plateformes de médias sociaux</p>
-                <p class="account-protection" id="hero-protection-fr">Protégez vos comptes personnels et commerciaux des grèves, interdictions et violations</p>
+                <h1>Ne devinez pas — vérifiez avant de publier</h1>
+                <p class="subtitle">Vérificateur de conformité de contenu alimenté par l'IA pour les plateformes de médias sociaux</p>
+                <p class="account-protection">Protégez vos comptes personnels et commerciaux des grèves, interdictions et violations</p>
                 <button class="cta-button" onclick="requireSignInForScan()">Commencer la vérification du contenu</button>
             </div>
             
@@ -629,7 +658,7 @@
 
             <div class="stats">
                 <div class="stat-card">
-                    <div class="stat-number" id="active-users-fr">2,697+</div>
+                    <div class="stat-number">2,697+</div>
                     <div class="stat-label">Utilisateurs actifs</div>
                 </div>
                 <div class="stat-card">
@@ -659,9 +688,9 @@
         <!-- Arabic Content -->
         <div id="content-ar" class="lang-content">
             <div class="hero">
-                <h1 id="hero-title-ar">لا تخمن — افحص قبل النشر</h1>
-                <p class="subtitle" id="hero-subtitle-ar">فاحص امتثال المحتوى المدعوم بالذكاء الاصطناعي لمنصات وسائل التواصل الاجتماعي</p>
-                <p class="account-protection" id="hero-protection-ar">احم حساباتك الشخصية والتجارية من الإضرابات والحظر والانتهاكات</p>
+                <h1>لا تخمن — افحص قبل النشر</h1>
+                <p class="subtitle">فاحص امتثال المحتوى المدعوم بالذكاء الاصطناعي لمنصات وسائل التواصل الاجتماعي</p>
+                <p class="account-protection">احم حساباتك الشخصية والتجارية من الإضرابات والحظر والانتهاكات</p>
                 <button class="cta-button" onclick="requireSignInForScan()">ابدأ فحص المحتوى</button>
             </div>
             
@@ -715,7 +744,7 @@
 
             <div class="stats">
                 <div class="stat-card">
-                    <div class="stat-number" id="active-users-ar">2,697+</div>
+                    <div class="stat-number">2,697+</div>
                     <div class="stat-label">مستخدم نشط</div>
                 </div>
                 <div class="stat-card">
@@ -775,7 +804,7 @@
         // FIXED: Complete language switching with content updates
         function switchLanguage(lang) {
             currentLanguage = lang;
-            localStorage.setItem('checkreel_language', lang);
+            safeStorage.setItem('checkreel_language', lang);
 
             // Hide all language content
             document.querySelectorAll('.lang-content').forEach(content => {
@@ -858,7 +887,7 @@
 
         // FIXED: Enforce sign-in before accessing scan features
         function requireSignInForScan() {
-            const isSignedIn = localStorage.getItem('checkreel_user_email');
+            const isSignedIn = safeStorage.getItem('checkreel_user_email');
             
             if (isSignedIn) {
                 // User is signed in, redirect to dashboard
@@ -880,8 +909,8 @@
             }
 
             // Store user email to mark as signed in
-            localStorage.setItem('checkreel_user_email', email);
-            localStorage.setItem('checkreel_signin_timestamp', Date.now());
+            safeStorage.setItem('checkreel_user_email', email);
+            safeStorage.setItem('checkreel_signin_timestamp', Date.now());
             
             // Get user IP for tracking
             fetch('https://api.ipify.org?format=json')
@@ -891,10 +920,10 @@
                     console.log('User IP:', userIP);
                     
                     // Store IP for abuse prevention
-                    localStorage.setItem('checkreel_user_ip', userIP);
+                    safeStorage.setItem('checkreel_user_ip', userIP);
                     
                     // Store language selection for dashboard
-                    localStorage.setItem('checkreel_language', currentLanguage);
+                    safeStorage.setItem('checkreel_language', currentLanguage);
                     
                     // Redirect to dashboard
                     window.location.href = 'dashboard.html';
@@ -902,7 +931,7 @@
                 .catch(error => {
                     console.error('IP tracking error:', error);
                     // Still allow sign in
-                    localStorage.setItem('checkreel_language', currentLanguage);
+                    safeStorage.setItem('checkreel_language', currentLanguage);
                     window.location.href = 'dashboard.html';
                 });
         }
@@ -917,7 +946,7 @@
 
         // Load saved language on page load
         document.addEventListener('DOMContentLoaded', function() {
-            const savedLang = localStorage.getItem('checkreel_language') || 'en';
+            const savedLang = safeStorage.getItem('checkreel_language') || 'en';
             switchLanguage(savedLang);
 
             // Update user counter
@@ -926,27 +955,17 @@
 
         function updateUserCounter() {
             const baseCount = 2697;
-            let userIncrement = localStorage.getItem('checkreel_user_increment');
+            let userIncrement = safeStorage.getItem('checkreel_user_increment');
             if (!userIncrement) {
                 userIncrement = Math.floor(Math.random() * 100) + 1;
-                localStorage.setItem('checkreel_user_increment', userIncrement.toString());
+                safeStorage.setItem('checkreel_user_increment', userIncrement.toString());
             }
             const totalUsers = baseCount + parseInt(userIncrement);
             
-            // Update for all languages
-            const activeUsersElements = ['active-users', 'active-users-fr', 'active-users-ar'];
-            activeUsersElements.forEach(id => {
-                const element = document.getElementById(id);
-                if (element) {
-                    if (id.includes('ar')) {
-                        element.textContent = `${totalUsers.toLocaleString('ar')}+`;
-                    } else if (id.includes('fr')) {
-                        element.textContent = `${totalUsers.toLocaleString('fr')}+`;
-                    } else {
-                        element.textContent = `${totalUsers.toLocaleString('en')}+`;
-                    }
-                }
-            });
+            const activeUsersEl = document.getElementById('active-users');
+            if (activeUsersEl) {
+                activeUsersEl.textContent = `${totalUsers.toLocaleString()}+`;
+            }
         }
     </script>
     
@@ -955,20 +974,20 @@
 
     <script>
         // Secret Admin Access System - Invisible Corner Click
-        let clickCount = 0;
-        let clickTimer = null;
+        let adminClickCount = 0;
+        let adminClickTimer = null;
 
         function checkAdminAccess() {
-            clickCount++;
+            adminClickCount++;
             
             // Reset counter after 3 seconds of no clicks
-            clearTimeout(clickTimer);
-            clickTimer = setTimeout(() => {
-                clickCount = 0;
+            clearTimeout(adminClickTimer);
+            adminClickTimer = setTimeout(() => {
+                adminClickCount = 0;
             }, 3000);
             
             // Secret sequence: 7 clicks in bottom-left corner
-            if (clickCount === 7) {
+            if (adminClickCount === 7) {
                 const password = prompt('🔐 Admin Access\n\nEnter owner password:');
                 
                 // YOUR SECRET PASSWORD - CHANGE THIS!
@@ -976,7 +995,7 @@
                     window.location.href = 'admin.html';
                 } else if (password !== null) {
                     alert('❌ Access Denied');
-                    clickCount = 0;
+                    adminClickCount = 0;
                 }
             }
         }
