@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -1007,7 +1007,7 @@
                     showToast(languages[currentLanguage].upgradeSuccess, 'success');
                     document.getElementById('userEmail').value = '';
                     document.getElementById('tierSelect').value = '';
-                    addLiveActivity(`User ${email} upgraded to ${tier.toUpperCase()}`, '??');
+                    addLiveActivity(`User ${email} upgraded to ${tier.toUpperCase()}`, '');
                 } else {
                     showToast(languages[currentLanguage].upgradeFailed, 'error');
                 }
@@ -1040,7 +1040,7 @@
             }, 3000);
         }
 
-        function addLiveActivity(text, icon = '??') {
+        function addLiveActivity(text, icon = '') {
             const liveActivityContainer = document.querySelector('.sidebar-section:last-child');
             const activities = liveActivityContainer.querySelectorAll('.activity-item');
             
