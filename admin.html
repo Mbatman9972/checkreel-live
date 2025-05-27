@@ -1176,10 +1176,10 @@ callback: function(value) { return '$' + value; }                               
 
         function updateChartsLanguage() {
             if (charts.platform) {
-                charts.platform.update();
+                // charts.platform.update();
             }
             if (charts.violations) {
-                charts.violations.update();
+                // charts.violations.update();
             }
         }
 
@@ -1267,7 +1267,7 @@ callback: function(value) { return '$' + value; }                               
                     
                     charts.revenue.data.labels = newLabels;
                     charts.revenue.data.datasets[0].data = newData;
-                    charts.revenue.update();
+                    // charts.revenue.update();
                 }
             } catch (error) {
                 console.error('Error updating chart:', error);
@@ -1285,7 +1285,7 @@ callback: function(value) { return '$' + value; }                               
                 }
                 
                 if (charts.violations) {
-                    charts.violations.update();
+                    // charts.violations.update();
                 }
             } catch (error) {
                 console.error('Error updating violations chart:', error);
