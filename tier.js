@@ -1,4 +1,4 @@
-﻿// Tier management system for CheckReel
+// Tier management system for CheckReel
 const TIER_CONFIG = {
     free: {
         name: 'Free',
