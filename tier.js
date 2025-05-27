@@ -130,9 +130,9 @@ async function syncTierWithServer(email, tier) {
             return false;
         }
     } catch (error) {
-        console.error('Tier sync error:', error);
-        return false;
-    }
+    console.error('Tier verification error:', error);
+    return false;
+}
 }
 
 async function verifyTierWithServer(email) {
@@ -152,8 +152,9 @@ async function verifyTierWithServer(email) {
             return result.tier;
         }
     } catch (error) {
-        console.error('Tier verification error:', error);
-    }
+    console.error('Tier verification error:', error);
+    return false;
+}
     
     return getCurrentTier();
 }
@@ -178,3 +179,4 @@ window.tierSystem = {
     verifyTierWithServer,
     TIER_CONFIG
 };
+
