@@ -1175,136 +1175,40 @@
 
         // Initialize all charts
         function initializeCharts() {
-            if (typeof Chart === "undefined") {
-                console.log('Chart.js not loaded yet, retrying...');
-                setTimeout(initializeCharts, 100);
-                return;
-            }
+    if (typeof Chart === 'undefined') {
+        console.log('Chart.js not loaded yet, retrying...');
+        setTimeout(initializeCharts, 500);
+        return;
+    }
 
-            try {
-                const revenueCtx = document.getElementById('revenueChart');
-                if (revenueCtx) {
-                    charts.revenue = new Chart(revenueCtx, {
-                        type: 'line',
-                        data: {
-                            labels: ['00:00', '04:00', '08:00', '12:00', '16:00', '20:00', '24:00'],
-                            datasets: [{
-                                label: 'Revenue ($)',
-                                data: [850, 920, 1100, 1247, 1180, 1320, 1400],
-                                borderColor: '#4CAF50',
-                                backgroundColor: 'rgba(76, 175, 80, 0.1)',
-                                borderWidth: 3,
-                                fill: true,
-                                tension: 0.4,
-                                pointBackgroundColor: '#4CAF50',
-                                pointBorderColor: 'white',
-                                pointBorderWidth: 2,
-                                pointRadius: 6
-                            }]
-                        },
-                        options: {
-                            responsive: true,
-                            maintainAspectRatio: false,
-                            plugins: {
-                                legend: { display: false }
-                            },
-                            scales: {
-                                x: {
-                                    ticks: { color: 'rgba(255, 255, 255, 0.8)' },
-                                    grid: { color: 'rgba(255, 255, 255, 0.1)' }
-                                },
-                                y: {
-                                    ticks: {
-                                        color: 'rgba(255, 255, 255, 0.8)',
-                                        callback: function(value) {
-                                            return '$' + value;
-                                        }
-                                    },
-                                    grid: { color: 'rgba(255, 255, 255, 0.1)' }
-                                }
-                            }
-                        }
-                    });
-                    console.log('Revenue chart initialized');
-                }
+    Chart.defaults.color = 'rgba(255, 255, 255, 0.8)';
+    Chart.defaults.borderColor = 'rgba(255, 255, 255, 0.1)';
 
-                const platformCtx = document.getElementById('platformChart');
-                if (platformCtx) {
-                    charts.platform = new Chart(platformCtx, {
-                        type: 'doughnut',
-                        data: {
-                            labels: ['TikTok', 'Instagram', 'YouTube', 'Facebook', 'Twitter'],
-                            datasets: [{
-                                data: [35, 25, 20, 15, 5],
-                                backgroundColor: [
-                                    '#FF6B6B',
-                                    '#4ECDC4', 
-                                    '#45B7D1',
-                                    '#96CEB4',
-                                    '#FFEAA7'
-                                ],
-                                borderWidth: 0
-                            }]
-                        },
-                        options: {
-                            responsive: true,
-                            maintainAspectRatio: false,
-                            plugins: {
-                                legend: {
-                                    position: 'bottom',
-                                    labels: { color: 'rgba(255, 255, 255, 0.8)' }
-                                }
-                            }
-                        }
-                    });
-                    console.log('Platform chart initialized');
-                }
-
-                const violationsCtx = document.getElementById('violationsChart');
-                if (violationsCtx) {
-                    charts.violations = new Chart(violationsCtx, {
-                        type: 'bar',
-                        data: {
-                            labels: ['Language', 'Violence', 'Spam', 'Copyright', 'Adult', 'Hate'],
-                            datasets: [{
-                                label: 'Violations',
-                                data: [89, 45, 67, 23, 12, 8],
-                                backgroundColor: [
-                                    '#FF6B6B',
-                                    '#FF8E53',
-                                    '#FF6B9D',
-                                    '#C44569',
-                                    '#F8B500',
-                                    '#FF3838'
-                                ],
-                                borderRadius: 8,
-                                borderSkipped: false
-                            }]
-                        },
-                        options: {
-                            responsive: true,
-                            maintainAspectRatio: false,
-                            plugins: {
-                                legend: { display: false }
-                            },
-                            scales: {
-                                x: {
-                                    ticks: { color: 'rgba(255, 255, 255, 0.8)' },
-                                    grid: { display: false }
-                                },
-                                y: {
-                                    ticks: { color: 'rgba(255, 255, 255, 0.8)' },
-                                    grid: { color: 'rgba(255, 255, 255, 0.1)' }
-                                }
-                            }
-                        }
-                    });
-                    console.log('Violations chart initialized');
-                }
-            } catch (error) {
-                console.error('Error initializing charts:', error);
-            }
-        }
+    try {
+        const revenueCtx = document.getElementById('revenueChart');
+        if (revenueCtx && revenueCtx.getContext) {
+            charts.revenue = new Chart(revenueCtx.getContext('2d'), {
+                type: 'line',
+                data: {
+                    labels: ['00:00', '04:00', '08:00', '12:00', '16:00', '20:00', '24:00'],
+                    datasets: [{
+                        label: 'Revenue',
+                        data: [850, 920, 1100, 1247, 1180, 1320, 1400],
+                        borderColor: '#4CAF50',
+                        backgroundColor: 'rgba(76, 175, 80, 0.1)',
+                        borderWidth: 2,
+                        fill: true,
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        y: { 
+                            ticks: { 
+                                callback: function(value) { return '
 
         // Update charts language
         function updateChartsLanguage() {
@@ -1519,3 +1423,270 @@
     </script>
 </body>
 </html>
+ + value; }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        const platformCtx = document.getElementById('platformChart');
+        if (platformCtx && platformCtx.getContext) {
+            charts.platform = new Chart(platformCtx.getContext('2d'), {
+                type: 'doughnut',
+                data: {
+                    labels: ['TikTok', 'Instagram', 'YouTube', 'Facebook', 'Twitter'],
+                    datasets: [{
+                        data: [35, 25, 20, 15, 5],
+                        backgroundColor: ['#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FFEAA7']
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { position: 'bottom' } }
+                }
+            });
+        }
+
+        const violationsCtx = document.getElementById('violationsChart');
+        if (violationsCtx && violationsCtx.getContext) {
+            charts.violations = new Chart(violationsCtx.getContext('2d'), {
+                type: 'bar',
+                data: {
+                    labels: ['Language', 'Violence', 'Spam', 'Copyright', 'Adult', 'Hate'],
+                    datasets: [{
+                        data: [89, 45, 67, 23, 12, 8],
+                        backgroundColor: ['#FF6B6B', '#FF8E53', '#FF6B9D', '#C44569', '#F8B500', '#FF3838']
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } }
+                }
+            });
+        }
+
+        console.log('All charts initialized successfully');
+    } catch (error) {
+        console.error('Chart initialization error:', error);
+        setTimeout(initializeCharts, 1000);
+    }
+}
+
+        // Update charts language
+        function updateChartsLanguage() {
+            if (charts.platform) {
+                charts.platform.update();
+            }
+            if (charts.violations) {
+                charts.violations.update();
+            }
+        }
+
+        // Live mode toggle
+        function toggleLiveMode() {
+            liveMode = !liveMode;
+            const toggle = document.getElementById('controlToggle');
+            
+            if (liveMode) {
+                toggle.textContent = '🟢 Live Mode';
+                toggle.classList.add('active');
+                startRealTimeUpdates();
+            } else {
+                toggle.textContent = '🔴 Live Mode';
+                toggle.classList.remove('active');
+                stopRealTimeUpdates();
+            }
+        }
+
+        // Start live updates
+        function startLiveUpdates() {
+            updateInterval = setInterval(function() {
+                if (liveMode) {
+                    updateLiveData();
+                }
+            }, 5000);
+        }
+
+        // Update live data
+        function updateLiveData() {
+            const kpiCards = document.querySelectorAll('.kpi-value');
+            kpiCards.forEach(function(card) {
+                const currentValue = parseInt(card.textContent.replace(/[^0-9]/g, ''));
+                const change = Math.floor(Math.random() * 20) - 10;
+                let newValue = Math.max(0, currentValue + change);
+
+                if (card.textContent.includes('$')) {
+                    card.textContent = '$' + newValue.toLocaleString();
+                } else if (card.textContent.includes('%')) {
+                    card.textContent = (newValue / 100).toFixed(1) + '%';
+                } else if (card.textContent.includes('ms')) {
+                    card.textContent = newValue + 'ms';
+                } else {
+                    card.textContent = newValue.toLocaleString();
+                }
+            });
+
+            if (charts.revenue) {
+                const newData = charts.revenue.data.datasets[0].data.map(function() {
+                    return Math.floor(Math.random() * 500) + 800;
+                });
+                charts.revenue.data.datasets[0].data = newData;
+                charts.revenue.update('none');
+            }
+        }
+
+        function startRealTimeUpdates() {
+            console.log('Real-time updates started');
+        }
+
+        function stopRealTimeUpdates() {
+            console.log('Real-time updates stopped');
+        }
+
+        // Chart update functions
+        function updateChart(period) {
+            try {
+                const buttons = document.querySelectorAll('.chart-btn');
+                buttons.forEach(function(btn) {
+                    btn.classList.remove('active');
+                });
+                if (window.event && window.event.target) {
+                    window.event.target.classList.add('active');
+                }
+                
+                if (charts.revenue) {
+                    let newLabels, newData;
+                    switch(period) {
+                        case '24h':
+                            newLabels = ['00:00', '04:00', '08:00', '12:00', '16:00', '20:00', '24:00'];
+                            newData = [850, 920, 1100, 1247, 1180, 1320, 1400];
+                            break;
+                        case '7d':
+                            newLabels = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+                            newData = [8500, 9200, 11000, 12470, 11800, 13200, 14000];
+                            break;
+                        case '30d':
+                            newLabels = ['Week 1', 'Week 2', 'Week 3', 'Week 4'];
+                            newData = [65000, 72000, 68000, 75000];
+                            break;
+                        case '1y':
+                            newLabels = ['Q1', 'Q2', 'Q3', 'Q4'];
+                            newData = [850000, 920000, 1100000, 1200000];
+                            break;
+                        default:
+                            newLabels = ['00:00', '04:00', '08:00', '12:00', '16:00', '20:00', '24:00'];
+                            newData = [850, 920, 1100, 1247, 1180, 1320, 1400];
+                    }
+                    
+                    charts.revenue.data.labels = newLabels;
+                    charts.revenue.data.datasets[0].data = newData;
+                    charts.revenue.update();
+                    console.log('Chart updated for period:', period);
+                }
+            } catch (error) {
+                console.error('Error updating chart:', error);
+            }
+        }
+
+        function updateViolationsChart(type) {
+            try {
+                if (window.event && window.event.target && window.event.target.parentElement) {
+                    const buttons = window.event.target.parentElement.querySelectorAll('.chart-btn');
+                    buttons.forEach(function(btn) {
+                        btn.classList.remove('active');
+                    });
+                    window.event.target.classList.add('active');
+                }
+                
+                if (charts.violations) {
+                    charts.violations.update();
+                    console.log('Violations chart updated for type:', type);
+                }
+            } catch (error) {
+                console.error('Error updating violations chart:', error);
+            }
+        }
+
+        // Emergency mode
+        function emergencyMode() {
+            try {
+                if (confirm('Activate Emergency Mode? This will temporarily halt all automated actions.')) {
+                    document.body.style.backgroundColor = 'rgba(244, 67, 54, 0.1)';
+                    alert('Emergency Mode Activated. All automated moderation has been paused.');
+                    
+                    setTimeout(function() {
+                        document.body.style.backgroundColor = '';
+                        alert('Emergency Mode Deactivated. Normal operations resumed.');
+                    }, 30000);
+                }
+            } catch (error) {
+                console.error('Error in emergency mode:', error);
+            }
+        }
+
+        // Modal management
+        function openModal(modalId) {
+            try {
+                console.log('Opening modal:', modalId);
+                alert('Opening ' + modalId + ' - Feature under development');
+            } catch (error) {
+                console.error('Error opening modal:', error);
+            }
+        }
+
+        // PWA functionality
+        let deferredPrompt;
+
+        function initializePWA() {
+            if (window.matchMedia('(display-mode: standalone)').matches) {
+                document.getElementById('pwaStatus').textContent = '📱 App Installed';
+            } else {
+                document.getElementById('pwaStatus').textContent = '🌐 Web Version';
+            }
+
+            window.addEventListener('beforeinstallprompt', function(e) {
+                e.preventDefault();
+                deferredPrompt = e;
+                const installBtn = document.getElementById('installPWA');
+                if (installBtn) {
+                    installBtn.style.display = 'block';
+                }
+            });
+
+            const installBtn = document.getElementById('installPWA');
+            if (installBtn) {
+                installBtn.addEventListener('click', function() {
+                    if (deferredPrompt) {
+                        deferredPrompt.prompt();
+                        deferredPrompt.userChoice.then(function(result) {
+                            if (result.outcome === 'accepted') {
+                                installBtn.style.display = 'none';
+                                document.getElementById('pwaStatus').textContent = '📱 App Installing...';
+                            }
+                            deferredPrompt = null;
+                        });
+                    }
+                });
+            }
+
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.register('/sw.js').catch(function() {
+                    console.log('Service worker registration failed');
+                });
+            }
+        }
+
+        // Cleanup on page unload
+        window.addEventListener('beforeunload', function() {
+            if (updateInterval) {
+                clearInterval(updateInterval);
+            }
+        });
+    </script>
+</body>
+</html>
+
