@@ -528,7 +528,45 @@
                 grid-template-columns: 1fr;
             }
         }
-    </style>
+    .control-display {
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 12px;
+    padding: 20px;
+    text-align: center;
+    height: 200px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+.metric-value {
+    font-size: 48px;
+    font-weight: bold;
+    color: #fff;
+    margin-bottom: 10px;
+}
+.metric-label {
+    font-size: 14px;
+    color: rgba(255,255,255,0.8);
+    margin-bottom: 5px;
+}
+.metric-trend {
+    font-size: 16px;
+    color: #4CAF50;
+}
+.platform-stats {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+.platform-item {
+    font-size: 18px;
+    color: #fff;
+    padding: 8px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 6px;
+}
+</style>
 </head>
 <body>
     <header class="header">
@@ -659,14 +697,14 @@
                             <button class="chart-btn" onclick="updateChart('1y')">1Y</button>
                         </div>
                     </div>
-                    <canvas id="revenueChart" width="400" height="200"></canvas>
+                    <div class="control-display"><div class="metric-value" id="revenueValue"><canvas id="revenueChart" width="400" height="200"></canvas></div><div class="metric-label">Total Revenue</div><div class="metric-trend"> +12.5%</div></div>
                 </div>
 
                 <div class="chart-container">
                     <div class="chart-header">
                         <h3 class="chart-title">🎭 <span data-i18n="platformChart">Platform Distribution</span></h3>
                     </div>
-                    <canvas id="platformChart" width="400" height="200"></canvas>
+                    <div class="control-display"><div class="platform-stats"><div class="platform-item">TikTok: <span id="tiktokCount">0</span></div><div class="platform-item">Instagram: <span id="instaCount">0</span></div><div class="platform-item">YouTube: <span id="youtubeCount">0</span></div></div></div>
                 </div>
             </div>
 
@@ -679,7 +717,7 @@
                         <button class="chart-btn" onclick="updateViolationsChart('daily')">Daily</button>
                     </div>
                 </div>
-                <canvas id="violationsChart" width="400" height="150"></canvas>
+                <div class="control-display"><div class="metric-value" id="violationsValue">0</div><div class="metric-label">Active Violations</div><div class="metric-trend"> Live</div></div>
             </div>
 
             <div class="analytics-grid">
@@ -834,7 +872,7 @@
         <span class="toast-message" id="toastMessage"></span>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.js"></script>
+    <!-- Chart.js removed -->
     <script src="tier.js"></script>
     
     <script>
