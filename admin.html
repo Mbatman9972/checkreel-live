@@ -1,113 +1,616 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CheckReel Admin Control Room</title>
-    <link rel="manifest" href="manifest.json" />
-    <meta name="theme-color" content="#667eea" />
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#667eea">
     <style>
-/*  —————  ORIGINAL STYLES (unchanged)  —————  */
-        *{margin:0;padding:0;box-sizing:border-box}
-        body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);min-height:100vh;color:#333;line-height:1.6;transition:.3s}
-        [dir=rtl]{direction:rtl;text-align:right}
-        [dir=rtl] .header-controls{flex-direction:row-reverse}
-        [dir=rtl] .main-container{grid-template-columns:320px 1fr}
-        [dir=rtl] .logo-section{flex-direction:row-reverse}
-        .header{background:rgba(255,255,255,.1);backdrop-filter:blur(10px);border-bottom:1px solid rgba(255,255,255,.2);padding:1rem 2rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem}
-        .logo-section{display:flex;align-items:center;gap:1rem}
-        .logo{font-size:2rem;font-weight:bold;color:#fff}
-        .header-controls{display:flex;align-items:center;gap:1rem;flex-wrap:wrap}
-        .language-selector,.pwa-install,.control-toggle{background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.3);color:#fff;padding:.5rem 1rem;border-radius:8px;cursor:pointer;transition:.3s}
-        .language-selector:hover,.pwa-install:hover,.control-toggle:hover{background:rgba(255,255,255,.3);transform:translateY(-2px)}
-        .control-toggle.active{background:rgba(76,175,80,.3)}
-        .main-container{display:grid;grid-template-columns:1fr 320px;gap:2rem;padding:2rem;max-width:1600px;margin:0 auto}
-        .dashboard-content{display:flex;flex-direction:column;gap:2rem}
-        .status-bar{background:rgba(255,255,255,.1);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.2);border-radius:16px;padding:1rem 2rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem}
-        .status-item{display:flex;align-items:center;gap:.5rem;color:#fff}
-        .status-indicator{width:12px;height:12px;border-radius:50%;animation:pulse 2s infinite}
-        .status-indicator.online{background:#4CAF50}.status-indicator.warning{background:#FF9800}.status-indicator.error{background:#F44336}
-        @keyframes pulse{0%{opacity:1}50%{opacity:.5}100%{opacity:1}}
-        .kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.5rem}
-        .kpi-card{background:rgba(255,255,255,.1);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.2);border-radius:16px;padding:1.5rem;transition:.3s;cursor:pointer;position:relative;overflow:hidden}
-        .kpi-card::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,#4CAF50,#2196F3,#FF9800,#F44336)}
-        .kpi-card:hover{transform:translateY(-5px);background:rgba(255,255,255,.15)}
-        .kpi-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem}
-        .kpi-title{color:rgba(255,255,255,.8);font-size:.9rem;font-weight:500}
-        .kpi-icon{font-size:1.5rem}
-        .kpi-value{font-size:2rem;font-weight:bold;color:#fff;margin-bottom:.5rem}
-        .kpi-change{font-size:.85rem;font-weight:500;display:flex;align-items:center;gap:.25rem}
-        .kpi-change.positive{color:#4ade80}.kpi-change.negative{color:#f87171}.kpi-change.neutral{color:#94a3b8}
-        .user-tier-management{background:rgba(255,255,255,.1);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.2);border-radius:16px;padding:2rem;margin-bottom:2rem}
-        .section-title{font-size:1.3rem;font-weight:600;color:#fff;margin-bottom:1.5rem;display:flex;align-items:center;gap:.5rem}
-        .tier-upgrade-form{display:grid;grid-template-columns:2fr 1fr auto;gap:1rem;align-items:end}
-        .form-group{display:flex;flex-direction:column;gap:.5rem}
-        .form-label{color:rgba(255,255,255,.9);font-size:.9rem;font-weight:500}
-        .form-input,.form-select{padding:.75rem;border-radius:8px;border:1px solid rgba(255,255,255,.3);background:rgba(255,255,255,.1);color:#fff;font-size:1rem;transition:.3s}
-        .form-input::placeholder{color:rgba(255,255,255,.5)}
-        .form-input:focus,.form-select:focus{outline:none;border-color:rgba(255,255,255,.5);background:rgba(255,255,255,.15)}
-        .form-select option{background:#667eea;color:#fff}
-        .btn-upgrade{background:rgba(76,175,80,.3);border:1px solid rgba(76,175,80,.5);color:#fff;padding:.75rem 1.5rem;border-radius:8px;cursor:pointer;font-size:1rem;font-weight:500;transition:.3s;display:flex;align-items:center;gap:.5rem}
-        .btn-upgrade:hover{background:rgba(76,175,80,.4);transform:translateY(-2px)}
-        .btn-upgrade:disabled{opacity:.6;cursor:not-allowed}
-        .charts-grid{display:grid;grid-template-columns:2fr 1fr;gap:2rem}
-        .chart-container{background:rgba(255,255,255,.1);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.2);border-radius:16px;padding:2rem}
-        .chart-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem}
-        .chart-title{font-size:1.2rem;font-weight:600;color:#fff;display:flex;align-items:center;gap:.5rem}
-        .chart-controls{display:flex;gap:.5rem}
-        .chart-btn{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);color:rgba(255,255,255,.8);padding:.25rem .75rem;border-radius:6px;cursor:pointer;transition:.3s;font-size:.8rem}
-        .chart-btn.active,.chart-btn:hover{background:rgba(255,255,255,.2);color:#fff}
-        .analytics-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:2rem;margin-top:2rem}
-        .analytics-card{background:rgba(255,255,255,.1);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.2);border-radius:16px;padding:1.5rem}
-        .analytics-title{font-size:1.1rem;font-weight:600;color:#fff;margin-bottom:1rem;display:flex;align-items:center;gap:.5rem}
-        .metric-item{display:flex;justify-content:space-between;align-items:center;padding:.75rem 0;border-bottom:1px solid rgba(255,255,255,.1)}
-        .metric-item:last-child{border-bottom:none}
-        .metric-label{color:rgba(255,255,255,.8);font-size:.9rem}
-        .metric-value{color:#fff;font-weight:600}
-        .sidebar{display:flex;flex-direction:column;gap:2rem}
-        .sidebar-section{background:rgba(255,255,255,.1);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.2);border-radius:16px;padding:1.5rem}
-        .sidebar-title{font-size:1.1rem;font-weight:600;color:#fff;margin-bottom:1rem;display:flex;align-items:center;gap:.5rem}
-        .quick-action,.activity-item,.alert-item{display:flex;align-items:center;gap:1rem;padding:.75rem;background:rgba(255,255,255,.05);border-radius:8px;margin-bottom:.5rem;cursor:pointer;transition:.3s}
-        .quick-action:hover,.activity-item:hover{background:rgba(255,255,255,.1);transform:translateX(5px)}
-        .alert-item.critical{border-left:4px solid #F44336}.alert-item.warning{border-left:4px solid #FF9800}.alert-item.info{border-left:4px solid #2196F3}
-        .action-icon,.activity-icon,.alert-icon{font-size:1.2rem}
-        .action-text,.activity-text,.alert-text{color:#fff;font-weight:500;flex:1}
-        .activity-details,.alert-details{display:flex;flex-direction:column;flex:1}
-        .activity-time,.alert-time{color:rgba(255,255,255,.6);font-size:.8rem}
-        .toast{position:fixed;bottom:2rem;right:2rem;background:rgba(255,255,255,.95);backdrop-filter:blur(10px);border-radius:8px;padding:1rem 1.5rem;box-shadow:0 4px 12px rgba(0,0,0,.2);display:flex;align-items:center;gap:.75rem;transform:translateY(100px);opacity:0;transition:.3s;z-index:1000}
-        .toast.show{transform:translateY(0);opacity:1}
-        .toast.success{border-left:4px solid #4CAF50}.toast.error{border-left:4px solid #F44336}
-        .toast-icon{font-size:1.5rem}.toast-message{color:#333;font-weight:500}
-        .spinner{border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;width:16px;height:16px;animation:spin .8s linear infinite;display:inline-block}
-        @keyframes spin{to{transform:rotate(360deg)}}
-        @media(max-width:1200px){.charts-grid{grid-template-columns:1fr}.tier-upgrade-form{grid-template-columns:1fr}}
-        @media(max-width:1024px){.main-container{grid-template-columns:1fr}.sidebar{order:-1}.analytics-grid{grid-template-columns:1fr}}
-        @media(max-width:768px){.header{padding:1rem}.main-container{padding:1rem;gap:1rem}.kpi-grid{grid-template-columns:1fr}}
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+            line-height: 1.6;
+            transition: all 0.3s ease;
+        }
+
+        /* RTL Support */
+        [dir="rtl"] {
+            direction: rtl;
+            text-align: right;
+        }
+
+        [dir="rtl"] .header-controls {
+            flex-direction: row-reverse;
+        }
+
+        [dir="rtl"] .main-container {
+            grid-template-columns: 320px 1fr;
+        }
+
+        [dir="rtl"] .logo-section {
+            flex-direction: row-reverse;
+        }
+
+        /* Header */
+        .header {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logo {
+            font-size: 2rem;
+            font-weight: bold;
+            color: white;
+        }
+
+        .header-controls {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .language-selector, .pwa-install, .control-toggle {
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .language-selector:hover, .pwa-install:hover, .control-toggle:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .control-toggle.active {
+            background: rgba(76, 175, 80, 0.3);
+        }
+
+        /* Main Layout */
+        .main-container {
+            display: grid;
+            grid-template-columns: 1fr 320px;
+            gap: 2rem;
+            padding: 2rem;
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        .dashboard-content {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        /* Status Bar */
+        .status-bar {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 16px;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .status-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: white;
+        }
+
+        .status-indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        .status-indicator.online { background: #4CAF50; }
+        .status-indicator.warning { background: #FF9800; }
+        .status-indicator.error { background: #F44336; }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+
+        /* KPI Grid */
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .kpi-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 16px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .kpi-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #4CAF50, #2196F3, #FF9800, #F44336);
+        }
+
+        .kpi-card:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .kpi-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .kpi-title {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .kpi-icon {
+            font-size: 1.5rem;
+        }
+
+        .kpi-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: white;
+            margin-bottom: 0.5rem;
+        }
+
+        .kpi-change {
+            font-size: 0.85rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .kpi-change.positive { color: #4ade80; }
+        .kpi-change.negative { color: #f87171; }
+        .kpi-change.neutral { color: #94a3b8; }
+
+        /* User Tier Management Section */
+        .user-tier-management {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .section-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: white;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .tier-upgrade-form {
+            display: grid;
+            grid-template-columns: 2fr 1fr auto;
+            gap: 1rem;
+            align-items: end;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .form-label {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .form-input, .form-select {
+            padding: 0.75rem;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-input::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .form-input:focus, .form-select:focus {
+            outline: none;
+            border-color: rgba(255, 255, 255, 0.5);
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .form-select option {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-upgrade {
+            background: rgba(76, 175, 80, 0.3);
+            border: 1px solid rgba(76, 175, 80, 0.5);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-upgrade:hover {
+            background: rgba(76, 175, 80, 0.4);
+            transform: translateY(-2px);
+        }
+
+        .btn-upgrade:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        /* Charts */
+        .charts-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 2rem;
+        }
+
+        .chart-container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 16px;
+            padding: 2rem;
+        }
+
+        .chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .chart-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .chart-controls {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .chart-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: rgba(255, 255, 255, 0.8);
+            padding: 0.25rem 0.75rem;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.8rem;
+        }
+
+        .chart-btn.active, .chart-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+        }
+
+        /* Analytics Grid */
+        .analytics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .analytics-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 16px;
+            padding: 1.5rem;
+        }
+
+        .analytics-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: white;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .metric-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .metric-item:last-child {
+            border-bottom: none;
+        }
+
+        .metric-label {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.9rem;
+        }
+
+        .metric-value {
+            color: white;
+            font-weight: 600;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        .sidebar-section {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 16px;
+            padding: 1.5rem;
+        }
+
+        .sidebar-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: white;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .quick-action, .activity-item, .alert-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.75rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            margin-bottom: 0.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .quick-action:hover, .activity-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateX(5px);
+        }
+
+        .alert-item.critical {
+            border-left: 4px solid #F44336;
+        }
+
+        .alert-item.warning {
+            border-left: 4px solid #FF9800;
+        }
+
+        .alert-item.info {
+            border-left: 4px solid #2196F3;
+        }
+
+        .action-icon, .activity-icon, .alert-icon {
+            font-size: 1.2rem;
+        }
+
+        .action-text, .activity-text, .alert-text {
+            color: white;
+            font-weight: 500;
+            flex: 1;
+        }
+
+        .activity-details, .alert-details {
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+        }
+
+        .activity-time, .alert-time {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.8rem;
+        }
+
+        /* Toast Notification */
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 8px;
+            padding: 1rem 1.5rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+
+        .toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .toast.success {
+            border-left: 4px solid #4CAF50;
+        }
+
+        .toast.error {
+            border-left: 4px solid #F44336;
+        }
+
+        .toast-icon {
+            font-size: 1.5rem;
+        }
+
+        .toast-message {
+            color: #333;
+            font-weight: 500;
+        }
+
+        /* Loading Spinner */
+        .spinner {
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            width: 16px;
+            height: 16px;
+            animation: spin 0.8s linear infinite;
+            display: inline-block;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1200px) {
+            .charts-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .tier-upgrade-form {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 1024px) {
+            .main-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .sidebar {
+                order: -1;
+            }
+            
+            .analytics-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                padding: 1rem;
+            }
+            
+            .main-container {
+                padding: 1rem;
+                gap: 1rem;
+            }
+            
+            .kpi-grid {
+                grid-template-columns: 1fr;
+            }
+        }
     </style>
 </head>
 <body>
     <!-- Header -->
     <header class="header">
         <div class="logo-section">
-            <div class="logo" data-i18n="controlRoomTitle">CheckReel Control Room</div>
-            <div id="pwaStatus" style="color:rgba(255,255,255,.7);font-size:.9rem"></div>
+            <div class="logo">?? CheckReel Control Room</div>
+            <div id="pwaStatus" style="color: rgba(255,255,255,0.7); font-size: 0.9rem;"></div>
         </div>
         <div class="header-controls">
             <select id="languageSelector" class="language-selector">
-                <option value="en">🇺🇸 English</option>
-                <option value="ar">🇸🇦 العربية</option>
+                <option value="en">???? English</option>
+                <option value="ar">???? ???????</option>
             </select>
-            <button id="controlToggle" class="control-toggle">🔴 Live Mode</button>
-            <button id="installPWA" class="pwa-install" style="display:none">📱 Install App</button>
+            <button id="controlToggle" class="control-toggle">?? Live Mode</button>
+            <button id="installPWA" class="pwa-install" style="display: none;">?? Install App</button>
         </div>
     </header>
 
     <!-- Status Bar -->
     <div class="status-bar">
-        <div class="status-item"><div class="status-indicator online"></div><span data-i18n="systemStatus">System Status: Online</span></div>
-        <div class="status-item"><div class="status-indicator online"></div><span data-i18n="apiStatus">API: Healthy</span></div>
-        <div class="status-item"><div class="status-indicator warning"></div><span data-i18n="queueStatus">Queue: 847 pending</span></div>
-        <div class="status-item"><div class="status-indicator online"></div><span data-i18n="dbStatus">Database: Connected</span></div>
+        <div class="status-item">
+            <div class="status-indicator online"></div>
+            <span data-i18n="systemStatus">System Status: Online</span>
+        </div>
+        <div class="status-item">
+            <div class="status-indicator online"></div>
+            <span data-i18n="apiStatus">API: Healthy</span>
+        </div>
+        <div class="status-item">
+            <div class="status-indicator warning"></div>
+            <span data-i18n="queueStatus">Queue: 847 pending</span>
+        </div>
+        <div class="status-item">
+            <div class="status-indicator online"></div>
+            <span data-i18n="dbStatus">Database: Connected</span>
+        </div>
     </div>
 
     <!-- Main Container -->
@@ -116,40 +619,93 @@
         <div class="dashboard-content">
             <!-- KPI Grid -->
             <div class="kpi-grid">
-                <!-- 6 KPI cards (unchanged markup) -->
                 <div class="kpi-card" onclick="openModal('revenueModal')">
-                    <div class="kpi-header"><h4 class="kpi-title" data-i18n="todayRevenue">Today's Revenue</h4><div class="kpi-icon">💰</div></div>
-                    <div class="kpi-value">$1,247</div><div class="kpi-change positive">↗ +18.4% <span style="font-size:.7rem">vs yesterday</span></div>
+                    <div class="kpi-header">
+                        <h4 class="kpi-title" data-i18n="todayRevenue">Today's Revenue</h4>
+                        <div class="kpi-icon">??</div>
+                    </div>
+                    <div class="kpi-value">$1,247</div>
+                    <div class="kpi-change positive">? +18.4% <span style="font-size: 0.7rem;">vs yesterday</span></div>
                 </div>
+
                 <div class="kpi-card" onclick="openModal('scansModal')">
-                    <div class="kpi-header"><h4 class="kpi-title" data-i18n="activeScans">Active Scans</h4><div class="kpi-icon">🔍</div></div>
-                    <div class="kpi-value">2,845</div><div class="kpi-change positive">↗ +12.3% <span style="font-size:.7rem">this hour</span></div>
+                    <div class="kpi-header">
+                        <h4 class="kpi-title" data-i18n="activeScans">Active Scans</h4>
+                        <div class="kpi-icon">??</div>
+                    </div>
+                    <div class="kpi-value">2,845</div>
+                    <div class="kpi-change positive">? +12.3% <span style="font-size: 0.7rem;">this hour</span></div>
                 </div>
+
                 <div class="kpi-card" onclick="openModal('violationsModal')">
-                    <div class="kpi-header"><h4 class="kpi-title" data-i18n="violationsDetected">Violations Detected</h4><div class="kpi-icon">⚠️</div></div>
-                    <div class="kpi-value">89</div><div class="kpi-change negative">↘ -5.2% <span style="font-size:.7rem">vs last hour</span></div>
+                    <div class="kpi-header">
+                        <h4 class="kpi-title" data-i18n="violationsDetected">Violations Detected</h4>
+                        <div class="kpi-icon">??</div>
+                    </div>
+                    <div class="kpi-value">89</div>
+                    <div class="kpi-change negative">? -5.2% <span style="font-size: 0.7rem;">vs last hour</span></div>
                 </div>
+
                 <div class="kpi-card" onclick="openModal('usersModal')">
-                    <div class="kpi-header"><h4 class="kpi-title" data-i18n="activeUsers">Active Users</h4><div class="kpi-icon">👥</div></div>
-                    <div class="kpi-value">18,926</div><div class="kpi-change positive">↗ +7.8% <span style="font-size:.7rem">online now</span></div>
+                    <div class="kpi-header">
+                        <h4 class="kpi-title" data-i18n="activeUsers">Active Users</h4>
+                        <div class="kpi-icon">??</div>
+                    </div>
+                    <div class="kpi-value">18,926</div>
+                    <div class="kpi-change positive">? +7.8% <span style="font-size: 0.7rem;">online now</span></div>
                 </div>
+
                 <div class="kpi-card" onclick="openModal('performanceModal')">
-                    <div class="kpi-header"><h4 class="kpi-title" data-i18n="responseTime">Avg Response Time</h4><div class="kpi-icon">⚡</div></div>
-                    <div class="kpi-value">143ms</div><div class="kpi-change positive">↗ -12ms <span style="font-size:.7rem">improved</span></div>
+                    <div class="kpi-header">
+                        <h4 class="kpi-title" data-i18n="responseTime">Avg Response Time</h4>
+                        <div class="kpi-icon">?</div>
+                    </div>
+                    <div class="kpi-value">143ms</div>
+                    <div class="kpi-change positive">? -12ms <span style="font-size: 0.7rem;">improved</span></div>
                 </div>
+
                 <div class="kpi-card" onclick="openModal('accuracyModal')">
-                    <div class="kpi-header"><h4 class="kpi-title" data-i18n="accuracy">AI Accuracy</h4><div class="kpi-icon">🎯</div></div>
-                    <div class="kpi-value">97.2%</div><div class="kpi-change positive">↗ +0.3% <span style="font-size:.7rem">this week</span></div>
+                    <div class="kpi-header">
+                        <h4 class="kpi-title" data-i18n="accuracy">AI Accuracy</h4>
+                        <div class="kpi-icon">??</div>
+                    </div>
+                    <div class="kpi-value">97.2%</div>
+                    <div class="kpi-change positive">? +0.3% <span style="font-size: 0.7rem;">this week</span></div>
                 </div>
             </div>
 
-            <!-- User Tier Management (unchanged markup) -->
-            <!--  …  -->
+            <!-- User Tier Management Section -->
+            <div class="user-tier-management">
+                <h3 class="section-title">
+                    <span>?</span>
+                    <span data-i18n="userTierManagement">User Tier Management</span>
+                </h3>
+                <form class="tier-upgrade-form" id="tierUpgradeForm">
+                    <div class="form-group">
+                        <label class="form-label" for="userEmail" data-i18n="userEmail">User Email</label>
+                        <input type="email" class="form-input" id="userEmail" placeholder="user@example.com" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="tierSelect" data-i18n="selectTier">Select Tier</label>
+                        <select class="form-select" id="tierSelect" required>
+                            <option value="" data-i18n="chooseTier">Choose tier...</option>
+                            <option value="plus">Plus - $4.99/mo (20 scans)</option>
+                            <option value="premium">Premium - $9.99/mo (40 scans)</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn-upgrade" id="upgradeBtn">
+                        <span>??</span>
+                        <span data-i18n="upgradeTier">Upgrade Tier</span>
+                    </button>
+                </form>
+            </div>
 
             <!-- Charts Grid -->
             <div class="charts-grid">
+                <!-- Revenue Chart -->
                 <div class="chart-container">
-                    <div class="chart-header"><h3 class="chart-title">📈 <span data-i18n="revenueChart">Revenue Analytics</span></h3>
+                    <div class="chart-header">
+                        <h3 class="chart-title">?? <span data-i18n="revenueChart">Revenue Analytics</span></h3>
                         <div class="chart-controls">
                             <button class="chart-btn active" onclick="updateChart('24h')">24H</button>
                             <button class="chart-btn" onclick="updateChart('7d')">7D</button>
@@ -159,146 +715,829 @@
                     </div>
                     <canvas id="revenueChart" height="300"></canvas>
                 </div>
+
+                <!-- Platform Distribution -->
                 <div class="chart-container">
-                    <div class="chart-header"><h3 class="chart-title">🎭 <span data-i18n="platformChart">Platform Distribution</span></h3></div>
+                    <div class="chart-header">
+                        <h3 class="chart-title">?? <span data-i18n="platformChart">Platform Distribution</span></h3>
+                    </div>
                     <canvas id="platformChart" height="300"></canvas>
                 </div>
             </div>
 
-            <!-- Violations Chart + analytics grid -->
-            <!--  …  (unchanged) -->
+            <!-- Violations Chart -->
+            <div class="chart-container">
+                <div class="chart-header">
+                    <h3 class="chart-title">?? <span data-i18n="violationsChart">Real-time Violations Detection</span></h3>
+                    <div class="chart-controls">
+                        <button class="chart-btn active" onclick="updateViolationsChart('live')">Live</button>
+                        <button class="chart-btn" onclick="updateViolationsChart('hourly')">Hourly</button>
+                        <button class="chart-btn" onclick="updateViolationsChart('daily')">Daily</button>
+                    </div>
+                </div>
+                <canvas id="violationsChart" height="200"></canvas>
+            </div>
+
+            <!-- Analytics Grid -->
+            <div class="analytics-grid">
+                <!-- Performance Metrics -->
+                <div class="analytics-card">
+                    <h3 class="analytics-title">? <span data-i18n="performanceMetrics">Performance Metrics</span></h3>
+                    <div class="metric-item">
+                        <span class="metric-label" data-i18n="avgScanTime">Avg Scan Time</span>
+                        <span class="metric-value">2.3s</span>
+                    </div>
+                    <div class="metric-item">
+                        <span class="metric-label" data-i18n="successRate">Success Rate</span>
+                        <span class="metric-value">99.8%</span>
+                    </div>
+                    <div class="metric-item">
+                        <span class="metric-label" data-i18n="throughput">Throughput</span>
+                        <span class="metric-value">1,247/min</span>
+                    </div>
+                    <div class="metric-item">
+                        <span class="metric-label" data-i18n="errorRate">Error Rate</span>
+                        <span class="metric-value">0.2%</span>
+                    </div>
+                </div>
+
+                <!-- Content Categories -->
+                <div class="analytics-card">
+                    <h3 class="analytics-title">?? <span data-i18n="contentCategories">Content Categories</span></h3>
+                    <div class="metric-item">
+                        <span class="metric-label" data-i18n="inappropriate">Inappropriate Language</span>
+                        <span class="metric-value">34.2%</span>
+                    </div>
+                    <div class="metric-item">
+                        <span class="metric-label" data-i18n="violence">Violence/Gore</span>
+                        <span class="metric-value">18.7%</span>
+                    </div>
+                    <div class="metric-item">
+                        <span class="metric-label" data-i18n="spam">Spam/Scam</span>
+                        <span class="metric-value">23.1%</span>
+                    </div>
+                    <div class="metric-item">
+                        <span class="metric-label" data-i18n="copyright">Copyright</span>
+                        <span class="metric-value">24.0%</span>
+                    </div>
+                </div>
+
+                <!-- Geographic Distribution -->
+                <div class="analytics-card">
+                    <h3 class="analytics-title">?? <span data-i18n="geographic">Geographic Distribution</span></h3>
+                    <div class="metric-item">
+                        <span class="metric-label" data-i18n="northAmerica">North America</span>
+                        <span class="metric-value">42.3%</span>
+                    </div>
+                    <div class="metric-item">
+                        <span class="metric-label" data-i18n="europe">Europe</span>
+                        <span class="metric-value">28.7%</span>
+                    </div>
+                    <div class="metric-item">
+                        <span class="metric-label" data-i18n="asia">Asia</span>
+                        <span class="metric-value">21.5%</span>
+                    </div>
+                    <div class="metric-item">
+                        <span class="metric-label" data-i18n="other">Other</span>
+                        <span class="metric-value">7.5%</span>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <!-- Sidebar -->
-        <!--  …  (unchanged) -->
+        <div class="sidebar">
+            <!-- Control Actions -->
+            <div class="sidebar-section">
+                <h3 class="sidebar-title">??? <span data-i18n="controlActions">Control Actions</span></h3>
+                <div class="quick-action" onclick="openModal('scanHistoryModal')">
+                    <div class="action-icon">??</div>
+                    <div class="action-text" data-i18n="scanHistory">Scan History</div>
+                </div>
+                <div class="quick-action" onclick="openModal('platformGuidelinesModal')">
+                    <div class="action-icon">??</div>
+                    <div class="action-text" data-i18n="platformGuidelines">Platform Rules</div>
+                </div>
+                <div class="quick-action" onclick="openModal('settingsModal')">
+                    <div class="action-icon">??</div>
+                    <div class="action-text" data-i18n="settings">System Settings</div>
+                </div>
+                <div class="quick-action" onclick="openModal('supportModal')">
+                    <div class="action-icon">??</div>
+                    <div class="action-text" data-i18n="support">Support Center</div>
+                </div>
+                <div class="quick-action" onclick="emergencyMode()">
+                    <div class="action-icon">??</div>
+                    <div class="action-text" data-i18n="emergency">Emergency Mode</div>
+                </div>
+            </div>
+
+            <!-- Critical Alerts -->
+            <div class="sidebar-section">
+                <h3 class="sidebar-title">?? <span data-i18n="criticalAlerts">Critical Alerts</span></h3>
+                <div class="alert-item critical">
+                    <div class="alert-icon">??</div>
+                    <div class="alert-details">
+                        <div class="alert-text">High violation rate detected</div>
+                        <div class="alert-time">2 minutes ago</div>
+                    </div>
+                </div>
+                <div class="alert-item warning">
+                    <div class="alert-icon">??</div>
+                    <div class="alert-details">
+                        <div class="alert-text">API response time spike</div>
+                        <div class="alert-time">5 minutes ago</div>
+                    </div>
+                </div>
+                <div class="alert-item info">
+                    <div class="alert-icon">??</div>
+                    <div class="alert-details">
+                        <div class="alert-text">Traffic surge: +67% users</div>
+                        <div class="alert-time">12 minutes ago</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Live Activity -->
+            <div class="sidebar-section">
+                <h3 class="sidebar-title">?? <span data-i18n="liveActivity">Live Activity</span></h3>
+                <div class="activity-item">
+                    <div class="activity-icon">??</div>
+                    <div class="activity-details">
+                        <div class="activity-text">TikTok: Music copyright claim</div>
+                        <div class="activity-time">Just now</div>
+                    </div>
+                </div>
+                <div class="activity-item">
+                    <div class="activity-icon">??</div>
+                    <div class="activity-details">
+                        <div class="activity-text">Instagram: Story flagged</div>
+                        <div class="activity-time">1 min ago</div>
+                    </div>
+                </div>
+                <div class="activity-item">
+                    <div class="activity-icon">??</div>
+                    <div class="activity-details">
+                        <div class="activity-text">YouTube: Age-inappropriate content</div>
+                        <div class="activity-time">3 min ago</div>
+                    </div>
+                </div>
+                <div class="activity-item">
+                    <div class="activity-icon">??</div>
+                    <div class="activity-details">
+                        <div class="activity-text">New Premium user registered</div>
+                        <div class="activity-time">5 min ago</div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <!-- Toast -->
-    <div class="toast" id="toast"><span class="toast-icon" id="toastIcon"></span><span class="toast-message" id="toastMessage"></span></div>
+    <!-- Toast Notification -->
+    <div class="toast" id="toast">
+        <span class="toast-icon" id="toastIcon"></span>
+        <span class="toast-message" id="toastMessage"></span>
+    </div>
 
-    <!-- Libraries -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</script>
     <script src="tier.js"></script>
-
+</script>
+    
     <script>
-/* ——————————————————————  TRANSLATIONS  —————————————————————— */
-const languages = {
-  en:{ /* original keys … */ controlRoomTitle:"CheckReel Control Room"},
-  ar:{ /* original keys … */ controlRoomTitle:"غرفة تحكم تشكريل"}
-};
+        // Language translations
+        const languages = {
+            en: {
+                systemStatus: "System Status: Online",
+                apiStatus: "API: Healthy", 
+                queueStatus: "Queue: 847 pending",
+                dbStatus: "Database: Connected",
+                todayRevenue: "Today's Revenue",
+                activeScans: "Active Scans",
+                violationsDetected: "Violations Detected",
+                activeUsers: "Active Users",
+                responseTime: "Avg Response Time",
+                accuracy: "AI Accuracy",
+                userTierManagement: "User Tier Management",
+                userEmail: "User Email",
+                selectTier: "Select Tier",
+                chooseTier: "Choose tier...",
+                upgradeTier: "Upgrade Tier",
+                revenueChart: "Revenue Analytics",
+                platformChart: "Platform Distribution",
+                violationsChart: "Real-time Violations Detection",
+                performanceMetrics: "Performance Metrics",
+                avgScanTime: "Avg Scan Time",
+                successRate: "Success Rate",
+                throughput: "Throughput",
+                errorRate: "Error Rate",
+                contentCategories: "Content Categories",
+                inappropriate: "Inappropriate Language",
+                violence: "Violence/Gore",
+                spam: "Spam/Scam",
+                copyright: "Copyright",
+                geographic: "Geographic Distribution",
+                northAmerica: "North America",
+                europe: "Europe",
+                asia: "Asia",
+                other: "Other",
+                controlActions: "Control Actions",
+                scanHistory: "Scan History",
+                platformGuidelines: "Platform Rules",
+                settings: "System Settings",
+                support: "Support Center",
+                emergency: "Emergency Mode",
+                criticalAlerts: "Critical Alerts",
+                liveActivity: "Live Activity",
+                upgradeSuccess: "User tier upgraded successfully!",
+                upgradeFailed: "Failed to upgrade user tier. Please try again.",
+                enterValidEmail: "Please enter a valid email address",
+                selectValidTier: "Please select a tier"
+            },
+            ar: {
+                systemStatus: "???? ??????: ????",
+                apiStatus: "????? ???????: ?????",
+                queueStatus: "???????: 847 ?? ????????",
+                dbStatus: "????? ????????: ?????",
+                todayRevenue: "??????? ?????",
+                activeScans: "?????? ????? ??????",
+                violationsDetected: "?????????? ????????",
+                activeUsers: "?????????? ???????",
+                responseTime: "????? ??? ?????????",
+                accuracy: "??? ?????? ?????????",
+                userTierManagement: "????? ??????? ??????????",
+                userEmail: "?????? ?????????? ????????",
+                selectTier: "???? ???????",
+                chooseTier: "???? ???????...",
+                upgradeTier: "????? ???????",
+                revenueChart: "??????? ?????????",
+                platformChart: "????? ???????",
+                violationsChart: "??? ?????????? ?? ????? ??????",
+                performanceMetrics: "?????? ??????",
+                avgScanTime: "????? ??? ?????",
+                successRate: "???? ??????",
+                throughput: "?????????",
+                errorRate: "???? ?????",
+                contentCategories: "???? ???????",
+                inappropriate: "??? ??? ?????",
+                violence: "???/?????",
+                spam: "????? ?????/??????",
+                copyright: "???? ????? ??????",
+                geographic: "??????? ????????",
+                northAmerica: "?????? ????????",
+                europe: "??????",
+                asia: "????",
+                other: "????",
+                controlActions: "??????? ??????",
+                scanHistory: "????? ?????",
+                platformGuidelines: "????? ???????",
+                settings: "??????? ??????",
+                support: "???? ?????",
+                emergency: "??? ???????",
+                criticalAlerts: "??????? ????",
+                liveActivity: "?????? ???????",
+                upgradeSuccess: "?? ????? ????? ???????? ?????!",
+                upgradeFailed: "???? ????? ????? ????????. ???? ??? ????.",
+                enterValidEmail: "?????? ????? ???? ???????? ????",
+                selectValidTier: "?????? ?????? ?????"
+            }
+        };
 
-/* —————————————————  GLOBALS  ————————————————— */
-let currentLanguage='en',charts={},liveMode=false,updateInterval;
+        // Global variables
+        let currentLanguage = 'en';
+        let charts = {};
+        let liveMode = false;
+        let updateInterval;
 
-/* —————————————————  INIT  ————————————————— */
-document.addEventListener('DOMContentLoaded',()=>{
-  updateLanguage(localStorage.getItem('checkReelLanguage')||'en');
-  initializeCharts(); initializePWA(); setupEventListeners(); startLiveUpdates();
-});
+        // Initialize app
+        document.addEventListener('DOMContentLoaded', function() {
+            const savedLanguage = localStorage.getItem('checkReelLanguage') || 'en';
+            updateLanguage(savedLanguage);
+            initializeCharts();
+            initializePWA();
+            setupEventListeners();
+            startLiveUpdates();
+        });
 
-/* —————————————————  EVENT SETUP  ————————————————— */
-function setupEventListeners(){
-  const languageSelector=document.getElementById('languageSelector');
-  if(languageSelector){
-      languageSelector.addEventListener('change',e=>updateLanguage(e.target.value));
-  }
-  const controlToggle=document.getElementById('controlToggle');
-  if(controlToggle){ controlToggle.addEventListener('click',toggleLiveMode); }
-  const tierUpgradeForm=document.getElementById('tierUpgradeForm');
-  if(tierUpgradeForm){ tierUpgradeForm.addEventListener('submit',handleTierUpgrade); }
-}
+        // Event listeners setup
+        function setupEventListeners() {
+            const languageSelector = document.getElementById('languageSelector');
+            if (languageSelector) {
+                languageSelector.addEventListener('change', function(e) {
+                    console.log('Language changed to:', e.target.value);
+                    updateLanguage(e.target.value);
+                });
+            }
 
-/* —————————————————  LANGUAGE  ————————————————— */
-function updateLanguage(lang){
-  currentLanguage=lang;
-  document.documentElement.setAttribute('lang',lang);
-  document.documentElement.setAttribute('dir',lang==='ar'?'rtl':'ltr');
-  const font=lang==='ar'?'Tahoma,Arial,sans-serif':'-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif';
-  document.body.style.fontFamily=font;
-  document.querySelectorAll('[data-i18n]').forEach(el=>{
-      const key=el.getAttribute('data-i18n');
-      if(languages[lang] && languages[lang][key]) el.textContent=languages[lang][key];
-  });
-  updateChartsLanguage();
-  localStorage.setItem('checkReelLanguage',lang);
-}
+            const controlToggle = document.getElementById('controlToggle');
+            if (controlToggle) {
+                controlToggle.addEventListener('click', function() {
+                    toggleLiveMode();
+                });
+            }
 
-/* —————————————————  CHARTS  ————————————————— */
-function initializeCharts(){
-  if(typeof Chart==='undefined'){setTimeout(initializeCharts,100);return;}
-  try{
-    const revenueCtx=document.getElementById('revenueChart');
-    if(revenueCtx){
-      charts.revenue=new Chart(revenueCtx,{
-       type:'line',
-       data:{labels:['00:00','04:00','08:00','12:00','16:00','20:00','24:00'],
-             datasets:[{label:'Revenue ($)',data:[850,920,1100,1247,1180,1320,1400],
-             borderColor:'#4CAF50',backgroundColor:'rgba(76,175,80,.1)',borderWidth:3,fill:true,tension:.4,
-             pointBackgroundColor:'#4CAF50',pointBorderColor:'#fff',pointBorderWidth:2,pointRadius:6}]},
-       options:{responsive:true,maintainAspectRatio:false,
-         plugins:{legend:{display:false}},
-         scales:{
-           x:{ticks:{color:'rgba(255,255,255,.8)'},grid:{color:'rgba(255,255,255,.1)'}},
-           y:{ticks:{
-                 color:'rgba(255,255,255,.8)',
-                 callback:v=>'$'+v     /* ← MONEY FORMAT FIX */
-              },
-              grid:{color:'rgba(255,255,255,.1)'}}
-         }}
-      });
+            // Tier upgrade form
+            const tierUpgradeForm = document.getElementById('tierUpgradeForm');
+            if (tierUpgradeForm) {
+                tierUpgradeForm.addEventListener('submit', handleTierUpgrade);
+            }
+        }
+
+        // Handle tier upgrade
+        async function handleTierUpgrade(e) {
+            e.preventDefault();
+            
+            const email = document.getElementById('userEmail').value.trim();
+            const tier = document.getElementById('tierSelect').value;
+            
+            // Validation
+            if (!email || !validateEmail(email)) {
+                showToast(languages[currentLanguage].enterValidEmail, 'error');
+                return;
+            }
+            
+            if (!tier) {
+                showToast(languages[currentLanguage].selectValidTier, 'error');
+                return;
+            }
+            
+            const upgradeBtn = document.getElementById('upgradeBtn');
+            const originalContent = upgradeBtn.innerHTML;
+            
+            try {
+                // Show loading state
+                upgradeBtn.innerHTML = '<span class="spinner"></span> Processing...';
+                upgradeBtn.disabled = true;
+                
+                // Use tier system from tier.js
+                if (window.tierSystem && window.tierSystem.syncTierWithServer) {
+                    const success = await window.tierSystem.syncTierWithServer(email, tier);
+                    
+                    if (success) {
+                        showToast(languages[currentLanguage].upgradeSuccess, 'success');
+                        
+                        // Clear form
+                        document.getElementById('userEmail').value = '';
+                        document.getElementById('tierSelect').value = '';
+                        
+                        // Update live activity to show upgrade
+                        addLiveActivity(`User ${email} upgraded to ${tier.toUpperCase()}`, '??');
+                    } else {
+                        showToast(languages[currentLanguage].upgradeFailed, 'error');
+                    }
+                } else {
+                    // Fallback for demo
+                    setTimeout(() => {
+                        showToast(languages[currentLanguage].upgradeSuccess, 'success');
+                        document.getElementById('userEmail').value = '';
+                        document.getElementById('tierSelect').value = '';
+                        addLiveActivity(`User ${email} upgraded to ${tier.toUpperCase()}`, '??');
+                    }, 1000);
+                }
+            } catch (error) {
+                console.error('Tier upgrade error:', error);
+                showToast(languages[currentLanguage].upgradeFailed, 'error');
+            } finally {
+                // Reset button
+                upgradeBtn.innerHTML = originalContent;
+                upgradeBtn.disabled = false;
+            }
+        }
+
+        // Email validation
+        function validateEmail(email) {
+            return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+        }
+
+        // Show toast notification
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            const toastIcon = document.getElementById('toastIcon');
+            const toastMessage = document.getElementById('toastMessage');
+            
+            // Set icon based on type
+            toastIcon.textContent = type === 'success' ? '?' : '?';
+            toastMessage.textContent = message;
+            
+            // Set class for styling
+            toast.className = `toast ${type}`;
+            
+            // Show toast
+            toast.classList.add('show');
+            
+            // Hide after 3 seconds
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        // Add live activity
+        function addLiveActivity(text, icon = '??') {
+            const liveActivityContainer = document.querySelector('.sidebar-section:last-child');
+            const activities = liveActivityContainer.querySelectorAll('.activity-item');
+            
+            // Create new activity
+            const newActivity = document.createElement('div');
+            newActivity.className = 'activity-item';
+            newActivity.innerHTML = `
+                <div class="activity-icon">${icon}</div>
+                <div class="activity-details">
+                    <div class="activity-text">${text}</div>
+                    <div class="activity-time">Just now</div>
+                </div>
+            `;
+            
+            // Insert at top
+            liveActivityContainer.insertBefore(newActivity, activities[0]);
+            
+            // Remove oldest if more than 4
+            if (activities.length >= 4) {
+                activities[activities.length - 1].remove();
+            }
+        }
+
+        // Language management with proper RTL
+        function updateLanguage(lang) {
+            console.log('Updating language to:', lang);
+            currentLanguage = lang;
+            
+            const languageSelector = document.getElementById('languageSelector');
+            if (languageSelector) {
+                languageSelector.value = lang;
+            }
+            
+            document.documentElement.setAttribute('lang', lang);
+            if (lang === 'ar') {
+                document.documentElement.setAttribute('dir', 'rtl');
+                document.body.style.fontFamily = 'Tahoma, Arial, sans-serif';
+                console.log('Applied RTL styling for Arabic');
+            } else {
+                document.documentElement.setAttribute('dir', 'ltr');
+                document.body.style.fontFamily = '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
+                console.log('Applied LTR styling for', lang);
+            }
+            
+            const elements = document.querySelectorAll('[data-i18n]');
+            console.log('Found', elements.length, 'translatable elements');
+            elements.forEach(function(element) {
+                const key = element.getAttribute('data-i18n');
+                if (languages[lang] && languages[lang][key]) {
+                    element.textContent = languages[lang][key];
+                } else {
+                    console.warn('Missing translation for key:', key, 'in language:', lang);
+                }
+            });
+            
+            updateChartsLanguage();
+            localStorage.setItem('checkReelLanguage', lang);
+            console.log('Language updated and saved:', lang);
+        }
+
+        // Initialize all charts
+        function initializeCharts() {
+            if (typeof Chart === 'undefined') {
+                console.log('Chart.js not loaded yet, retrying...');
+                setTimeout(initializeCharts, 100);
+                return;
+            }
+
+            try {
+                const revenueCtx = document.getElementById('revenueChart');
+                if (revenueCtx) {
+                    charts.revenue = new Chart(revenueCtx, {
+                        type: 'line',
+                        data: {
+                            labels: ['00:00', '04:00', '08:00', '12:00', '16:00', '20:00', '24:00'],
+                            datasets: [{
+                                label: 'Revenue ($)',
+                                data: [850, 920, 1100, 1247, 1180, 1320, 1400],
+                                borderColor: '#4CAF50',
+                                backgroundColor: 'rgba(76, 175, 80, 0.1)',
+                                borderWidth: 3,
+                                fill: true,
+                                tension: 0.4,
+                                pointBackgroundColor: '#4CAF50',
+                                pointBorderColor: 'white',
+                                pointBorderWidth: 2,
+                                pointRadius: 6
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                legend: { display: false }
+                            },
+                            scales: {
+                                x: {
+                                    ticks: { color: 'rgba(255, 255, 255, 0.8)' },
+                                    grid: { color: 'rgba(255, 255, 255, 0.1)' }
+                                },
+                                y: {
+                                    ticks: {
+    color: 'rgba(255, 255, 255, 0.8)',
+    callback: function(value) {
+        return '$' + value;
     }
-    const platformCtx=document.getElementById('platformChart');
-    if(platformCtx){
-      charts.platform=new Chart(platformCtx,{type:'doughnut',
-        data:{labels:['TikTok','Instagram','YouTube','Facebook','Twitter'],
-              datasets:[{data:[35,25,20,15,5],backgroundColor:['#FF6B6B','#4ECDC4','#45B7D1','#96CEB4','#FFEAA7'],borderWidth:0}]},
-        options:{responsive:true,maintainAspectRatio:false,
-                 plugins:{legend:{position:'bottom',labels:{color:'rgba(255,255,255,.8)'}}}}
-      });
+},
+                                    grid: { color: 'rgba(255, 255, 255, 0.1)' }
+                                }
+                            }
+                        }
+                    });
+                    console.log('Revenue chart initialized');
+                }
+
+                const platformCtx = document.getElementById('platformChart');
+                if (platformCtx) {
+                    charts.platform = new Chart(platformCtx, {
+                        type: 'doughnut',
+                        data: {
+                            labels: ['TikTok', 'Instagram', 'YouTube', 'Facebook', 'Twitter'],
+                            datasets: [{
+                                data: [35, 25, 20, 15, 5],
+                                backgroundColor: [
+                                    '#FF6B6B',
+                                    '#4ECDC4', 
+                                    '#45B7D1',
+                                    '#96CEB4',
+                                    '#FFEAA7'
+                                ],
+                                borderWidth: 0
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                legend: {
+                                    position: 'bottom',
+                                    labels: { color: 'rgba(255, 255, 255, 0.8)' }
+                                }
+                            }
+                        }
+                    });
+                    console.log('Platform chart initialized');
+                }
+
+                const violationsCtx = document.getElementById('violationsChart');
+                if (violationsCtx) {
+                    charts.violations = new Chart(violationsCtx, {
+                        type: 'bar',
+                        data: {
+                            labels: ['Language', 'Violence', 'Spam', 'Copyright', 'Adult', 'Hate'],
+                            datasets: [{
+                                label: 'Violations',
+                                data: [89, 45, 67, 23, 12, 8],
+                                backgroundColor: [
+                                    '#FF6B6B',
+                                    '#FF8E53',
+                                    '#FF6B9D',
+                                    '#C44569',
+                                    '#F8B500',
+                                    '#FF3838'
+                                ],
+                                borderRadius: 8,
+                                borderSkipped: false
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                legend: { display: false }
+                            },
+                            scales: {
+                                x: {
+                                    ticks: { color: 'rgba(255, 255, 255, 0.8)' },
+                                    grid: { display: false }
+                                },
+                                y: {
+                                    ticks: { color: 'rgba(255, 255, 255, 0.8)' },
+                                    grid: { color: 'rgba(255, 255, 255, 0.1)' }
+                                }
+                            }
+                        }
+                    });
+                    console.log('Violations chart initialized');
+                }
+            } catch (error) {
+                console.error('Error initializing charts:', error);
+            }
+        }
+
+        // Update charts language
+        function updateChartsLanguage() {
+            if (charts.platform) {
+                charts.platform.update();
+            }
+            if (charts.violations) {
+                charts.violations.update();
+            }
+        }
+
+        // Live mode toggle
+        function toggleLiveMode() {
+            liveMode = !liveMode;
+            const toggle = document.getElementById('controlToggle');
+            
+            if (liveMode) {
+                toggle.textContent = '?? Live Mode';
+                toggle.classList.add('active');
+                startRealTimeUpdates();
+            } else {
+                toggle.textContent = '?? Live Mode';
+                toggle.classList.remove('active');
+                stopRealTimeUpdates();
+            }
+        }
+
+        // Start live updates
+        function startLiveUpdates() {
+            updateInterval = setInterval(function() {
+                if (liveMode) {
+                    updateLiveData();
+                }
+            }, 5000);
+        }
+
+        // Update live data
+function updateLiveData() {
+    const kpiCards = document.querySelectorAll('.kpi-value');
+    kpiCards.forEach(function(card) {
+        const currentValue = parseInt(card.textContent.replace(/[^0-9]/g, ''));
+        const change = Math.floor(Math.random() * 20) - 10;
+        let newValue = Math.max(0, currentValue + change);
+
+        if (card.textContent.includes('$')) {
+            card.textContent = '$' + newValue.toLocaleString();
+        } else if (card.textContent.includes('%')) {
+            card.textContent = (newValue / 100).toFixed(1) + '%';
+        } else if (card.textContent.includes('ms')) {
+            card.textContent = newValue + 'ms';
+        } else {
+            card.textContent = newValue.toLocaleString();
+        }
+    });
+
+    if (charts.revenue) {
+        const newData = charts.revenue.data.datasets[0].data.map(function() {
+            return Math.floor(Math.random() * 500) + 800;
+        });
+        charts.revenue.data.datasets[0].data = newData;
+        charts.revenue.update('none');
     }
-    const violationsCtx=document.getElementById('violationsChart');
-    if(violationsCtx){
-      charts.violations=new Chart(violationsCtx,{type:'bar',
-        data:{labels:['Language','Violence','Spam','Copyright','Adult','Hate'],
-              datasets:[{label:'Violations',data:[89,45,67,23,12,8],
-                       backgroundColor:['#FF6B6B','#FF8E53','#FF6B9D','#C44569','#F8B500','#FF3838'],
-                       borderRadius:8,borderSkipped:false}]},
-        options:{responsive:true,maintainAspectRatio:false,
-                 plugins:{legend:{display:false}},
-                 scales:{x:{ticks:{color:'rgba(255,255,255,.8)'},grid:{display:false}},
-                         y:{ticks:{color:'rgba(255,255,255,.8)'},grid:{color:'rgba(255,255,255,.1)'}}}}
-      });
-    }
-  }catch(err){console.error('Error initializing charts:',err);}
 }
-function updateChartsLanguage(){ if(charts.platform)charts.platform.update(); if(charts.violations)charts.violations.update(); }
 
-/* —————————————————  KPI LIVE UPDATE  ————————————————— */
-function updateLiveData(){
-  document.querySelectorAll('.kpi-value').forEach(card=>{
-    const curr=parseInt(card.textContent.replace(/[^0-9]/g,''))||0;
-    const diff=Math.floor(Math.random()*20)-10;
-    const val=Math.max(0,curr+diff);
-    if(card.textContent.includes('$'))       {card.textContent='$'+val.toLocaleString();}
-    else if(card.textContent.includes('%'))  {card.textContent=(val/100).toFixed(1)+'%';}
-    else if(card.textContent.includes('ms')) {card.textContent=val+'ms';}
-    else                                     {card.textContent=val.toLocaleString();}
-  });
-  if(charts.revenue){
-    charts.revenue.data.datasets[0].data=charts.revenue.data.datasets[0].data.map(
-      ()=>Math.floor(Math.random()*500)+800);
-    charts.revenue.update('none');
-  }
-}
-function startLiveUpdates(){updateInterval=setInterval(()=>liveMode&&updateLiveData(),5000);}
-function stopRealTimeUpdates(){}
+        function startRealTimeUpdates() {
+            // Additional real-time functionality
+        }
 
-/* —————————————————  OTHER FUNCTIONS  ————————————————— */
-/*  handleTierUpgrade, validateEmail, showToast, addLiveActivity,
-    updateChart, updateViolationsChart, toggleLiveMode,
-    emergencyMode, openModal, PWA helpers … are identical to original  */
+        function stopRealTimeUpdates() {
+            // Stop real-time functionality
+        }
 
-/*  (for brevity they’re not repeated – they did not need fixes)  */
+        // Chart update functions
+        function updateChart(period) {
+            try {
+                const buttons = document.querySelectorAll('.chart-btn');
+                buttons.forEach(function(btn) {
+                    btn.classList.remove('active');
+                });
+                if (window.event && window.event.target) {
+                    window.event.target.classList.add('active');
+                }
+                
+                if (charts.revenue) {
+                    let newLabels, newData;
+                    switch(period) {
+                        case '24h':
+                            newLabels = ['00:00', '04:00', '08:00', '12:00', '16:00', '20:00', '24:00'];
+                            newData = [850, 920, 1100, 1247, 1180, 1320, 1400];
+                            break;
+                        case '7d':
+                            newLabels = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+                            newData = [8500, 9200, 11000, 12470, 11800, 13200, 14000];
+                            break;
+                        case '30d':
+                            newLabels = ['Week 1', 'Week 2', 'Week 3', 'Week 4'];
+                            newData = [65000, 72000, 68000, 75000];
+                            break;
+                        case '1y':
+                            newLabels = ['Q1', 'Q2', 'Q3', 'Q4'];
+                            newData = [850000, 920000, 1100000, 1200000];
+                            break;
+                        default:
+                            newLabels = ['00:00', '04:00', '08:00', '12:00', '16:00', '20:00', '24:00'];
+                            newData = [850, 920, 1100, 1247, 1180, 1320, 1400];
+                    }
+                    
+                    charts.revenue.data.labels = newLabels;
+                    charts.revenue.data.datasets[0].data = newData;
+                    charts.revenue.update();
+                    console.log('Chart updated for period:', period);
+                }
+            } catch (error) {
+                console.error('Error updating chart:', error);
+            }
+        }
+
+        function updateViolationsChart(type) {
+            try {
+                if (window.event && window.event.target && window.event.target.parentElement) {
+                    const buttons = window.event.target.parentElement.querySelectorAll('.chart-btn');
+                    buttons.forEach(function(btn) {
+                        btn.classList.remove('active');
+                    });
+                    window.event.target.classList.add('active');
+                }
+                
+                if (charts.violations) {
+                    charts.violations.update();
+                    console.log('Violations chart updated for type:', type);
+                }
+            } catch (error) {
+                console.error('Error updating violations chart:', error);
+            }
+        }
+
+        // Emergency mode
+        function emergencyMode() {
+            try {
+                if (confirm('Activate Emergency Mode? This will temporarily halt all automated actions.')) {
+                    document.body.style.backgroundColor = 'rgba(244, 67, 54, 0.1)';
+                    alert('Emergency Mode Activated. All automated moderation has been paused.');
+                    
+                    setTimeout(function() {
+                        document.body.style.backgroundColor = '';
+                        alert('Emergency Mode Deactivated. Normal operations resumed.');
+                    }, 30000);
+                }
+            } catch (error) {
+                console.error('Error in emergency mode:', error);
+            }
+        }
+
+        // Modal management
+        function openModal(modalId) {
+            try {
+                console.log('Opening modal:', modalId);
+                alert('Opening ' + modalId + ' - Feature under development');
+            } catch (error) {
+                console.error('Error opening modal:', error);
+            }
+        }
+
+        // PWA functionality
+        let deferredPrompt;
+
+        function initializePWA() {
+            if (window.matchMedia('(display-mode: standalone)').matches) {
+                document.getElementById('pwaStatus').textContent = '?? App Installed';
+            } else {
+                document.getElementById('pwaStatus').textContent = '?? Web Version';
+            }
+
+            window.addEventListener('beforeinstallprompt', function(e) {
+                e.preventDefault();
+                deferredPrompt = e;
+                const installBtn = document.getElementById('installPWA');
+                if (installBtn) {
+                    installBtn.style.display = 'block';
+                }
+            });
+
+            const installBtn = document.getElementById('installPWA');
+            if (installBtn) {
+                installBtn.addEventListener('click', function() {
+                    if (deferredPrompt) {
+                        deferredPrompt.prompt();
+                        deferredPrompt.userChoice.then(function(result) {
+                            if (result.outcome === 'accepted') {
+                                installBtn.style.display = 'none';
+                                document.getElementById('pwaStatus').textContent = '?? App Installing...';
+                            }
+                            deferredPrompt = null;
+                        });
+                    }
+                });
+            }
+
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.register('/sw.js').catch(function() {
+                    // Silent fail for demo purposes
+                });
+            }
+        }
+
+        // Cleanup on page unload
+        window.addEventListener('beforeunload', function() {
+            if (updateInterval) {
+                clearInterval(updateInterval);
+            }
+        });
     </script>
 </body>
 </html>
+
+
