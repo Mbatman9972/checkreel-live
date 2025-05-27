@@ -1090,7 +1090,13 @@
             localStorage.setItem('checkReelLanguage', lang);
         }
 
-        function initializeCharts() {
+        let chartInitAttempts = 0;
+function initializeCharts() {
+    chartInitAttempts++;
+    if (chartInitAttempts > 3) {
+        console.log('Chart initialization failed after 3 attempts');
+        return;
+    }
             if (typeof Chart === 'undefined') {
                 setTimeout(initializeCharts, 100);
                 return;
@@ -1231,7 +1237,7 @@ callback: function(value) { return '$' + value; }                               
             }
         }
 
-        function updateChart(period) {
+        function updateChart(period) { return; // Disabled {
             try {
                 const buttons = document.querySelectorAll('.chart-btn');
                 buttons.forEach(function(btn) {
@@ -1274,7 +1280,7 @@ callback: function(value) { return '$' + value; }                               
             }
         }
 
-        function updateViolationsChart(type) {
+        function updateViolationsChart(type) { return; // Disabled {
             try {
                 if (window.event && window.event.target && window.event.target.parentElement) {
                     const buttons = window.event.target.parentElement.querySelectorAll('.chart-btn');
