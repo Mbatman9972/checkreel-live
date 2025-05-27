@@ -1122,7 +1122,7 @@
                             scales: {
                                 y: { 
                                     ticks: { 
-                                        callback: function(value) { return ' + value; }
+                                        callback: function(value) { return '$' + value; }
                                     }
                                 }
                             }
@@ -1212,8 +1212,8 @@
                 const change = Math.floor(Math.random() * 20) - 10;
                 let newValue = Math.max(0, currentValue + change);
 
-                if (card.textContent.includes(')) {
-                    card.textContent = ' + newValue.toLocaleString();
+                if (card.textContent.includes('$')) {
+                    card.textContent = `$${newValue.toLocaleString()}`;
                 } else if (card.textContent.includes('%')) {
                     card.textContent = (newValue / 100).toFixed(1) + '%';
                 } else if (card.textContent.includes('ms')) {
