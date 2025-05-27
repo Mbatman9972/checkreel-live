@@ -1208,17 +1208,68 @@
                     scales: {
                         y: { 
                             ticks: { 
-                                callback: function(value) { return '
-
-        // Update charts language
-        function updateChartsLanguage() {
-            if (charts.platform) {
-                charts.platform.update();
-            }
-            if (charts.violations) {
-                charts.violations.update();
+                                        callback: function(value) { return '$' + value; }
+                                    }
+                                }
+                            }
+                        }
+                    });
+                }
+        
+                const platformCtx = document.getElementById('platformChart');
+                if (platformCtx && platformCtx.getContext) {
+                    charts.platform = new Chart(platformCtx.getContext('2d'), {
+                        type: 'doughnut',
+                        data: {
+                            labels: ['TikTok', 'Instagram', 'YouTube', 'Facebook', 'Twitter'],
+                            datasets: [{
+                                data: [35, 25, 20, 15, 5],
+                                backgroundColor: ['#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FFEAA7']
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: { legend: { position: 'bottom' } }
+                        }
+                    });
+                }
+        
+                const violationsCtx = document.getElementById('violationsChart');
+                if (violationsCtx && violationsCtx.getContext) {
+                    charts.violations = new Chart(violationsCtx.getContext('2d'), {
+                        type: 'bar',
+                        data: {
+                            labels: ['Language', 'Violence', 'Spam', 'Copyright', 'Adult', 'Hate'],
+                            datasets: [{
+                                data: [89, 45, 67, 23, 12, 8],
+                                backgroundColor: ['#FF6B6B', '#FF8E53', '#FF6B9D', '#C44569', '#F8B500', '#FF3838']
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: { legend: { display: false } }
+                        }
+                    });
+                }
+        
+                console.log('All charts initialized successfully');
+            } catch (error) {
+                console.error('Chart initialization error:', error);
+                setTimeout(initializeCharts, 1000);
             }
         }
+        
+                // Update charts language
+                function updateChartsLanguage() {
+                    if (charts.platform) {
+                        charts.platform.update();
+                    }
+                    if (charts.violations) {
+                        charts.violations.update();
+                    }
+                }
 
         // Live mode toggle
         function toggleLiveMode() {
