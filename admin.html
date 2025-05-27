@@ -1175,7 +1175,7 @@
 
         // Initialize all charts
         function initializeCharts() {
-            if (typeof Chart === 'undefined') {
+            if (typeof Chart === "undefined") {
                 console.log('Chart.js not loaded yet, retrying...');
                 setTimeout(initializeCharts, 100);
                 return;
