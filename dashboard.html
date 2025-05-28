@@ -991,7 +991,7 @@ let selectedPlatforms = [];
 let selectedRegion = null;
 let selectedCountry = null;
 let currentTier = 'free';
-let currentLanguage = 'en';
+
 let scanHistory = [];
 
 // FIXED: Load language from homepage using safeStorage
@@ -1110,15 +1110,15 @@ updateScanButton();
 updateSelectionAlert();
 }
 
-// Update platform counter
+// Update platform counterEl
 function updatePlatformCounter() {
-const counter = document.getElementById('platformCounter');
+const counterEl = document.getElementById('platformCounter');
 const userTier = safeStorage.getItem('checkreel_tier') || 'free';
 
-if (userTier === 'premium' && counter) {
-    counter.textContent = `(${selectedPlatforms.length}/3 selected)`;
-} else if (counter) {
-    counter.textContent = '';
+if (userTier === 'premium' && counterEl) {
+    counterEl.textContent = `(${selectedPlatforms.length}/3 selected)`;
+} else if (counterEl) {
+    counterEl.textContent = '';
 }
 }
 
@@ -1803,10 +1803,10 @@ document.addEventListener('DOMContentLoaded', function() {
                     } else if (lang === 'fr') {
                         title.innerHTML = '📱 Sélectionner la plateforme';
                     }
-                    // Re-add counter if it exists
-                    if (counter) {
+                    // Re-add counterEl if it exists
+                    if (counterEl) {
                         title.appendChild(document.createTextNode(' '));
-                        title.appendChild(counter);
+                        title.appendChild(counterEl);
                     }
                 } else if (index === 2) { // Upload card
                     if (lang === 'ar') {
@@ -1842,7 +1842,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         title.textContent = '🌍 Sélectionner la région';
                     }
                 } else if (index === 1) { // Platform card
-                    const counter = title.querySelector('#platformCounter');
+                    const counterEl = title.querySelector('#platformCounter');
                     if (lang === 'ar') {
                         title.innerHTML = '📱 اختر المنصة';
                     } else if (lang === '
