@@ -1777,7 +1777,39 @@ document.addEventListener('DOMContentLoaded', function() {
             window.loadLanguageContent(lang);
         }
         
-        // Apply dashboard-specific translations
+                    // Complete Arabic translation
+            if (lang === 'ar') {
+                // Update all text elements
+                const elements = {
+                    'scansLeft': '????? ?? ?????',
+                    'tierBadge': '????? ??????'
+                };
+                
+                Object.keys(elements).forEach(id => {
+                    const el = document.getElementById(id);
+                    if (el && el.textContent.includes('scans left')) {
+                        el.textContent = el.textContent.replace('scans left', '??? ?????');
+                    }
+                });
+                
+                // Update all static text
+                document.querySelectorAll('h2, h3, p, span, div').forEach(el => {
+                    if (el.textContent.includes('Upload Content')) el.textContent = '??? ??????? ';
+                    if (el.textContent.includes('Select Platform')) el.textContent = '???? ?????? ';
+                    if (el.textContent.includes('Select Region')) el.textContent = '???? ??????? ';
+                    if (el.textContent.includes('Drop your content here')) el.textContent = '???? ??????? ???';
+                    if (el.textContent.includes('or click to browse files')) el.textContent = '?? ???? ????? ???????';
+                    if (el.textContent.includes('Supports:')) el.textContent = '????: MP4, MOV, JPG, PNG, MP3, WAV (?? ???? 100 ????????)';
+                    if (el.textContent.includes('Start Content Check')) el.textContent = '??? ??? ???????';
+                    if (el.textContent.includes('Active Users')) el.textContent = '?????????? ???????';
+                    if (el.textContent.includes('Content Scanned')) el.textContent = '??????? ???????';
+                    if (el.textContent.includes('Success Rate')) el.textContent = '???? ??????';
+                    if (el.textContent.includes('Platforms')) el.textContent = '???????';
+                    if (el.textContent.includes('Scans Used')) el.textContent = '????? ????????';
+                    if (el.textContent.includes('CheckReel. All rights reserved')) el.textContent = '???? ???. ???? ?????? ?????? 2025 ';
+                });
+            }
+            // Apply dashboard-specific translations
         if (window.LANGUAGE_CONTENT && window.LANGUAGE_CONTENT[lang]) {
             const content = window.LANGUAGE_CONTENT[lang];
             
