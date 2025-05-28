@@ -736,6 +736,15 @@ gap: 20px;
 <body>
 <!-- ADDED: safeStorage wrapper for localStorage safety -->
 <script>
+function selectTier(tier) {
+    console.log("Selected tier:", tier);
+}
+function selectPlatform(platform) {
+    console.log("Selected platform:", platform);
+}
+function selectRegion(region) {
+    console.log("Selected region:", region);
+}
 const safeStorage = {
     getItem(key) {
         try {
@@ -1846,3 +1855,4 @@ document.addEventListener('DOMContentLoaded', function() {
                     if (lang === 'ar') {
                         title.innerHTML = '📱 اختر المنصة';
                     } else if (lang === '
+
