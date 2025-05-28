@@ -1011,7 +1011,7 @@ let selectedPlatforms = [];
 let selectedRegion = null;
 let selectedCountry = null;
 let currentTier = 'free';
-let currentLanguage = 'en';
+
 let scanHistory = [];
 
 // FIXED: Load language from homepage using safeStorage
@@ -1135,7 +1135,7 @@ function updatePlatformCounter() {
 const counterEl = document.getElementById("platformCounter");
 const userTier = safeStorage.getItem('checkreel_tier') || 'free';
 
-if (userTier === 'premium' && counter) {
+if (userTier === "premium" && counterEl) {
     counterEl.textContent = `(${selectedPlatforms.length}/3 selected)`;
 } else if (counterEl) {
     counterEl.textContent = '';
@@ -1826,7 +1826,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     // Re-add counter if it exists
                     if (counterEl) {
                         title.appendChild(document.createTextNode(' '));
-                        title.appendChild(counter);
+                        title.appendChild(counterEl);
                     }
                 } else if (index === 2) { // Upload card
                     if (lang === 'ar') {
