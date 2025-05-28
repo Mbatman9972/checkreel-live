@@ -1132,13 +1132,13 @@ updateSelectionAlert();
 
 // Update platform counter
 function updatePlatformCounter() {
-const counter = document.getElementById('platformCounter');
+const counterEl = document.getElementById("platformCounter");
 const userTier = safeStorage.getItem('checkreel_tier') || 'free';
 
 if (userTier === 'premium' && counter) {
-    counter.textContent = `(${selectedPlatforms.length}/3 selected)`;
-} else if (counter) {
-    counter.textContent = '';
+    counterEl.textContent = `(${selectedPlatforms.length}/3 selected)`;
+} else if (counterEl) {
+    counterEl.textContent = '';
 }
 }
 
@@ -1824,7 +1824,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         title.innerHTML = '📱 Sélectionner la plateforme';
                     }
                     // Re-add counter if it exists
-                    if (counter) {
+                    if (counterEl) {
                         title.appendChild(document.createTextNode(' '));
                         title.appendChild(counter);
                     }
