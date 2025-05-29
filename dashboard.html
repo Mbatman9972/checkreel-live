@@ -19,7 +19,16 @@ background: linear-gradient(135deg, #1e3c72 0%, #2a5298 25%, #667eea 50%, #764ba
 min-height: 100vh;
 color: #333;
 }
+body[dir="rtl"] .container {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+}
 
+body[dir="rtl"] .card {
+    display: block !important;
+    visibility: visible !important;
+}
 .container {
 max-width: 1200px;
 margin: 0 auto;
