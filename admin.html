@@ -1,3 +1,1078 @@
-﻿<!DOCTYPE html><html><head><meta http-equiv='refresh' content='0; url=dashboard.html'></head><body><script>window.location.href='dashboard.html';</script></body></html>
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CheckReel Admin Control Room</title>
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#667eea">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+            line-height: 1.6;
+            transition: all 0.3s ease;
+        }
+
+        [dir="rtl"] {
+            direction: rtl;
+            text-align: right;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logo {
+            font-size: 2rem;
+            font-weight: bold;
+            color: white;
+        }
+
+        .header-controls {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .language-selector, .pwa-install, .control-toggle {
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .main-container {
+            display: grid;
+            grid-template-columns: 1fr 320px;
+            gap: 2rem;
+            padding: 2rem;
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        .dashboard-content {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        .status-bar {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 16px;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .status-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: white;
+        }
+
+        .status-indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        .status-indicator.online { 
+            background: #4CAF50; 
+        }
+        
+        .status-indicator.warning { 
+            background: #FF9800; 
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .kpi-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 16px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .kpi-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #4CAF50, #2196F3, #FF9800, #F44336);
+        }
+
+        .kpi-card:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .kpi-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .kpi-title {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .kpi-icon {
+            font-size: 1.5rem;
+        }
+
+        .kpi-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: white;
+            margin-bottom: 0.5rem;
+        }
+
+        .kpi-change {
+            font-size: 0.85rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .kpi-change.positive { 
+            color: #4ade80; 
+        }
+        
+        .kpi-change.negative { 
+            color: #f87171; 
+        }
+
+        .user-tier-management {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .section-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: white;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .tier-upgrade-form {
+            display: grid;
+            grid-template-columns: 2fr 1fr auto;
+            gap: 1rem;
+            align-items: end;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .form-label {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .form-input, .form-select {
+            padding: 0.75rem;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-input::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .form-select option {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-upgrade {
+            background: rgba(76, 175, 80, 0.3);
+            border: 1px solid rgba(76, 175, 80, 0.5);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-upgrade:hover {
+            background: rgba(76, 175, 80, 0.4);
+            transform: translateY(-2px);
+        }
+
+        .charts-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 2rem;
+        }
+
+        .chart-container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 16px;
+            padding: 2rem;
+        }
+
+        .chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .chart-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .chart-controls {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .chart-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: rgba(255, 255, 255, 0.8);
+            padding: 0.25rem 0.75rem;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.8rem;
+        }
+
+        .chart-btn.active, .chart-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+        }
+
+        .analytics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .analytics-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 16px;
+            padding: 1.5rem;
+        }
+
+        .analytics-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: white;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .metric-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .metric-item:last-child {
+            border-bottom: none;
+        }
+
+        .metric-label {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.9rem;
+        }
+
+        .metric-value {
+            color: white;
+            font-weight: 600;
+        }
+
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        .sidebar-section {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 16px;
+            padding: 1.5rem;
+        }
+
+        .sidebar-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: white;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .quick-action, .activity-item, .alert-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.75rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            margin-bottom: 0.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .quick-action:hover, .activity-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateX(5px);
+        }
+
+        .alert-item.critical {
+            border-left: 4px solid #F44336;
+        }
+
+        .alert-item.warning {
+            border-left: 4px solid #FF9800;
+        }
+
+        .alert-item.info {
+            border-left: 4px solid #2196F3;
+        }
+
+        .action-icon, .activity-icon, .alert-icon {
+            font-size: 1.2rem;
+        }
+
+        .action-text, .activity-text, .alert-text {
+            color: white;
+            font-weight: 500;
+            flex: 1;
+        }
+
+        .activity-details, .alert-details {
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+        }
+
+        .activity-time, .alert-time {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.8rem;
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 8px;
+            padding: 1rem 1.5rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+
+        .toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .toast.success {
+            border-left: 4px solid #4CAF50;
+        }
+
+        .toast.error {
+            border-left: 4px solid #F44336;
+        }
+
+        .toast-icon {
+            font-size: 1.5rem;
+        }
+
+        .toast-message {
+            color: #333;
+            font-weight: 500;
+        }
+
+        .spinner {
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            width: 16px;
+            height: 16px;
+            animation: spin 0.8s linear infinite;
+            display: inline-block;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .control-display {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            height: 200px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .platform-stats {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .platform-item {
+            font-size: 18px;
+            color: #fff;
+            padding: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 6px;
+        }
+
+        .platform-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            height: 180px;
+            max-height: 180px;
+        }
+
+        .platform-box {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 12px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .platform-icon {
+            font-size: 24px;
+            margin-bottom: 5px;
+        }
+
+        .platform-name {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 3px;
+        }
+
+        .platform-count {
+            font-size: 18px;
+            font-weight: bold;
+            color: #fff;
+        }
+
+        @media (max-width: 1200px) {
+            .charts-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .tier-upgrade-form {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 1024px) {
+            .main-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .sidebar {
+                order: -1;
+            }
+            
+            .analytics-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                padding: 1rem;
+            }
+            
+            .main-container {
+                padding: 1rem;
+                gap: 1rem;
+            }
+            
+            .kpi-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="logo-section">
+            <div class="logo">?? CheckReel Control Room</div>
+            <div id="pwaStatus" style="color: rgba(255,255,255,0.7); font-size: 0.9rem;"></div>
+        </div>
+        <div class="header-controls">
+            <select id="languageSelector" class="language-selector">
+                <option value="en">???? English</option>
+                <option value="ar">???? ???????</option>
+            </select>
+            <button id="controlToggle" class="control-toggle">?? Live Mode</button>
+            <button id="installPWA" class="pwa-install" style="display: none;">?? Install App</button>
+        </div>
+    </header>
+
+    <div class="status-bar">
+        <div class="status-item">
+            <div class="status-indicator online"></div>
+            <span data-i18n="systemStatus">System Status: Online</span>
+        </div>
+        <div class="status-item">
+            <div class="status-indicator online"></div>
+            <span data-i18n="apiStatus">API: Healthy</span>
+        </div>
+        <div class="status-item">
+            <div class="status-indicator warning"></div>
+            <span data-i18n="queueStatus">Queue: 847 pending</span>
+        </div>
+        <div class="status-item">
+            <div class="status-indicator online"></div>
+            <span data-i18n="dbStatus">Database: Connected</span>
+        </div>
+    </div>
+
+    <div class="main-container">
+        <div class="dashboard-content">
+            <div class="kpi-grid">
+                <div class="kpi-card">
+                    <div class="kpi-header">
+                        <h4 class="kpi-title" data-i18n="todayRevenue">Today's Revenue</h4>
+                        <div class="kpi-icon">??</div>
+                    </div>
+                    <div class="kpi-value">$1,247</div>
+                    <div class="kpi-change positive">? +18.4% <span style="font-size: 0.7rem;">vs yesterday</span></div>
+                </div>
+
+                <div class="kpi-card">
+                    <div class="kpi-header">
+                        <h4 class="kpi-title" data-i18n="activeScans">Active Scans</h4>
+                        <div class="kpi-icon">??</div>
+                    </div>
+                    <div class="kpi-value">2,845</div>
+                    <div class="kpi-change positive">? +12.3% <span style="font-size: 0.7rem;">this hour</span></div>
+                </div>
+
+                <div class="kpi-card">
+                    <div class="kpi-header">
+                        <h4 class="kpi-title" data-i18n="violationsDetected">Violations Detected</h4>
+                        <div class="kpi-icon">??</div>
+                    </div>
+                    <div class="kpi-value">89</div>
+                    <div class="kpi-change negative">? -5.2% <span style="font-size: 0.7rem;">vs last hour</span></div>
+                </div>
+
+                <div class="kpi-card">
+                    <div class="kpi-header">
+                        <h4 class="kpi-title" data-i18n="activeUsers">Active Users</h4>
+                        <div class="kpi-icon">??</div>
+                    </div>
+                    <div class="kpi-value">18,926</div>
+                    <div class="kpi-change positive">? +7.8% <span style="font-size: 0.7rem;">online now</span></div>
+                </div>
+
+                <div class="kpi-card">
+                    <div class="kpi-header">
+                        <h4 class="kpi-title" data-i18n="responseTime">Avg Response Time</h4>
+                        <div class="kpi-icon">?</div>
+                    </div>
+                    <div class="kpi-value">143ms</div>
+                    <div class="kpi-change positive">? -12ms <span style="font-size: 0.7rem;">improved</span></div>
+                </div>
+
+                <div class="kpi-card">
+                    <div class="kpi-header">
+                        <h4 class="kpi-title" data-i18n="accuracy">AI Accuracy</h4>
+                        <div class="kpi-icon">??</div>
+                    </div>
+                    <div class="kpi-value">97.2%</div>
+                    <div class="kpi-change positive">? +0.3% <span style="font-size: 0.7rem;">this week</span></div>
+                </div>
+            </div>
+
+            <div class="user-tier-management">
+                <h3 class="section-title">
+                    <span>?</span>
+                    <span data-i18n="userTierManagement">User Tier Management</span>
+                </h3>
+                <form class="tier-upgrade-form" id="tierUpgradeForm">
+                    <div class="form-group">
+                        <label class="form-label" for="userEmail" data-i18n="userEmail">User Email</label>
+                        <input type="email" class="form-input" id="userEmail" placeholder="user@example.com" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="tierSelect" data-i18n="selectTier">Select Tier</label>
+                        <select class="form-select" id="tierSelect" required>
+                            <option value="" data-i18n="chooseTier">Choose tier...</option>
+                            <option value="plus">Plus - $4.99/mo (20 scans)</option>
+                            <option value="premium">Premium - $9.99/mo (40 scans)</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn-upgrade" id="upgradeBtn">
+                        <span>??</span>
+                        <span data-i18n="upgradeTier">Upgrade Tier</span>
+                    </button>
+                </form>
+            </div>
+
+            <div class="charts-grid">
+                <div class="chart-container">
+                    <div class="chart-header">
+                        <h3 class="chart-title">?? <span data-i18n="revenueChart">Revenue Analytics</span></h3>
+                        <div class="chart-controls">
+                            <button class="chart-btn active" onclick="updateChart('24h')">24H</button>
+                            <button class="chart-btn" onclick="updateChart('7d')">7D</button>
+                            <button class="chart-btn" onclick="updateChart('30d')">30D</button>
+                            <button class="chart-btn" onclick="updateChart('1y')">1Y</button>
+                        </div>
+                    </div>
+                    <div class="control-display">
+                        <div class="metric-value" id="revenueValue">$24,847</div>
+                        <div class="metric-label">Total Revenue</div>
+                        <div class="metric-trend">+12.5%</div>
+                    </div>
+                </div>
+
+                <div class="chart-container">
+                    <div class="chart-header">
+                        <h3 class="chart-title">?? <span data-i18n="platformChart">Platform Distribution</span></h3>
+                    </div>
+                    <div class="control-display">
+                        <div class="platform-grid">
+                            <div class="platform-box">
+                                <div class="platform-icon">??</div>
+                                <div class="platform-name">TikTok</div>
+                                <div class="platform-count" id="tiktokCount">1,247</div>
+                            </div>
+                            <div class="platform-box">
+                                <div class="platform-icon">??</div>
+                                <div class="platform-name">Instagram</div>
+                                <div class="platform-count" id="instaCount">892</div>
+                            </div>
+                            <div class="platform-box">
+                                <div class="platform-icon">??</div>
+                                <div class="platform-name">YouTube</div>
+                                <div class="platform-count" id="youtubeCount">634</div>
+                            </div>
+                            <div class="platform-box">
+                                <div class="platform-icon">??</div>
+                                <div class="platform-name">Facebook</div>
+                                <div class="platform-count" id="facebookCount">423</div>
+                            </div>
+                            <div class="platform-box">
+                                <div class="platform-icon">??</div>
+                                <div class="platform-name">Twitter</div>
+                                <div class="platform-count" id="twitterCount">287</div>
+                            </div>
+                            <div class="platform-box">
+                                <div class="platform-icon">??</div>
+                                <div class="platform-name">LinkedIn</div>
+                                <div class="platform-count" id="linkedinCount">156</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="chart-container">
+                <div class="chart-header">
+                    <h3 class="chart-title">?? <span data-i18n="violationsChart">Real-time Violations Detection</span></h3>
+                    <div class="chart-controls">
+                        <button class="chart-btn active" onclick="updateViolationsChart('live')">Live</button>
+                        <button class="chart-btn" onclick="updateViolationsChart('hourly')">Hourly</button>
+                        <button class="chart-btn" onclick="updateViolationsChart('daily')">Daily</button>
+                    </div>
+                </div>
+                <div class="control-display">
+                    <div class="metric-value" id="violationsValue">89</div>
+                    <div class="metric-label">Active Violations</div>
+                    <div class="metric-trend">Live Monitoring</div>
+                </div>
+            </div>
+
+            <div class="analytics-grid">
+                <div class="analytics-card">
+                    <h3 class="analytics-title">? <span data-i18n="performanceMetrics">Performance Metrics</span></h3>
+                    <div class="metric-item">
+                        <span class="metric-label" data-i18n="copyright">Copyright</span>
+                        <span class="metric-value">24.0%</span>
+                    </div>
+                </div>
+
+                <div class="analytics-card">
+                    <h3 class="analytics-title">?? <span data-i18n="geographic">Geographic Distribution</span></h3>
+                    <div class="metric-item">
+                        <span class="metric-label" data-i18n="northAmerica">North America</span>
+                        <span class="metric-value">42.3%</span>
+                    </div>
+                    <div class="metric-item">
+                        <span class="metric-label" data-i18n="europe">Europe</span>
+                        <span class="metric-value">28.7%</span>
+                    </div>
+                    <div class="metric-item">
+                        <span class="metric-label" data-i18n="asia">Asia</span>
+                        <span class="metric-value">21.5%</span>
+                    </div>
+                    <div class="metric-item">
+                        <span class="metric-label" data-i18n="other">Other</span>
+                        <span class="metric-value">7.5%</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="sidebar">
+            <div class="sidebar-section">
+                <h3 class="sidebar-title">??? <span data-i18n="controlActions">Control Actions</span></h3>
+                <div class="quick-action">
+                    <div class="action-icon">??</div>
+                    <div class="action-text" data-i18n="scanHistory">Scan History</div>
+                </div>
+                <div class="quick-action">
+                    <div class="action-icon">??</div>
+                    <div class="action-text" data-i18n="platformGuidelines">Platform Rules</div>
+                </div>
+                <div class="quick-action">
+                    <div class="action-icon">??</div>
+                    <div class="action-text" data-i18n="settings">System Settings</div>
+                </div>
+                <div class="quick-action">
+                    <div class="action-icon">??</div>
+                    <div class="action-text" data-i18n="support">Support Center</div>
+                </div>
+                <div class="quick-action">
+                    <div class="action-icon">??</div>
+                    <div class="action-text" data-i18n="emergency">Emergency Mode</div>
+                </div>
+            </div>
+
+            <div class="sidebar-section">
+                <h3 class="sidebar-title">?? <span data-i18n="criticalAlerts">Critical Alerts</span></h3>
+                <div class="alert-item critical">
+                    <div class="alert-icon">??</div>
+                    <div class="alert-details">
+                        <div class="alert-text">High violation rate detected</div>
+                        <div class="alert-time">2 minutes ago</div>
+                    </div>
+                </div>
+                <div class="alert-item warning">
+                    <div class="alert-icon">??</div>
+                    <div class="alert-details">
+                        <div class="alert-text">API response time spike</div>
+                        <div class="alert-time">5 minutes ago</div>
+                    </div>
+                </div>
+                <div class="alert-item info">
+                    <div class="alert-icon">??</div>
+                    <div class="alert-details">
+                        <div class="alert-text">Traffic surge: +67% users</div>
+                        <div class="alert-time">12 minutes ago</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="sidebar-section">
+                <h3 class="sidebar-title">?? <span data-i18n="liveActivity">Live Activity</span></h3>
+                <div class="activity-item">
+                    <div class="activity-icon">??</div>
+                    <div class="activity-details">
+                        <div class="activity-text">TikTok: Music copyright claim</div>
+                        <div class="activity-time">Just now</div>
+                    </div>
+                </div>
+                <div class="activity-item">
+                    <div class="activity-icon">??</div>
+                    <div class="activity-details">
+                        <div class="activity-text">Instagram: Story flagged</div>
+                        <div class="activity-time">1 min ago</div>
+                    </div>
+                </div>
+                <div class="activity-item">
+                    <div class="activity-icon">??</div>
+                    <div class="activity-details">
+                        <div class="activity-text">YouTube: Age-inappropriate content</div>
+                        <div class="activity-time">3 min ago</div>
+                    </div>
+                </div>
+                <div class="activity-item">
+                    <div class="activity-icon">??</div>
+                    <div class="activity-details">
+                        <div class="activity-text">New Premium user registered</div>
+                        <div class="activity-time">5 min ago</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="toast" id="toast">
+        <span class="toast-icon" id="toastIcon"></span>
+        <span class="toast-message" id="toastMessage"></span>
+    </div>
+
+    <script src="tier.js"></script>
+    <script>
+        var currentLanguage = "en";
+        var logoClickCount = 0;
+        var isAdminMode = false;
+
+        var languages = {
+            en: {
+                systemStatus: "System Status: Online",
+                apiStatus: "API: Healthy",
+                lastUpdate: "Last Update: Just now",
+                activeUsers: "Active Users",
+                contentChecks: "Content Checks",
+                payingSubscribers: "Paying Subscribers",
+                revenue: "Revenue",
+                adminPanel: "Admin Panel",
+                tierManagement: "Tier Management"
+            },
+            ar: {
+                systemStatus: "حالة النظام: متصل",
+                apiStatus: "واجهة البرمجة: سليمة",
+                lastUpdate: "آخر تحديث: الآن",
+                activeUsers: "المستخدمون النشطون",
+                contentChecks: "فحوصات المحتوى",
+                payingSubscribers: "المشتركون المدفوعون",
+                revenue: "الإيرادات",
+                adminPanel: "لوحة الإدارة",
+                tierManagement: "إدارة المستويات"
+            }
+        };
+
+        function updateLanguage() {
+            var lang = languages[currentLanguage];
+            document.getElementById("systemStatus").textContent = lang.systemStatus;
+            document.getElementById("apiStatus").textContent = lang.apiStatus;
+            document.getElementById("kpiTitle1").textContent = lang.activeUsers;
+            document.getElementById("kpiTitle2").textContent = lang.contentChecks;
+            document.getElementById("kpiTitle3").textContent = lang.payingSubscribers;
+            document.getElementById("kpiTitle4").textContent = lang.revenue;
+            document.body.className = currentLanguage === "ar" ? "rtl" : "";
+        }
+
+        function loadKPIs() {
+            setTimeout(function() {
+                document.getElementById("kpiValue1").textContent = "24,891";
+                document.getElementById("kpiValue2").textContent = "156,234";
+                document.getElementById("kpiValue4").textContent = "$89,420";
+            }, 1000);
+            loadPayingCount();
+        }
+
+        function loadPayingCount() {
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "https://script.google.com/macros/s/AKfycbwKWcb5Tx2wHhyGn5Bwec4nwumlSibm9VPpJ2lR269M8e_xt-x7bUe2GmZX17FKJRk/exec", true);
+            xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    try {
+                        var response = JSON.parse(xhr.responseText);
+                        document.getElementById("kpiValue3").textContent = response.success ? response.count.toString() : "892";
+                    } catch (e) {
+                        document.getElementById("kpiValue3").textContent = "892";
+                    }
+                }
+            };
+            xhr.send("action=getPayingCount");
+        }
+
+        function addTierUser(tier) {
+            var emailInput = document.getElementById(tier + "EmailInput");
+            var email = emailInput.value.trim();
+            if (!email) {
+                alert("Please enter an email address");
+                return;
+            }
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "https://script.google.com/macros/s/AKfycbwKWcb5Tx2wHhyGn5Bwec4nwumlSibm9VPpJ2lR269M8e_xt-x7bUe2GmZX17FKJRk/exec", true);
+            xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    emailInput.value = "";
+                    alert("User added successfully!");
+                }
+            };
+            xhr.send("action=syncTier&email=" + encodeURIComponent(email) + "&tier=" + tier);
+        }
+
+        function toggleAdmin() {
+            var password = prompt("Enter admin password:");
+            if (password === "MM7286CR") {
+                isAdminMode = !isAdminMode;
+                var adminSection = document.getElementById("adminSection");
+                if (isAdminMode) {
+                    adminSection.classList.add("active");
+                } else {
+                    adminSection.classList.remove("active");
+                }
+            }
+        }
+
+        document.getElementById("logoClick").addEventListener("click", function() {
+            logoClickCount++;
+            if (logoClickCount >= 5) {
+                document.getElementById("adminToggle").style.display = "block";
+                logoClickCount = 0;
+            }
+        });
+
+        document.getElementById("languageSelector").addEventListener("change", function() {
+            currentLanguage = this.value;
+            updateLanguage();
+            localStorage.setItem("checkreel_language", currentLanguage);
+        });
+
+        document.getElementById("adminToggle").addEventListener("click", toggleAdmin);
+
+        window.addEventListener("load", function() {
+            var savedLanguage = localStorage.getItem("checkreel_language");
+            if (savedLanguage && languages[savedLanguage]) {
+                currentLanguage = savedLanguage;
+                document.getElementById("languageSelector").value = currentLanguage;
+            }
+            updateLanguage();
+            loadKPIs();
+        });
+    </script>
+</body>
+</html>
+                        <span class="metric-label" data-i18n="avgScanTime">Avg Scan Time</span>
+                        <span class="metric-value">2.3s</span>
+                    </div>
+                    <div class="metric-item">
+                        <span class="metric-label" data-i18n="successRate">Success Rate</span>
+                        <span class="metric-value">99.8%</span>
+                    </div>
+                    <div class="metric-item">
+                        <span class="metric-label" data-i18n="throughput">Throughput</span>
+                        <span class="metric-value">1,247/min</span>
+                    </div>
+                    <div class="metric-item">
+                        <span class="metric-label" data-i18n="errorRate">Error Rate</span>
+                        <span class="metric-value">0.2%</span>
+                    </div>
+                </div>
+
+                <div class="analytics-card">
+                    <h3 class="analytics-title">?? <span data-i18n="contentCategories">Content Categories</span></h3>
+                    <div class="metric-item">
+                        <span class="metric-label" data-i18n="inappropriate">Inappropriate Language</span>
+                        <span class="metric-value">34.2%</span>
+                    </div>
+                    <div class="metric-item">
+                        <span class="metric-label" data-i18n="violence">Violence/Gore</span>
+                        <span class="metric-value">18.7%</span>
+                    </div>
+                    <div class="metric-item">
+                        <span class="metric-label" data-i18n="spam">Spam/Scam</span>
+                        <span class="metric-value">23.1%</span>
+                    </div>
+                    <div class="metric-item">
 
