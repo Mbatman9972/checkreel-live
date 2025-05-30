@@ -5,7 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>CheckReel Dashboard</title>
 <link rel="icon" type="image/x-icon" href="images/favicon.ico">
-<link rel="manifest" href="manifest.json">
+<!-- Commented out to prevent 401 error -->
+<!-- <link rel="manifest" href="manifest.json"> -->
 <style>
 * {
 margin: 0;
@@ -744,31 +745,6 @@ gap: 20px;
 </style>
 </head>
 <body>
-<!-- ADDED: safeStorage wrapper for localStorage safety -->
-<script>
-function selectTier(tier) {
-    console.log("Selected tier:", tier);
-    // Add tier selection logic here
-}
-
-function selectPlatform(platform) {
-    console.log("Selected platform:", platform);
-    // Add platform selection logic here
-}
-
-function selectRegion(region) {
-    console.log("Selected region:", region);
-    // Add region selection logic here
-}
-function selectPlatform(platform) {
-    console.log("Selected platform:", platform);
-}
-function selectRegion(region) {
-    console.log("Selected region:", region);
-}
-// safeStorage already defined in lang-loader.js
-</script>
-
 <div class="container">
 <!-- Header -->
 <div class="header">
@@ -994,12 +970,12 @@ let selectedPlatforms = [];
 let selectedRegion = null;
 let selectedCountry = null;
 let currentTier = 'free';
-
 let scanHistory = [];
 
-// FIXED: Load language from homepage using safeStorage
+// Main initialization - SINGLE DOMContentLoaded
 document.addEventListener('DOMContentLoaded', function() {
-    currentLanguage = safeStorage.getItem('checkreel_language') || 'en';
+    // Get current language from localStorage
+    const currentLanguage = safeStorage.getItem('checkreel_language') || 'en';
     console.log('Dashboard language set to:', currentLanguage);
     console.log('Language loaded from index.html:', currentLanguage);
     
@@ -1015,6 +991,62 @@ document.addEventListener('DOMContentLoaded', function() {
     updateScansCounter();
     loadScanHistory();
     
+    // Apply language-specific updates after a short delay
+    setTimeout(() => {
+        const lang = safeStorage.getItem('checkreel_language') || 'en';
+        console.log('Applying language:', lang);
+        
+        // Force reload language content
+        if (window.loadLanguageContent) {
+            window.loadLanguageContent(lang);
+        }
+        
+        // Apply dashboard-specific translations
+        if (window.LANGUAGE_CONTENT && window.LANGUAGE_CONTENT[lang]) {
+            const content = window.LANGUAGE_CONTENT[lang];
+            
+            // Update scan button
+            const scanBtn = document.getElementById('scan-btn-text');
+            if (scanBtn && content['start-check']) {
+                scanBtn.textContent = content['start-check'];
+            }
+            
+            // Update tier selection title
+            const tierTitle = document.querySelector('.tier-selection h2');
+            if (tierTitle && content['choose-plan']) {
+                tierTitle.textContent = `🎯 ${content['choose-plan']}`;
+            }
+            
+            // Update selection alert
+            const alert = document.getElementById('selectionAlert');
+            if (alert && content['selection-alert']) {
+                alert.textContent = `⚠️ ${content['selection-alert']}`;
+            }
+            
+            // Update card titles
+            const cards = document.querySelectorAll('.card h2');
+            cards.forEach((title, index) => {
+                if (index === 0 && content['select-region']) {
+                    title.textContent = `🌍 ${content['select-region']}`;
+                } else if (index === 1 && content['select-platform']) {
+                    const counter = document.getElementById('platformCounter');
+                    title.innerHTML = `📱 ${content['select-platform']} ${counter ? counter.outerHTML : ''}`;
+                } else if (index === 2 && content['upload-content']) {
+                    title.textContent = `📁 ${content['upload-content']}`;
+                }
+            });
+            
+            // Update upload area text
+            const uploadArea = document.getElementById('uploadArea');
+            if (uploadArea) {
+                const h3 = uploadArea.querySelector('h3');
+                const p = uploadArea.querySelector('p');
+                if (h3 && content['drop-here']) h3.textContent = content['drop-here'];
+                if (p && content['click-browse']) p.textContent = content['click-browse'];
+            }
+        }
+    }, 100);
+    
     console.log('✅ PWA features working with language persistence');
     console.log('✅ Zero console errors - production ready!');
     console.log('🚀 CheckReel Dashboard Starting...');
@@ -1023,703 +1055,706 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // Countries data
 const countriesData = {
-middleEast: [
-'Palestine', 'Jordan', 'Lebanon', 'Syria', 'Iraq', 'Kuwait', 'Saudi Arabia',
-'Bahrain', 'Qatar', 'United Arab Emirates', 'Oman', 'Yemen', 'Iran', 'Turkey', 'Cyprus'
-],
-mena: [
-'Palestine', 'Jordan', 'Lebanon', 'Syria', 'Iraq', 'Kuwait', 'Saudi Arabia',
-'Bahrain', 'Qatar', 'United Arab Emirates', 'Oman', 'Yemen', 'Iran', 'Turkey',
-'Egypt', 'Libya', 'Tunisia', 'Algeria', 'Morocco', 'Sudan', 'Mauritania', 'Djibouti', 'Somalia'
-],
-europe: [
-'Albania', 'Andorra', 'Armenia', 'Austria', 'Azerbaijan', 'Belarus', 'Belgium',
-'Bosnia and Herzegovina', 'Bulgaria', 'Croatia', 'Cyprus', 'Czech Republic',
-'Denmark', 'Estonia', 'Finland', 'France', 'Georgia', 'Germany', 'Greece',
-'Hungary', 'Iceland', 'Ireland', 'Italy', 'Kazakhstan', 'Kosovo', 'Latvia',
-'Liechtenstein', 'Lithuania', 'Luxembourg', 'Malta', 'Moldova', 'Monaco',
-'Montenegro', 'Netherlands', 'North Macedonia', 'Norway', 'Poland', 'Portugal',
-'Romania', 'Russia', 'San Marino', 'Serbia', 'Slovakia', 'Slovenia', 'Spain',
-'Sweden', 'Switzerland', 'Ukraine', 'United Kingdom', 'Vatican City'
-]
+    middleEast: [
+        'Palestine', 'Jordan', 'Lebanon', 'Syria', 'Iraq', 'Kuwait', 'Saudi Arabia',
+        'Bahrain', 'Qatar', 'United Arab Emirates', 'Oman', 'Yemen', 'Iran', 'Turkey', 'Cyprus'
+    ],
+    mena: [
+        'Palestine', 'Jordan', 'Lebanon', 'Syria', 'Iraq', 'Kuwait', 'Saudi Arabia',
+        'Bahrain', 'Qatar', 'United Arab Emirates', 'Oman', 'Yemen', 'Iran', 'Turkey',
+        'Egypt', 'Libya', 'Tunisia', 'Algeria', 'Morocco', 'Sudan', 'Mauritania', 'Djibouti', 'Somalia'
+    ],
+    europe: [
+        'Albania', 'Andorra', 'Armenia', 'Austria', 'Azerbaijan', 'Belarus', 'Belgium',
+        'Bosnia and Herzegovina', 'Bulgaria', 'Croatia', 'Cyprus', 'Czech Republic',
+        'Denmark', 'Estonia', 'Finland', 'France', 'Georgia', 'Germany', 'Greece',
+        'Hungary', 'Iceland', 'Ireland', 'Italy', 'Kazakhstan', 'Kosovo', 'Latvia',
+        'Liechtenstein', 'Lithuania', 'Luxembourg', 'Malta', 'Moldova', 'Monaco',
+        'Montenegro', 'Netherlands', 'North Macedonia', 'Norway', 'Poland', 'Portugal',
+        'Romania', 'Russia', 'San Marino', 'Serbia', 'Slovakia', 'Slovenia', 'Spain',
+        'Sweden', 'Switzerland', 'Ukraine', 'United Kingdom', 'Vatican City'
+    ]
 };
 
 // Tier selection
 function selectTier(tier) {
-currentTier = tier;
-safeStorage.setItem('checkreel_tier', tier);
-// Update visual selection
-document.querySelectorAll('.tier-plan').forEach(plan => {
-plan.classList.remove('active');
-});
-document.querySelector(`[data-tier="${tier}"]`).classList.add('active');
-// Reset scans if upgrading
-if (tier !== 'free') {
-safeStorage.setItem('checkreel_scans_used', '0');
-}
-updateTierDisplay();
-updateScansCounter();
-updatePlatformCounter();
-
-// Show/hide scan history
-const historySection = document.getElementById('scanHistory');
-if (tier === 'plus' || tier === 'premium') {
-historySection.classList.add('visible');
-} else {
-historySection.classList.remove('visible');
-}
+    currentTier = tier;
+    safeStorage.setItem('checkreel_tier', tier);
+    
+    // Update visual selection
+    document.querySelectorAll('.tier-plan').forEach(plan => {
+        plan.classList.remove('active');
+    });
+    document.querySelector(`[data-tier="${tier}"]`).classList.add('active');
+    
+    // Reset scans if upgrading
+    if (tier !== 'free') {
+        safeStorage.setItem('checkreel_scans_used', '0');
+    }
+    
+    updateTierDisplay();
+    updateScansCounter();
+    updatePlatformCounter();
+    
+    // Show/hide scan history
+    const historySection = document.getElementById('scanHistory');
+    if (tier === 'plus' || tier === 'premium') {
+        historySection.classList.add('visible');
+    } else {
+        historySection.classList.remove('visible');
+    }
 }
 
 // Region selection
 function selectRegion(region) {
-selectedRegion = region;
-// Remove previous selection
-document.querySelectorAll('.region-option').forEach(opt => opt.classList.remove('selected'));
-// Add selection to clicked option
-document.querySelector(`[data-region="${region}"]`).classList.add('selected');
-updateScanButton();
-updateSelectionAlert();
+    selectedRegion = region;
+    // Remove previous selection
+    document.querySelectorAll('.region-option').forEach(opt => opt.classList.remove('selected'));
+    // Add selection to clicked option
+    document.querySelector(`[data-region="${region}"]`).classList.add('selected');
+    updateScanButton();
+    updateSelectionAlert();
 }
 
 // Platform selection (multi-select for premium)
 function selectPlatform(platform) {
-const userTier = safeStorage.getItem('checkreel_tier') || 'free';
-const platformElement = document.querySelector(`[data-platform="${platform}"]`);
-
-if (userTier === 'premium') {
-    // Multi-select for premium (max 3)
-    if (selectedPlatforms.includes(platform)) {
-        // Deselect
-        selectedPlatforms = selectedPlatforms.filter(p => p !== platform);
-        platformElement.classList.remove('selected');
-    } else {
-        // Select (max 3)
-        if (selectedPlatforms.length < 3) {
-            selectedPlatforms.push(platform);
-            platformElement.classList.add('selected');
+    const userTier = safeStorage.getItem('checkreel_tier') || 'free';
+    const platformElement = document.querySelector(`[data-platform="${platform}"]`);
+    
+    if (userTier === 'premium') {
+        // Multi-select for premium (max 3)
+        if (selectedPlatforms.includes(platform)) {
+            // Deselect
+            selectedPlatforms = selectedPlatforms.filter(p => p !== platform);
+            platformElement.classList.remove('selected');
         } else {
-            alert('Premium users can select up to 3 platforms per scan');
+            // Select (max 3)
+            if (selectedPlatforms.length < 3) {
+                selectedPlatforms.push(platform);
+                platformElement.classList.add('selected');
+            } else {
+                alert('Premium users can select up to 3 platforms per scan');
+            }
         }
+    } else {
+        // Single select for free and plus
+        selectedPlatforms = [platform];
+        document.querySelectorAll('.platform-option').forEach(opt => opt.classList.remove('selected'));
+        platformElement.classList.add('selected');
     }
-} else {
-    // Single select for free and plus
-    selectedPlatforms = [platform];
-    document.querySelectorAll('.platform-option').forEach(opt => opt.classList.remove('selected'));
-    platformElement.classList.add('selected');
-}
-
-updatePlatformCounter();
-updateScanButton();
-updateSelectionAlert();
+    
+    updatePlatformCounter();
+    updateScanButton();
+    updateSelectionAlert();
 }
 
 // Update platform counter
 function updatePlatformCounter() {
-const counterEl = document.getElementById("platformCounter");
-const userTier = safeStorage.getItem('checkreel_tier') || 'free';
-
-if (userTier === "premium" && counterEl) {
-    counterEl.textContent = `(${selectedPlatforms.length}/3 selected)`;
-} else if (counterEl) {
-    counterEl.textContent = '';
-}
+    const counterEl = document.getElementById("platformCounter");
+    const userTier = safeStorage.getItem('checkreel_tier') || 'free';
+    
+    if (userTier === "premium" && counterEl) {
+        counterEl.textContent = `(${selectedPlatforms.length}/3 selected)`;
+    } else if (counterEl) {
+        counterEl.textContent = '';
+    }
 }
 
 // Countries modal
 function showCountries(region) {
-const modal = document.getElementById('countriesModal');
-const grid = document.getElementById('countriesGrid');
-const title = document.getElementById('modalTitle');
-title.textContent = `Select Country - ${region.charAt(0).toUpperCase() + region.slice(1)}`;
-grid.innerHTML = '';
-countriesData[region].forEach(country => {
-const item = document.createElement('div');
-item.className = 'country-item';
-item.textContent = country;
-item.onclick = () => selectCountry(country);
-grid.appendChild(item);
-});
-modal.style.display = 'block';
+    const modal = document.getElementById('countriesModal');
+    const grid = document.getElementById('countriesGrid');
+    const title = document.getElementById('modalTitle');
+    title.textContent = `Select Country - ${region.charAt(0).toUpperCase() + region.slice(1)}`;
+    grid.innerHTML = '';
+    
+    countriesData[region].forEach(country => {
+        const item = document.createElement('div');
+        item.className = 'country-item';
+        item.textContent = country;
+        item.onclick = () => selectCountry(country);
+        grid.appendChild(item);
+    });
+    
+    modal.style.display = 'block';
 }
 
 function selectCountry(country) {
-selectedCountry = country;
-closeCountriesModal();
-console.log('Selected country:', country);
+    selectedCountry = country;
+    closeCountriesModal();
+    console.log('Selected country:', country);
 }
 
 function closeCountriesModal() {
-document.getElementById('countriesModal').style.display = 'none';
+    document.getElementById('countriesModal').style.display = 'none';
 }
 
 // Update selection alert
 function updateSelectionAlert() {
-const alert = document.getElementById('selectionAlert');
-if (selectedRegion && selectedPlatforms.length > 0) {
-alert.classList.add('hidden');
-} else {
-alert.classList.remove('hidden');
-}
+    const alert = document.getElementById('selectionAlert');
+    if (selectedRegion && selectedPlatforms.length > 0) {
+        alert.classList.add('hidden');
+    } else {
+        alert.classList.remove('hidden');
+    }
 }
 
 // File upload functionality
 function initializeUpload() {
-const uploadArea = document.getElementById('uploadArea');
-const fileInput = document.getElementById('fileInput');
-const fileInfo = document.getElementById('fileInfo');
-const removeFileBtn = document.getElementById('removeFile');
-
-if (!uploadArea || !fileInput) return;
-
-// Click to browse
-uploadArea.addEventListener('click', () => {
-if (!selectedRegion || selectedPlatforms.length === 0) {
-alert('Please select a region and platform first!');
-return;
-}
-fileInput.click();
-});
-
-// File input change
-fileInput.addEventListener('change', (e) => {
-const file = e.target.files[0];
-if (file && selectedRegion && selectedPlatforms.length > 0) {
-handleFileSelect(file);
-}
-});
-
-// Drag and drop
-uploadArea.addEventListener('dragover', (e) => {
-e.preventDefault();
-if (selectedRegion && selectedPlatforms.length > 0) {
-uploadArea.classList.add('dragover');
-}
-});
-
-uploadArea.addEventListener('dragleave', (e) => {
-e.preventDefault();
-uploadArea.classList.remove('dragover');
-});
-
-uploadArea.addEventListener('drop', (e) => {
-e.preventDefault();
-uploadArea.classList.remove('dragover');
-if (!selectedRegion || selectedPlatforms.length === 0) {
-alert('Please select a region and platform first!');
-return;
-}
-const file = e.dataTransfer.files[0];
-if (file) {
-handleFileSelect(file);
-}
-});
-
-// Remove file
-if (removeFileBtn) {
-removeFileBtn.addEventListener('click', (e) => {
-e.stopPropagation();
-clearSelectedFile();
-});
-}
+    const uploadArea = document.getElementById('uploadArea');
+    const fileInput = document.getElementById('fileInput');
+    const fileInfo = document.getElementById('fileInfo');
+    const removeFileBtn = document.getElementById('removeFile');
+    
+    if (!uploadArea || !fileInput) return;
+    
+    // Click to browse
+    uploadArea.addEventListener('click', () => {
+        if (!selectedRegion || selectedPlatforms.length === 0) {
+            alert('Please select a region and platform first!');
+            return;
+        }
+        fileInput.click();
+    });
+    
+    // File input change
+    fileInput.addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        if (file && selectedRegion && selectedPlatforms.length > 0) {
+            handleFileSelect(file);
+        }
+    });
+    
+    // Drag and drop
+    uploadArea.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        if (selectedRegion && selectedPlatforms.length > 0) {
+            uploadArea.classList.add('dragover');
+        }
+    });
+    
+    uploadArea.addEventListener('dragleave', (e) => {
+        e.preventDefault();
+        uploadArea.classList.remove('dragover');
+    });
+    
+    uploadArea.addEventListener('drop', (e) => {
+        e.preventDefault();
+        uploadArea.classList.remove('dragover');
+        if (!selectedRegion || selectedPlatforms.length === 0) {
+            alert('Please select a region and platform first!');
+            return;
+        }
+        const file = e.dataTransfer.files[0];
+        if (file) {
+            handleFileSelect(file);
+        }
+    });
+    
+    // Remove file
+    if (removeFileBtn) {
+        removeFileBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            clearSelectedFile();
+        });
+    }
 }
 
 function handleFileSelect(file) {
-// Validate file type
-const allowedTypes = ['video/mp4', 'video/quicktime', 'image/jpeg', 'image/png', 'audio/mp3', 'audio/wav'];
-if (!allowedTypes.includes(file.type)) {
-alert('Unsupported file type. Please select MP4, MOV, JPG, PNG, MP3, or WAV files.');
-return;
-}
-
-// Validate file size (100MB limit)
-const maxSize = 100 * 1024 * 1024; // 100MB in bytes
-if (file.size > maxSize) {
-alert('File size too large. Please select a file smaller than 100MB.');
-return;
-}
-
-selectedFile = file;
-displayFileInfo(file);
-updateScanButton();
+    // Validate file type
+    const allowedTypes = ['video/mp4', 'video/quicktime', 'image/jpeg', 'image/png', 'audio/mp3', 'audio/wav'];
+    if (!allowedTypes.includes(file.type)) {
+        alert('Unsupported file type. Please select MP4, MOV, JPG, PNG, MP3, or WAV files.');
+        return;
+    }
+    
+    // Validate file size (100MB limit)
+    const maxSize = 100 * 1024 * 1024; // 100MB in bytes
+    if (file.size > maxSize) {
+        alert('File size too large. Please select a file smaller than 100MB.');
+        return;
+    }
+    
+    selectedFile = file;
+    displayFileInfo(file);
+    updateScanButton();
 }
 
 function displayFileInfo(file) {
-const uploadArea = document.getElementById('uploadArea');
-const fileInfo = document.getElementById('fileInfo');
-const fileName = document.getElementById('fileName');
-const fileSize = document.getElementById('fileSize');
-
-if (fileName) fileName.textContent = file.name;
-if (fileSize) fileSize.textContent = formatFileSize(file.size);
-if (uploadArea) uploadArea.style.display = 'none';
-if (fileInfo) fileInfo.style.display = 'block';
+    const uploadArea = document.getElementById('uploadArea');
+    const fileInfo = document.getElementById('fileInfo');
+    const fileName = document.getElementById('fileName');
+    const fileSize = document.getElementById('fileSize');
+    
+    if (fileName) fileName.textContent = file.name;
+    if (fileSize) fileSize.textContent = formatFileSize(file.size);
+    if (uploadArea) uploadArea.style.display = 'none';
+    if (fileInfo) fileInfo.style.display = 'block';
 }
 
 function clearSelectedFile() {
-const uploadArea = document.getElementById('uploadArea');
-const fileInfo = document.getElementById('fileInfo');
-const fileInput = document.getElementById('fileInput');
-
-selectedFile = null;
-if (fileInput) fileInput.value = '';
-if (uploadArea) uploadArea.style.display = 'block';
-if (fileInfo) fileInfo.style.display = 'none';
-updateScanButton();
+    const uploadArea = document.getElementById('uploadArea');
+    const fileInfo = document.getElementById('fileInfo');
+    const fileInput = document.getElementById('fileInput');
+    
+    selectedFile = null;
+    if (fileInput) fileInput.value = '';
+    if (uploadArea) uploadArea.style.display = 'block';
+    if (fileInfo) fileInfo.style.display = 'none';
+    updateScanButton();
 }
 
 function formatFileSize(bytes) {
-if (bytes === 0) return '0 Bytes';
-const k = 1024;
-const sizes = ['Bytes', 'KB', 'MB', 'GB'];
-const i = Math.floor(Math.log(bytes) / Math.log(k));
-return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+    if (bytes === 0) return '0 Bytes';
+    const k = 1024;
+    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
 }
 
 function updateScanButton() {
-const scanBtn = document.getElementById('scanBtn');
-if (!scanBtn) return;
-
-const canScan = selectedFile && selectedPlatforms.length > 0 && selectedRegion;
-scanBtn.disabled = !canScan;
-
-if (canScan) {
-scanBtn.classList.add('ready');
-} else {
-scanBtn.classList.remove('ready');
-}
+    const scanBtn = document.getElementById('scanBtn');
+    if (!scanBtn) return;
+    
+    const canScan = selectedFile && selectedPlatforms.length > 0 && selectedRegion;
+    scanBtn.disabled = !canScan;
+    
+    if (canScan) {
+        scanBtn.classList.add('ready');
+    } else {
+        scanBtn.classList.remove('ready');
+    }
 }
 
 // Scan functionality
-document.addEventListener('DOMContentLoaded', function() {
 const scanBtn = document.getElementById('scanBtn');
 if (scanBtn) {
-scanBtn.addEventListener('click', async function() {
-if (!selectedFile || selectedPlatforms.length === 0 || !selectedRegion) return;
-
-// Check if user has scans remaining
-if (!checkScanLimit()) {
-alert('You have reached your scan limit! Please upgrade your plan.');
-return;
+    scanBtn.addEventListener('click', async function() {
+        if (!selectedFile || selectedPlatforms.length === 0 || !selectedRegion) return;
+        
+        // Check if user has scans remaining
+        if (!checkScanLimit()) {
+            alert('You have reached your scan limit! Please upgrade your plan.');
+            return;
+        }
+        
+        await performScan();
+    });
 }
-
-await performScan();
-});
-}
-});
 
 function checkScanLimit() {
-const userTier = safeStorage.getItem('checkreel_tier') || 'free';
-const scansUsed = parseInt(safeStorage.getItem('checkreel_scans_used') || '0');
-const limits = {
-free: 3,
-plus: 20,
-premium: 40
-};
-return scansUsed < limits[userTier];
+    const userTier = safeStorage.getItem('checkreel_tier') || 'free';
+    const scansUsed = parseInt(safeStorage.getItem('checkreel_scans_used') || '0');
+    const limits = {
+        free: 3,
+        plus: 20,
+        premium: 40
+    };
+    return scansUsed < limits[userTier];
 }
 
 async function performScan() {
-const scanBtn = document.getElementById('scanBtn');
-const btnText = document.getElementById('scan-btn-text');
-const btnLoader = document.getElementById('btnLoader');
-const resultsSection = document.getElementById('resultsSection');
-
-if (!scanBtn) return;
-
-// Update button state
-scanBtn.disabled = true;
-if (btnText) btnText.textContent = 'Analyzing...';
-if (btnLoader) btnLoader.classList.add('active');
-
-try {
-// Simulate scan process
-await new Promise(resolve => setTimeout(resolve, 3000));
-
-// Generate results with dynamic score based on issues
-const results = generateDynamicResults();
-
-// Display results
-displayResults(results);
-
-// Save to history (for Plus and Premium)
-saveScanToHistory(results);
-
-// Increment scan count (ACTIVE for testing)
-incrementScanCount();
-
-// Update displays
-updateTierDisplay();
-updateScansCounter();
-
-// Scroll to results
-if (resultsSection) {
-resultsSection.scrollIntoView({ behavior: 'smooth' });
-}
-
-} catch (error) {
-console.error('Scan error:', error);
-alert('An error occurred during scanning. Please try again.');
-} finally {
-// Reset button state
-scanBtn.disabled = false;
-if (btnText) btnText.textContent = 'Start Content Check';
-if (btnLoader) btnLoader.classList.remove('active');
-}
+    const scanBtn = document.getElementById('scanBtn');
+    const btnText = document.getElementById('scan-btn-text');
+    const btnLoader = document.getElementById('btnLoader');
+    const resultsSection = document.getElementById('resultsSection');
+    
+    if (!scanBtn) return;
+    
+    // Update button state
+    scanBtn.disabled = true;
+    if (btnText) btnText.textContent = 'Analyzing...';
+    if (btnLoader) btnLoader.classList.add('active');
+    
+    try {
+        // Simulate scan process
+        await new Promise(resolve => setTimeout(resolve, 3000));
+        
+        // Generate results with dynamic score based on issues
+        const results = generateDynamicResults();
+        
+        // Display results
+        displayResults(results);
+        
+        // Save to history (for Plus and Premium)
+        saveScanToHistory(results);
+        
+        // Increment scan count (ACTIVE for testing)
+        incrementScanCount();
+        
+        // Update displays
+        updateTierDisplay();
+        updateScansCounter();
+        
+        // Scroll to results
+        if (resultsSection) {
+            resultsSection.scrollIntoView({ behavior: 'smooth' });
+        }
+        
+    } catch (error) {
+        console.error('Scan error:', error);
+        alert('An error occurred during scanning. Please try again.');
+    } finally {
+        // Reset button state
+        scanBtn.disabled = false;
+        if (btnText) btnText.textContent = 'Start Content Check';
+        if (btnLoader) btnLoader.classList.remove('active');
+    }
 }
 
 function generateDynamicResults() {
-const userTier = safeStorage.getItem('checkreel_tier') || 'free';
-
-// Simulate different scenarios
-const scenarios = [
-{ score: 95, issueCount: 0 }, // Perfect
-{ score: 85, issueCount: 2 }, // Good
-{ score: 70, issueCount: 4 }, // Needs work
-{ score: 55, issueCount: 6 }, // Poor
-{ score: 40, issueCount: 8 }  // Very poor
-];
-
-const scenario = scenarios[Math.floor(Math.random() * scenarios.length)];
-let issues, recommendations, status, statusIcon;
-
-// Dynamic status based on score
-if (scenario.score >= 90) {
-status = 'Perfect! Ready to Post';
-statusIcon = '✅';
-} else if (scenario.score >= 80) {
-status = 'Good to Post';
-statusIcon = '✅';
-} else if (scenario.score >= 70) {
-status = 'Minor Issues - Review Recommended';
-statusIcon = '⚠️';
-} else if (scenario.score >= 60) {
-status = 'Moderate Issues - Fix Before Posting';
-statusIcon = '⚠️';
-} else {
-status = 'Major Issues - Do Not Post';
-statusIcon = '❌';
-}
-
-if (userTier === 'free') {
-issues = scenario.issueCount > 0 ? [
-{ icon: '⚠️', text: `${scenario.issueCount} compliance issues detected for ${selectedPlatforms.join(', ')}` }
-] : [];
-recommendations = [
-{ icon: '💡', text: `Upgrade to Plus or Premium for detailed analysis` }
-];
-} else if (userTier === 'plus') {
-issues = scenario.issueCount > 0 ? [
-{ icon: '🔊', text: `Audio levels exceed ${selectedPlatforms.join(', ')} limits` },
-{ icon: '📺', text: `Content may violate ${selectedRegion} community guidelines` }
-].slice(0, Math.min(scenario.issueCount, 2)) : [];
-recommendations = [
-{ icon: '📈', text: `Use trending hashtags for ${selectedPlatforms.join(', ')}` },
-{ icon: '⏰', text: `Best posting time for ${selectedRegion}: 7-9 PM local` }
-];
-} else { // premium
-issues = scenario.issueCount > 0 ? [
-{ icon: '🔊', text: `Audio enhancement needed - our AI recommends voice optimization` },
-{ icon: '📺', text: `Visual quality below platform standards` },
-{ icon: '🎬', text: `Video pacing needs adjustment for ${selectedPlatforms.join(', ')}` }
-].slice(0, Math.min(scenario.issueCount, 3)) : [];
-recommendations = [
-{ icon: '🤖', text: `AI Analysis: Adjust content pacing for better engagement` },
-{ icon: '💬', text: `Optimization tip: Add stronger hooks in first 3 seconds` },
-{ icon: '🛠️', text: `Our advanced AI suggests format adjustments for viral potential` }
-];
-}
-
-return {
-score: scenario.score,
-status: status,
-statusIcon: statusIcon,
-issues: issues,
-recommendations: recommendations,
-platforms: selectedPlatforms,
-region: selectedRegion
-};
+    const userTier = safeStorage.getItem('checkreel_tier') || 'free';
+    
+    // Simulate different scenarios
+    const scenarios = [
+        { score: 95, issueCount: 0 }, // Perfect
+        { score: 85, issueCount: 2 }, // Good
+        { score: 70, issueCount: 4 }, // Needs work
+        { score: 55, issueCount: 6 }, // Poor
+        { score: 40, issueCount: 8 }  // Very poor
+    ];
+    
+    const scenario = scenarios[Math.floor(Math.random() * scenarios.length)];
+    let issues, recommendations, status, statusIcon;
+    
+    // Dynamic status based on score
+    if (scenario.score >= 90) {
+        status = 'Perfect! Ready to Post';
+        statusIcon = '✅';
+    } else if (scenario.score >= 80) {
+        status = 'Good to Post';
+        statusIcon = '✅';
+    } else if (scenario.score >= 70) {
+        status = 'Minor Issues - Review Recommended';
+        statusIcon = '⚠️';
+    } else if (scenario.score >= 60) {
+        status = 'Moderate Issues - Fix Before Posting';
+        statusIcon = '⚠️';
+    } else {
+        status = 'Major Issues - Do Not Post';
+        statusIcon = '❌';
+    }
+    
+    if (userTier === 'free') {
+        issues = scenario.issueCount > 0 ? [
+            { icon: '⚠️', text: `${scenario.issueCount} compliance issues detected for ${selectedPlatforms.join(', ')}` }
+        ] : [];
+        recommendations = [
+            { icon: '💡', text: `Upgrade to Plus or Premium for detailed analysis` }
+        ];
+    } else if (userTier === 'plus') {
+        issues = scenario.issueCount > 0 ? [
+            { icon: '🔊', text: `Audio levels exceed ${selectedPlatforms.join(', ')} limits` },
+            { icon: '📺', text: `Content may violate ${selectedRegion} community guidelines` }
+        ].slice(0, Math.min(scenario.issueCount, 2)) : [];
+        recommendations = [
+            { icon: '📈', text: `Use trending hashtags for ${selectedPlatforms.join(', ')}` },
+            { icon: '⏰', text: `Best posting time for ${selectedRegion}: 7-9 PM local` }
+        ];
+    } else { // premium
+        issues = scenario.issueCount > 0 ? [
+            { icon: '🔊', text: `Audio enhancement needed - our AI recommends voice optimization` },
+            { icon: '📺', text: `Visual quality below platform standards` },
+            { icon: '🎬', text: `Video pacing needs adjustment for ${selectedPlatforms.join(', ')}` }
+        ].slice(0, Math.min(scenario.issueCount, 3)) : [];
+        recommendations = [
+            { icon: '🤖', text: `AI Analysis: Adjust content pacing for better engagement` },
+            { icon: '💬', text: `Optimization tip: Add stronger hooks in first 3 seconds` },
+            { icon: '🛠️', text: `Our advanced AI suggests format adjustments for viral potential` }
+        ];
+    }
+    
+    return {
+        score: scenario.score,
+        status: status,
+        statusIcon: statusIcon,
+        issues: issues,
+        recommendations: recommendations,
+        platforms: selectedPlatforms,
+        region: selectedRegion
+    };
 }
 
 function displayResults(results) {
-const resultsSection = document.getElementById('resultsSection');
-const scoreValue = document.getElementById('scoreValue');
-const statusText = document.getElementById('status-text');
-const statusIcon = document.getElementById('statusIcon');
-const issuesList = document.getElementById('issuesList');
-const recommendationsList = document.getElementById('recommendationsList');
-const scoreCircle = document.getElementById('scoreCircle');
-
-// Update score with gradient
-if (scoreValue) scoreValue.textContent = results.score;
-if (scoreCircle) {
-    // Create gradient based on score
-    const red = results.score < 50 ? 255 : Math.round(255 * (100 - results.score) / 50);
-    const green = results.score > 50 ? 255 : Math.round(255 * results.score / 50);
-    const gradient = `conic-gradient(from 0deg, 
-        rgb(${red}, ${green}, 0) 0%, 
-        rgb(${red}, ${green}, 0) ${results.score}%, 
-        #e0e0e0 ${results.score}%)`;
-    scoreCircle.style.background = gradient;
-}
-
-// Update status
-if (statusText) statusText.textContent = results.status;
-if (statusIcon) statusIcon.textContent = results.statusIcon;
-
-// Update issues
-if (issuesList) {
-issuesList.innerHTML = '';
-results.issues.forEach((issue, index) => {
-const item = document.createElement('div');
-item.className = 'issue-item';
-item.innerHTML = `
-<span class="issue-icon">${issue.icon}</span>
-<span>${issue.text}</span>
-`;
-item.onclick = () => showInsight('issue', issue, index);
-issuesList.appendChild(item);
-});
-}
-
-// Update recommendations
-if (recommendationsList) {
-recommendationsList.innerHTML = '';
-results.recommendations.forEach((rec, index) => {
-const item = document.createElement('div');
-item.className = 'recommendation-item';
-item.innerHTML = `
-<span class="recommendation-icon">${rec.icon}</span>
-<span>${rec.text}</span>
-`;
-item.onclick = () => showInsight('recommendation', rec, index);
-recommendationsList.appendChild(item);
-});
-}
-
-if (resultsSection) resultsSection.style.display = 'block';
+    const resultsSection = document.getElementById('resultsSection');
+    const scoreValue = document.getElementById('scoreValue');
+    const statusText = document.getElementById('status-text');
+    const statusIcon = document.getElementById('statusIcon');
+    const issuesList = document.getElementById('issuesList');
+    const recommendationsList = document.getElementById('recommendationsList');
+    const scoreCircle = document.getElementById('scoreCircle');
+    
+    // Update score with gradient
+    if (scoreValue) scoreValue.textContent = results.score;
+    if (scoreCircle) {
+        // Create gradient based on score
+        const red = results.score < 50 ? 255 : Math.round(255 * (100 - results.score) / 50);
+        const green = results.score > 50 ? 255 : Math.round(255 * results.score / 50);
+        const gradient = `conic-gradient(from 0deg, 
+            rgb(${red}, ${green}, 0) 0%, 
+            rgb(${red}, ${green}, 0) ${results.score}%, 
+            #e0e0e0 ${results.score}%)`;
+        scoreCircle.style.background = gradient;
+    }
+    
+    // Update status
+    if (statusText) statusText.textContent = results.status;
+    if (statusIcon) statusIcon.textContent = results.statusIcon;
+    
+    // Update issues
+    if (issuesList) {
+        issuesList.innerHTML = '';
+        results.issues.forEach((issue, index) => {
+            const item = document.createElement('div');
+            item.className = 'issue-item';
+            item.innerHTML = `
+                <span class="issue-icon">${issue.icon}</span>
+                <span>${issue.text}</span>
+            `;
+            item.onclick = () => showInsight('issue', issue, index);
+            issuesList.appendChild(item);
+        });
+    }
+    
+    // Update recommendations
+    if (recommendationsList) {
+        recommendationsList.innerHTML = '';
+        results.recommendations.forEach((rec, index) => {
+            const item = document.createElement('div');
+            item.className = 'recommendation-item';
+            item.innerHTML = `
+                <span class="recommendation-icon">${rec.icon}</span>
+                <span>${rec.text}</span>
+            `;
+            item.onclick = () => showInsight('recommendation', rec, index);
+            recommendationsList.appendChild(item);
+        });
+    }
+    
+    if (resultsSection) resultsSection.style.display = 'block';
 }
 
 function showInsight(type, item, index) {
-const modal = document.getElementById('insightModal');
-const title = document.getElementById('insightTitle');
-const content = document.getElementById('insightContent');
-
-title.textContent = type === 'issue' ? 'Issue Details' : 'Recommendation Details';
-
-// Generate detailed insights based on tier
-const userTier = safeStorage.getItem('checkreel_tier') || 'free';
-let detailedContent = '';
-
-if (userTier === 'premium' && type === 'recommendation') {
-detailedContent = `
-<p><strong>Detailed Analysis:</strong></p>
-<p>${item.text}</p>
-<br>
-<p><strong>AI-Powered Recommendations:</strong></p>
-<ul>
-<li>🎨 <strong>Visual Enhancement:</strong> Our advanced AI suggests improving graphics and thumbnails for better engagement</li>
-<li>🎙️ <strong>Audio Optimization:</strong> AI-powered voice enhancement can improve audio quality by 40%</li>
-<li>🎬 <strong>Video Effects:</strong> Smart transitions and effects recommended for viral potential</li>
-<li>✨ <strong>Content Processing:</strong> Advanced optimization for maximum platform compatibility</li>
-</ul>
-<br>
-<p><strong>Note:</strong> Our system uses cutting-edge AI technology to provide these insights, ensuring your content performs at its best.</p>
-`;
-} else {
-detailedContent = `
-<p><strong>Details:</strong></p>
-<p>${item.text}</p>
-<br>
-<p>Upgrade to Premium for advanced AI-powered recommendations and detailed optimization insights.</p>
-`;
-}
-
-content.innerHTML = detailedContent;
-modal.style.display = 'block';
+    const modal = document.getElementById('insightModal');
+    const title = document.getElementById('insightTitle');
+    const content = document.getElementById('insightContent');
+    
+    title.textContent = type === 'issue' ? 'Issue Details' : 'Recommendation Details';
+    
+    // Generate detailed insights based on tier
+    const userTier = safeStorage.getItem('checkreel_tier') || 'free';
+    let detailedContent = '';
+    
+    if (userTier === 'premium' && type === 'recommendation') {
+        detailedContent = `
+            <p><strong>Detailed Analysis:</strong></p>
+            <p>${item.text}</p>
+            <br>
+            <p><strong>AI-Powered Recommendations:</strong></p>
+            <ul>
+                <li>🎨 <strong>Visual Enhancement:</strong> Our advanced AI suggests improving graphics and thumbnails for better engagement</li>
+                <li>🎙️ <strong>Audio Optimization:</strong> AI-powered voice enhancement can improve audio quality by 40%</li>
+                <li>🎬 <strong>Video Effects:</strong> Smart transitions and effects recommended for viral potential</li>
+                <li>✨ <strong>Content Processing:</strong> Advanced optimization for maximum platform compatibility</li>
+            </ul>
+            <br>
+            <p><strong>Note:</strong> Our system uses cutting-edge AI technology to provide these insights, ensuring your content performs at its best.</p>
+        `;
+    } else {
+        detailedContent = `
+            <p><strong>Details:</strong></p>
+            <p>${item.text}</p>
+            <br>
+            <p>Upgrade to Premium for advanced AI-powered recommendations and detailed optimization insights.</p>
+        `;
+    }
+    
+    content.innerHTML = detailedContent;
+    modal.style.display = 'block';
 }
 
 function closeInsightModal() {
-document.getElementById('insightModal').style.display = 'none';
+    document.getElementById('insightModal').style.display = 'none';
 }
 
 // Scan History Functions
 function saveScanToHistory(results) {
-const userTier = safeStorage.getItem('checkreel_tier') || 'free';
-if (userTier === 'free') return; // No history for free tier
-
-const scan = {
-id: Date.now(),
-date: new Date().toISOString(),
-score: results.score,
-status: results.status,
-platforms: results.platforms,
-region: results.region,
-fileName: selectedFile.name
-};
-
-// Get existing history
-let history = JSON.parse(safeStorage.getItem('checkreel_scan_history') || '[]');
-history.unshift(scan); // Add to beginning
-
-// Keep only last 50 scans
-if (history.length > 50) {
-history = history.slice(0, 50);
-}
-
-safeStorage.setItem('checkreel_scan_history', JSON.stringify(history));
-loadScanHistory();
+    const userTier = safeStorage.getItem('checkreel_tier') || 'free';
+    if (userTier === 'free') return; // No history for free tier
+    
+    const scan = {
+        id: Date.now(),
+        date: new Date().toISOString(),
+        score: results.score,
+        status: results.status,
+        platforms: results.platforms,
+        region: results.region,
+        fileName: selectedFile.name
+    };
+    
+    // Get existing history
+    let history = JSON.parse(safeStorage.getItem('checkreel_scan_history') || '[]');
+    history.unshift(scan); // Add to beginning
+    
+    // Keep only last 50 scans
+    if (history.length > 50) {
+        history = history.slice(0, 50);
+    }
+    
+    safeStorage.setItem('checkreel_scan_history', JSON.stringify(history));
+    loadScanHistory();
 }
 
 function loadScanHistory() {
-const userTier = safeStorage.getItem('checkreel_tier') || 'free';
-if (userTier === 'free') return;
-
-scanHistory = JSON.parse(safeStorage.getItem('checkreel_scan_history') || '[]');
-displayHistory('all');
+    const userTier = safeStorage.getItem('checkreel_tier') || 'free';
+    if (userTier === 'free') return;
+    
+    scanHistory = JSON.parse(safeStorage.getItem('checkreel_scan_history') || '[]');
+    displayHistory('all');
 }
 
 function displayHistory(filter) {
-const historyList = document.getElementById('historyList');
-if (!historyList) return;
-
-let filteredHistory = scanHistory;
-
-historyList.innerHTML = '';
-filteredHistory.forEach(scan => {
-const item = document.createElement('div');
-item.className = 'history-item';
-item.innerHTML = `
-<div>
-<strong>${scan.fileName}</strong><br>
-<span style="font-size: 12px; color: #666;">
-${scan.platforms.join(', ')} | ${scan.region} | Score: ${scan.score}
-</span>
-</div>
-<div>
-<span class="history-date">${new Date(scan.date).toLocaleDateString()}</span>
-</div>
-`;
-item.onclick = () => viewHistoryScan(scan);
-historyList.appendChild(item);
-});
+    const historyList = document.getElementById('historyList');
+    if (!historyList) return;
+    
+    let filteredHistory = scanHistory;
+    
+    historyList.innerHTML = '';
+    filteredHistory.forEach(scan => {
+        const item = document.createElement('div');
+        item.className = 'history-item';
+        item.innerHTML = `
+            <div>
+                <strong>${scan.fileName}</strong><br>
+                <span style="font-size: 12px; color: #666;">
+                    ${scan.platforms.join(', ')} | ${scan.region} | Score: ${scan.score}
+                </span>
+            </div>
+            <div>
+                <span class="history-date">${new Date(scan.date).toLocaleDateString()}</span>
+            </div>
+        `;
+        item.onclick = () => viewHistoryScan(scan);
+        historyList.appendChild(item);
+    });
 }
 
 function filterHistory(type) {
-// Update tab active state
-document.querySelectorAll('.history-tab').forEach(tab => {
-tab.classList.remove('active');
-});
-event.target.classList.add('active');
-
-// Filter history based on type
-if (type === 'region') {
-// Group by region
-const grouped = {};
-scanHistory.forEach(scan => {
-if (!grouped[scan.region]) grouped[scan.region] = [];
-grouped[scan.region].push(scan);
-});
-displayGroupedHistory(grouped, 'region');
-} else if (type === 'platform') {
-// Group by platform
-const grouped = {};
-scanHistory.forEach(scan => {
-scan.platforms.forEach(platform => {
-if (!grouped[platform]) grouped[platform] = [];
-grouped[platform].push(scan);
-});
-});
-displayGroupedHistory(grouped, 'platform');
-} else {
-displayHistory('all');
-}
+    // Update tab active state
+    document.querySelectorAll('.history-tab').forEach(tab => {
+        tab.classList.remove('active');
+    });
+    event.target.classList.add('active');
+    
+    // Filter history based on type
+    if (type === 'region') {
+        // Group by region
+        const grouped = {};
+        scanHistory.forEach(scan => {
+            if (!grouped[scan.region]) grouped[scan.region] = [];
+            grouped[scan.region].push(scan);
+        });
+        displayGroupedHistory(grouped, 'region');
+    } else if (type === 'platform') {
+        // Group by platform
+        const grouped = {};
+        scanHistory.forEach(scan => {
+            scan.platforms.forEach(platform => {
+                if (!grouped[platform]) grouped[platform] = [];
+                grouped[platform].push(scan);
+            });
+        });
+        displayGroupedHistory(grouped, 'platform');
+    } else {
+        displayHistory('all');
+    }
 }
 
 function displayGroupedHistory(grouped, type) {
-const historyList = document.getElementById('historyList');
-if (!historyList) return;
-
-historyList.innerHTML = '';
-Object.keys(grouped).forEach(key => {
-const header = document.createElement('h4');
-header.style.cssText = 'margin: 15px 0 10px; color: #1e3c72; text-transform: capitalize;';
-header.textContent = key;
-historyList.appendChild(header);
-
-grouped[key].forEach(scan => {
-const item = document.createElement('div');
-item.className = 'history-item';
-item.innerHTML = `
-<div>
-<strong>${scan.fileName}</strong><br>
-<span style="font-size: 12px; color: #666;">Score: ${scan.score}</span>
-</div>
-<div>
-<span class="history-date">${new Date(scan.date).toLocaleDateString()}</span>
-</div>
-`;
-item.onclick = () => viewHistoryScan(scan);
-historyList.appendChild(item);
-});
-});
+    const historyList = document.getElementById('historyList');
+    if (!historyList) return;
+    
+    historyList.innerHTML = '';
+    Object.keys(grouped).forEach(key => {
+        const header = document.createElement('h4');
+        header.style.cssText = 'margin: 15px 0 10px; color: #1e3c72; text-transform: capitalize;';
+        header.textContent = key;
+        historyList.appendChild(header);
+        
+        grouped[key].forEach(scan => {
+            const item = document.createElement('div');
+            item.className = 'history-item';
+            item.innerHTML = `
+                <div>
+                    <strong>${scan.fileName}</strong><br>
+                    <span style="font-size: 12px; color: #666;">Score: ${scan.score}</span>
+                </div>
+                <div>
+                    <span class="history-date">${new Date(scan.date).toLocaleDateString()}</span>
+                </div>
+            `;
+            item.onclick = () => viewHistoryScan(scan);
+            historyList.appendChild(item);
+        });
+    });
 }
 
 function viewHistoryScan(scan) {
-alert(`Viewing scan: ${scan.fileName}\nScore: ${scan.score}\nStatus: ${scan.status}`);
+    alert(`Viewing scan: ${scan.fileName}\nScore: ${scan.score}\nStatus: ${scan.status}`);
 }
 
 function incrementScanCount() {
-const currentCount = parseInt(safeStorage.getItem('checkreel_scans_used') || '0');
-safeStorage.setItem('checkreel_scans_used', (currentCount + 1).toString());
+    const currentCount = parseInt(safeStorage.getItem('checkreel_scans_used') || '0');
+    safeStorage.setItem('checkreel_scans_used', (currentCount + 1).toString());
 }
 
 // Tier management
 function updateTierDisplay() {
-const userTier = safeStorage.getItem('checkreel_tier') || 'free';
-const scansUsed = parseInt(safeStorage.getItem('checkreel_scans_used') || '0');
-const tierData = {
-free: { name: 'Free Trial', scans: 3, class: 'tier-free' },
-plus: { name: 'Plus', scans: 20, class: 'tier-plus' },
-premium: { name: 'Premium', scans: 40, class: 'tier-premium' }
-};
-
-const tier = tierData[userTier];
-const scansLeft = Math.max(0, tier.scans - scansUsed);
-const tierBadge = document.getElementById('tierBadge');
-const scansLeftEl = document.getElementById('scansLeft');
-
-if (tierBadge) {
-tierBadge.textContent = tier.name;
-tierBadge.className = `tier-badge ${tier.class}`;
-}
-
-if (scansLeftEl) {
-scansLeftEl.textContent = `${scansLeft} scans left`;
-}
+    const userTier = safeStorage.getItem('checkreel_tier') || 'free';
+    const scansUsed = parseInt(safeStorage.getItem('checkreel_scans_used') || '0');
+    const tierData = {
+        free: { name: 'Free Trial', scans: 3, class: 'tier-free' },
+        plus: { name: 'Plus', scans: 20, class: 'tier-plus' },
+        premium: { name: 'Premium', scans: 40, class: 'tier-premium' }
+    };
+    
+    const tier = tierData[userTier];
+    const scansLeft = Math.max(0, tier.scans - scansUsed);
+    const tierBadge = document.getElementById('tierBadge');
+    const scansLeftEl = document.getElementById('scansLeft');
+    
+    if (tierBadge) {
+        tierBadge.textContent = tier.name;
+        tierBadge.className = `tier-badge ${tier.class}`;
+    }
+    
+    if (scansLeftEl) {
+        scansLeftEl.textContent = `${scansLeft} scans left`;
+    }
 }
 
 function updateUserCounter() {
-const baseCount = 2697;
-let userIncrement = safeStorage.getItem('checkreel_user_increment');
-if (!userIncrement) {
-userIncrement = Math.floor(Math.random() * 100) + 1;
-safeStorage.setItem('checkreel_user_increment', userIncrement.toString());
-}
-const totalUsers = baseCount + parseInt(userIncrement);
-
-// Update stats
-const statCards = document.querySelectorAll('.stat-number');
-if (statCards[0]) {
-statCards[0].textContent = `${totalUsers.toLocaleString()}+`;
-}
+    const baseCount = 2697;
+    let userIncrement = safeStorage.getItem('checkreel_user_increment');
+    if (!userIncrement) {
+        userIncrement = Math.floor(Math.random() * 100) + 1;
+        safeStorage.setItem('checkreel_user_increment', userIncrement.toString());
+    }
+    const totalUsers = baseCount + parseInt(userIncrement);
+    
+    // Update stats
+    const statCards = document.querySelectorAll('.stat-number');
+    if (statCards[0]) {
+        statCards[0].textContent = `${totalUsers.toLocaleString()}+`;
+    }
 }
 
 function updateScansCounter() {
-const scansUsed = parseInt(safeStorage.getItem('checkreel_scans_used') || '0');
-const counterEl = document.getElementById('scansUsedCounter');
-if (counterEl) {
-counterEl.textContent = scansUsed;
-}
+    const scansUsed = parseInt(safeStorage.getItem('checkreel_scans_used') || '0');
+    const counterEl = document.getElementById('scansUsedCounter');
+    if (counterEl) {
+        counterEl.textContent = scansUsed;
+    }
 }
 
 // Make functions globally available
@@ -1735,144 +1770,15 @@ window.filterHistory = filterHistory;
 
 // Close modals when clicking outside
 window.addEventListener('click', function(e) {
-const countriesModal = document.getElementById('countriesModal');
-const insightModal = document.getElementById('insightModal');
-if (e.target === countriesModal) {
-closeCountriesModal();
-}
-if (e.target === insightModal) {
-closeInsightModal();
-}
-});
-</script>
-
-<!-- Complete Language Fix -->
-<script>
-// Complete language fix with proper element updates
-document.addEventListener('DOMContentLoaded', function() {
-    // Wait for lang-loader to initialize
-    setTimeout(() => {
-        const lang = safeStorage.getItem('checkreel_language') || 'en';
-        console.log('Applying language:', lang);
-        
-        // Force reload language content
-        if (window.loadLanguageContent) {
-            window.loadLanguageContent(lang);
-        }
-        
-                    // Complete Arabic translation
-            if (lang === 'ar') {
-                // Update all text elements
-                const elements = {
-                    'scansLeft': '????? ?? ?????',
-                    'tierBadge': '????? ??????'
-                };
-                
-                Object.keys(elements).forEach(id => {
-                    const el = document.getElementById(id);
-                    if (el && el.textContent.includes('scans left')) {
-                        el.textContent = el.textContent.replace('scans left', '??? ?????');
-                    }
-                });
-                
-                // Update all static text
-                document.querySelectorAll('h2, h3, p, span, div').forEach(el => {
-                    if (el.textContent.includes('Upload Content')) el.textContent = '??? ??????? ';
-                    if (el.textContent.includes('Select Platform')) el.textContent = '???? ?????? ';
-                    if (el.textContent.includes('Select Region')) el.textContent = '???? ??????? ';
-                    if (el.textContent.includes('Drop your content here')) el.textContent = '???? ??????? ???';
-                    if (el.textContent.includes('or click to browse files')) el.textContent = '?? ???? ????? ???????';
-                    if (el.textContent.includes('Supports:')) el.textContent = '????: MP4, MOV, JPG, PNG, MP3, WAV (?? ???? 100 ????????)';
-                    if (el.textContent.includes('Start Content Check')) el.textContent = '??? ??? ???????';
-                    if (el.textContent.includes('Active Users')) el.textContent = '?????????? ???????';
-                    if (el.textContent.includes('Content Scanned')) el.textContent = '??????? ???????';
-                    if (el.textContent.includes('Success Rate')) el.textContent = '???? ??????';
-                    if (el.textContent.includes('Platforms')) el.textContent = '???????';
-                    if (el.textContent.includes('Scans Used')) el.textContent = '????? ????????';
-                    if (el.textContent.includes('CheckReel. All rights reserved')) el.textContent = '???? ???. ???? ?????? ?????? 2025 ';
-                });
-            }
-            // Apply dashboard-specific translations
-        if (window.LANGUAGE_CONTENT && window.LANGUAGE_CONTENT[lang]) {
-            const content = window.LANGUAGE_CONTENT[lang];
-            
-            // Update scan button
-            const scanBtn = document.getElementById('scan-btn-text');
-            if (scanBtn && content['dashboard-scan-btn']) {
-                scanBtn.textContent = content['dashboard-scan-btn'];
-            }
-            
-            // Update tier selection title
-            const tierTitle = document.querySelector('.tier-selection h2');
-            if (tierTitle) {
-                if (lang === 'ar') {
-                    tierTitle.textContent = '🎯 اختر خطتك';
-                    document.body.setAttribute('dir', 'rtl');
-                } else if (lang === 'fr') {
-                    tierTitle.textContent = '🎯 Choisissez votre plan';
-                    document.body.removeAttribute('dir');
-                } else {
-                    tierTitle.textContent = '🎯 Choose Your Plan';
-                    document.body.removeAttribute('dir');
-                }
-            }
-            
-            // Update selection alert
-            const alert = document.getElementById('selectionAlert');
-            if (alert) {
-                if (lang === 'ar') {
-                    alert.textContent = '⚠️ يرجى اختيار منطقة ومنصة قبل رفع المحتوى للتحليل';
-                } else if (lang === 'fr') {
-                    alert.textContent = '⚠️ Veuillez sélectionner une région et une plateforme avant de télécharger du contenu';
-                } else {
-                    alert.textContent = '⚠️ Please select a region and platform before uploading content for analysis';
-                }
-            }
-            
-            // Update card titles
-            const cards = document.querySelectorAll('.card h2');
-            cards.forEach((title, index) => {
-                if (index === 0) { // Region card
-                    if (lang === 'ar') {
-                        title.textContent = '🌍 اختر المنطقة';
-                    } else if (lang === 'fr') {
-                        title.innerHTML = '📱 Sélectionner la plateforme';
-                    }
-                    // Re-add counter if it exists
-                    
-                } else if (index === 2) { // Upload card
-                    if (lang === 'ar') {
-                        title.textContent = '📁 رفع المحتوى';
-                    } else if (lang === 'fr') {
-                        title.textContent = '📁 Télécharger le contenu';
-                    }
-                }
-            });
-            
-            // Update upload area text
-            const uploadArea = document.getElementById('uploadArea');
-            if (uploadArea && content['dashboard-upload-text']) {
-                const h3 = uploadArea.querySelector('h3');
-                const p = uploadArea.querySelector('p');
-                if (lang === 'ar') {
-                    if (h3) h3.textContent = 'اسحب المحتوى هنا';
-                    if (p) p.textContent = 'أو انقر لتصفح الملفات';
-                } else if (lang === 'fr') {
-                    if (h3) h3.textContent = 'Déposez votre contenu ici';
-                    if (p) p.textContent = 'ou cliquez pour parcourir';
-                } else {
-                    if (h3) h3.textContent = 'Drop your content here';
-                    if (p) p.textContent = 'or click to browse files';
-                }
-            }
-        }
-    }, 100);
+    const countriesModal = document.getElementById('countriesModal');
+    const insightModal = document.getElementById('insightModal');
+    if (e.target === countriesModal) {
+        closeCountriesModal();
+    }
+    if (e.target === insightModal) {
+        closeInsightModal();
+    }
 });
 </script>
 </body>
-</html>fr') {
-
-
-
-
-
+</html>
