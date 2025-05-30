@@ -1,4 +1,4 @@
-﻿if (!window.safeStorage) {
+if (!window.safeStorage) {
   window.safeStorage = {
     getItem:   (k)=>{ try { return localStorage.getItem(k); } catch { return null } },
     setItem:   (k,v)=>{ try { localStorage.setItem(k,v) } catch {} },
@@ -35,56 +35,54 @@ const LANGUAGE_CONTENT = {
         "dashboard-upgrade-message": "You've reached your scan limit. Upgrade to continue checking your content."
     },
     fr: {
-        "home-page-title": "CheckReel - Vérifiez avant de publier",
+        "home-page-title": "CheckReel - V�rifiez avant de publier",
         "home-hero-title": "CheckReel",
-        "home-hero-subtitle": "Ne devinez pas  vérifiez avant de publier.",
-        "home-benefit-1": " Pré-vérifiez toute vidéo, image ou audio",
-        "home-benefit-2": " Rapport de conformité instantané avec l'IA",
-        "home-benefit-3": " Votre vie privée est entièrement protégée",
+        "home-hero-subtitle": "Ne devinez pas  v�rifiez avant de publier.",
+        "home-benefit-1": " Pr�-v�rifiez toute vid�o, image ou audio",
+        "home-benefit-2": " Rapport de conformit� instantan� avec l'IA",
+        "home-benefit-3": " Votre vie priv�e est enti�rement prot�g�e",
         "home-subscribe-button": "S'abonner maintenant",
-        "home-subscription-note": "4,99 $/mois après la période d'essai",
+        "home-subscription-note": "4,99 $/mois apr�s la p�riode d'essai",
         "home-active-users": " 2 729 utilisateurs actifs",
         "home-platforms-title": "Plateformes prises en charge",
-        "home-about-title": "À propos de CheckReel",
-        "home-about-content": "CheckReel est un service d'Alwafer Media, experts en gestion des réseaux sociaux, applications IA et marketing de précision.",
-        "dashboard-upload-title": "Télécharger le contenu à vérifier",
-        "dashboard-upload-text": "Glissez et déposez votre fichier ici ou cliquez pour parcourir",
-        "dashboard-platform-title": "Sélectionner la plateforme cible",
-        "dashboard-scan-btn": "Commencer la vérification",
-        "dashboard-results-title": "Rapport de conformité",
-        "dashboard-score-label": "Score de conformité",
-        "dashboard-issues-title": "Problèmes trouvés",
+        "home-about-title": "� propos de CheckReel",
+        "home-about-content": "CheckReel est un service d'Alwafer Media, experts en gestion des r�seaux sociaux, applications IA et marketing de pr�cision.",
+        "dashboard-upload-title": "T�l�charger le contenu � v�rifier",
+        "dashboard-upload-text": "Glissez et d�posez votre fichier ici ou cliquez pour parcourir",
+        "dashboard-platform-title": "S�lectionner la plateforme cible",
+        "dashboard-scan-btn": "Commencer la v�rification",
+        "dashboard-results-title": "Rapport de conformit�",
+        "dashboard-score-label": "Score de conformit�",
+        "dashboard-issues-title": "Probl�mes trouv�s",
         "dashboard-recommendations-title": "Recommandations",
-        "dashboard-upgrade-title": "Améliorer votre plan",
-        "dashboard-upgrade-message": "Vous avez atteint votre limite de scans. Améliorez pour continuer à vérifier votre contenu."
+        "dashboard-upgrade-title": "Am�liorer votre plan",
+        "dashboard-upgrade-message": "Vous avez atteint votre limite de scans. Am�liorez pour continuer � v�rifier votre contenu."
     },
     ar: {
-        "home-page-title": "تشيكريل - افحص قبل النشر",
-        "home-hero-title": "تشيكريل",
-        "home-hero-subtitle": "لا تتكهن، افحص قبل النشر.",
-        "home-benefit-1": " فحص مسبق لأي فيديو أو صورة أو صوت",
-        "home-benefit-2": " تقرير امتثال فوري مدعوم بالذكاء الاصطناعي",
-        "home-benefit-3": " خصوصيتك محمية بالكامل",
-        "home-subscribe-button": "اشترك الآن",
-        "home-subscription-note": " دولار/شهريًا بعد الفترة التجريبية",
-        "home-active-users": "  مستخدم نشط",
-        "home-platforms-title": "المنصات المدعومة",
-        "home-about-title": "حول تشيكريل",
-        "home-about-content": "تشيكريل هو جزء من الوافر ميديا، متخصص في إدارة وسائل التواصل الاجتماعي وتطبيقات الذكاء الاصطناعي والتسويق الدقيق.",
-        "dashboard-upload-title": "رفع المحتوى للفحص",
-        "dashboard-upload-text": "اسحب وأفلت ملفك هنا أو انقر للتصفح",
-        "dashboard-platform-title": "اختر المنصة المستهدفة",
-        "dashboard-scan-btn": "بدء فحص المحتوى",
-        "dashboard-results-title": "تقرير الامتثال",
-        "dashboard-score-label": "نتيجة الامتثال",
-        "dashboard-issues-title": "المشاكل الموجودة",
-        "dashboard-recommendations-title": "التوصيات",
-        "dashboard-upgrade-title": "ترقية خطتك",
-        "dashboard-upgrade-message": "لقد وصلت إلى حد الفحص الخاص بك. قم بالترقية لمواصلة فحص المحتوى."
+        "home-page-title": "??????? - ???? ??? ?????",
+        "home-hero-title": "???????",
+        "home-hero-subtitle": "?? ?????? ???? ??? ?????.",
+        "home-benefit-1": " ??? ???? ??? ????? ?? ???? ?? ???",
+        "home-benefit-2": " ????? ?????? ???? ????? ??????? ?????????",
+        "home-benefit-3": " ??????? ????? ???????",
+        "home-subscribe-button": "????? ????",
+        "home-subscription-note": " ?????/?????? ??? ?????? ?????????",
+        "home-active-users": "  ?????? ???",
+        "home-platforms-title": "??????? ????????",
+        "home-about-title": "??? ???????",
+        "home-about-content": "??????? ?? ??? ?? ?????? ?????? ????? ?? ????? ????? ??????? ????????? ???????? ?????? ????????? ???????? ??????.",
+        "dashboard-upload-title": "??? ??????? ?????",
+        "dashboard-upload-text": "???? ????? ???? ??? ?? ???? ??????",
+        "dashboard-platform-title": "???? ?????? ?????????",
+        "dashboard-scan-btn": "??? ??? ???????",
+        "dashboard-results-title": "????? ????????",
+        "dashboard-score-label": "????? ????????",
+        "dashboard-issues-title": "??????? ????????",
+        "dashboard-recommendations-title": "????????",
+        "dashboard-upgrade-title": "????? ????",
+        "dashboard-upgrade-message": "??? ???? ??? ?? ????? ????? ??. ?? ???????? ??????? ??? ???????."
     }
 };
-
-let currentLanguage = 'en';
 
 async function loadLanguageFromFile(lang) {
     try {
@@ -170,7 +168,7 @@ function updateActiveUsersCount(content) {
     const totalUsers = baseCount + parseInt(userIncrement);
     
     if (currentLanguage === 'ar') {
-        activeUsersEl.textContent = ` ${totalUsers.toLocaleString('ar')} مستخدم نشط`;
+        activeUsersEl.textContent = ` ${totalUsers.toLocaleString('ar')} ?????? ???`;
     } else if (currentLanguage === 'fr') {
         activeUsersEl.textContent = ` ${totalUsers.toLocaleString('fr')} utilisateurs actifs`;
     } else {
@@ -211,3 +209,4 @@ document.addEventListener('DOMContentLoaded', function() {
 
 window.loadLanguageContent = loadLanguageContent;
 window.LANGUAGE_CONTENT = LANGUAGE_CONTENT;
+

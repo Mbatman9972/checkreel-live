@@ -1,0 +1,333 @@
+warning: in the working copy of 'lang-loader.js', LF will be replaced by CRLF the next time Git touches it
+[1mdiff --git a/lang-loader.js b/lang-loader.js[m
+[1mindex dc4aec5..bd62b4e 100644[m
+[1m--- a/lang-loader.js[m
+[1m+++ b/lang-loader.js[m
+[36m@@ -1,318 +1,8 @@[m
+[31m-// Safe storage wrapper[m
+[31m-const safeStorage = {[m
+[31m-    getItem(key) {[m
+[31m-        try { return localStorage.getItem(key); }[m
+[31m-        catch (e) { return null; }[m
+[31m-    },[m
+[31m-    setItem(key, value) {[m
+[31m-        try { localStorage.setItem(key, value); return true; }[m
+[31m-        catch (e) { return false; }[m
+[31m-    }[m
+[31m-};[m
+[31m-[m
+[31m-// Prevent any manifest errors from crashing the page[m
+[31m-window.addEventListener('error', function(e) {[m
+[31m-    if (e.message && e.message.includes('manifest')) {[m
+[31m-        e.preventDefault();[m
+[31m-        console.warn('Manifest error caught and prevented');[m
+[31m-    }[m
+[31m-}, true);[m
+[31m-[m
+[31m-// Complete language content for dashboard[m
+[31m-const LANGUAGE_CONTENT = {[m
+[31m-    en: {[m
+[31m-        // Header[m
+[31m-        "scans-left": "scans left",[m
+[31m-        "tier-free": "Free Trial",[m
+[31m-        "tier-plus": "Plus",[m
+[31m-        "tier-premium": "Premium",[m
+[31m-        [m
+[31m-        // Tier Selection[m
+[31m-        "choose-plan": "Choose Your Plan",[m
+[31m-        "per-month": "/mo",[m
+[31m-        "scans": "scans",[m
+[31m-        "scans-month": "scans/month",[m
+[31m-        "basic-compliance": "Basic compliance check",[m
+[31m-        "standard-results": "Standard results",[m
+[31m-        "enhanced-compliance": "Enhanced compliance check",[m
+[31m-        "detailed-insights": "Detailed insights",[m
+[31m-        "scan-history": "Scan history",[m
+[31m-        "priority-support": "Priority support",[m
+[31m-        "all-features": "All features included",[m
+[31m-        "ai-guidance": "Advanced AI-powered guidance",[m
+[31m-        "content-optimization": "Assured content optimization",[m
+[31m-        "multi-platform": "Multi-platform scanning (up to 3)",[m
+[31m-        "complete-history": "Complete scan history",[m
+[31m-        [m
+[31m-        // Main Cards[m
+[31m-        "select-region": "Select Region",[m
+[31m-        "select-platform": "Select Platform",[m
+[31m-        "upload-content": "Upload Content",[m
+[31m-        "global": "Global",[m
+[31m-        "middle-east": "Middle East",[m
+[31m-        "mena": "MENA",[m
+[31m-        "europe": "Europe",[m
+[31m-        [m
+[31m-        // Upload Area[m
+[31m-        "drop-here": "Drop your content here",[m
+[31m-        "click-browse": "or click to browse files",[m
+[31m-        "supports": "Supports: MP4, MOV, JPG, PNG, MP3, WAV (max 100MB)",[m
+[31m-        "remove-file": "Remove File",[m
+[31m-        [m
+[31m-        // Selection Alert[m
+[31m-        "selection-alert": "Please select a region and platform before uploading content for analysis",[m
+[31m-        [m
+[31m-        // Scan Button[m
+[31m-        "start-check": "Start Content Check",[m
+[31m-        "analyzing": "Analyzing...",[m
+[31m-        [m
+[31m-        // Results[m
+[31m-        "compliance-results": "Compliance Results",[m
+[31m-        "ready-post": "Ready to Post",[m
+[31m-        "needs-review": "Needs Review",[m
+[31m-        "do-not-post": "Do Not Post",[m
+[31m-        "issues-found": "Issues Found",[m
+[31m-        "recommendations": "Recommendations",[m
+[31m-        [m
+[31m-        // Stats[m
+[31m-        "active-users": "Active Users",[m
+[31m-        "content-scanned": "Content Scanned",[m
+[31m-        "success-rate": "Success Rate",[m
+[31m-        "platforms": "Platforms",[m
+[31m-        "scans-used": "Scans Used (Testing)",[m
+[31m-        [m
+[31m-        // Modals[m
+[31m-        "select-country": "Select Country",[m
+[31m-        "insight-details": "Insight Details",[m
+[31m-        [m
+[31m-        // Footer[m
+[31m-        "footer-text": "© 2025 CheckReel. All rights reserved. Copyright Protected."[m
+[31m-    },[m
+[31m-    [m
+[31m-    ar: {[m
+[31m-        // Header[m
+[31m-        "scans-left": "?????? ??????",[m
+[31m-        "tier-free": "????? ??????",[m
+[31m-        "tier-plus": "???",[m
+[31m-        "tier-premium": "???????",[m
+[31m-        [m
+[31m-        // Tier Selection[m
+[31m-        "choose-plan": "???? ????",[m
+[31m-        "per-month": "/??????",[m
+[31m-        "scans": "??????",[m
+[31m-        "scans-month": "???/??????",[m
+[31m-        "basic-compliance": "??? ?????? ?????",[m
+[31m-        "standard-results": "????? ??????",[m
+[31m-        "enhanced-compliance": "??? ?????? ?????",[m
+[31m-        "detailed-insights": "??? ?????",[m
+[31m-        "scan-history": "??? ?????",[m
+[31m-        "priority-support": "??? ?? ??????",[m
+[31m-        "all-features": "???? ??????? ??????",[m
+[31m-        "ai-guidance": "????? ????? ??????? ?????????",[m
+[31m-        "content-optimization": "????? ????? ?????",[m
+[31m-        "multi-platform": "??? ????? ??????? (??? 3)",[m
+[31m-        "complete-history": "??? ??? ????",[m
+[31m-        [m
+[31m-        // Main Cards[m
+[31m-        "select-region": "???? ???????",[m
+[31m-        "select-platform": "???? ??????",[m
+[31m-        "upload-content": "??? ???????",[m
+[31m-        "global": "?????",[m
+[31m-        "middle-east": "????? ??????",[m
+[31m-        "mena": "????? ?????? ????? ???????",[m
+[31m-        "europe": "??????",[m
+[31m-        [m
+[31m-        // Upload Area[m
+[31m-        "drop-here": "???? ??????? ???",[m
+[31m-        "click-browse": "?? ???? ????? ???????",[m
+[31m-        "supports": "????: MP4? MOV? JPG? PNG? MP3? WAV (??? ???? 100 ????????)",[m
+[31m-        "remove-file": "????? ?????",[m
+[31m-        [m
+[31m-        // Selection Alert[m
+[31m-        "selection-alert": "???? ?????? ????? ????? ??? ??? ??????? ???????",[m
+[31m-        [m
+[31m-        // Scan Button[m
+[31m-        "start-check": "??? ??? ???????",[m
+[31m-        "analyzing": "???? ???????...",[m
+[31m-        [m
+[31m-        // Results[m
+[31m-        "compliance-results": "????? ????????",[m
+[31m-        "ready-post": "???? ?????",[m
+[31m-        "needs-review": "????? ??????",[m
+[31m-        "do-not-post": "?? ????",[m
+[31m-        "issues-found": "??????? ????????",[m
+[31m-        "recommendations": "????????",[m
+[31m-        [m
+[31m-        // Stats[m
+[31m-        "active-users": "?????????? ???????",[m
+[31m-        "content-scanned": "??????? ???????",[m
+[31m-        "success-rate": "???? ??????",[m
+[31m-        "platforms": "???????",[m
+[31m-        "scans-used": "???????? ????????? (??????)",[m
+[31m-        [m
+[31m-        // Modals[m
+[31m-        "select-country": "???? ??????",[m
+[31m-        "insight-details": "?????? ??????",[m
+[31m-        [m
+[31m-        // Footer[m
+[31m-        "footer-text": "© 2025 ???????. ???? ?????? ??????. ???? ????? ????? ??????."[m
+[31m-    },[m
+[31m-    [m
+[31m-    fr: {[m
+[31m-        // Header[m
+[31m-        "scans-left": "scans restants",[m
+[31m-        "tier-free": "Essai gratuit",[m
+[31m-        "tier-plus": "Plus",[m
+[31m-        "tier-premium": "Premium",[m
+[31m-        [m
+[31m-        // Tier Selection[m
+[31m-        "choose-plan": "Choisissez votre plan",[m
+[31m-        "per-month": "/mois",[m
+[31m-        "scans": "scans",[m
+[31m-        "scans-month": "scans/mois",[m
+[31m-        "basic-compliance": "Vérification de conformité de base",[m
+[31m-        "standard-results": "Résultats standards",[m
+[31m-        "enhanced-compliance": "Vérification de conformité améliorée",[m
+[31m-        "detailed-insights": "Aperçus détaillés",[m
+[31m-        "scan-history": "Historique des scans",[m
+[31m-        "priority-support": "Support prioritaire",[m
+[31m-        "all-features": "Toutes les fonctionnalités incluses",[m
+[31m-        "ai-guidance": "Conseils avancés par IA",[m
+[31m-        "content-optimization": "Optimisation de contenu assurée",[m
+[31m-        "multi-platform": "Scan multi-plateforme (jusqu'à 3)",[m
+[31m-        "complete-history": "Historique complet des scans",[m
+[31m-        [m
+[31m-        // Main Cards[m
+[31m-        "select-region": "Sélectionner la région",[m
+[31m-        "select-platform": "Sélectionner la plateforme",[m
+[31m-        "upload-content": "Télécharger le contenu",[m
+[31m-        "global": "Global",[m
+[31m-        "middle-east": "Moyen-Orient",[m
+[31m-        "mena": "MENA",[m
+[31m-        "europe": "Europe",[m
+[31m-        [m
+[31m-        // Upload Area[m
+[31m-        "drop-here": "Déposez votre contenu ici",[m
+[31m-        "click-browse": "ou cliquez pour parcourir",[m
+[31m-        "supports": "Supporte: MP4, MOV, JPG, PNG, MP3, WAV (max 100 Mo)",[m
+[31m-        "remove-file": "Supprimer le fichier",[m
+[31m-        [m
+[31m-        // Selection Alert[m
+[31m-        "selection-alert": "Veuillez sélectionner une région et une plateforme avant de télécharger du contenu",[m
+[31m-        [m
+[31m-        // Scan Button[m
+[31m-        "start-check": "Commencer la vérification",[m
+[31m-        "analyzing": "Analyse en cours...",[m
+[31m-        [m
+[31m-        // Results[m
+[31m-        "compliance-results": "Résultats de conformité",[m
+[31m-        "ready-post": "Prêt à publier",[m
+[31m-        "needs-review": "Nécessite une révision",[m
+[31m-        "do-not-post": "Ne pas publier",[m
+[31m-        "issues-found": "Problèmes trouvés",[m
+[31m-        "recommendations": "Recommandations",[m
+[31m-        [m
+[31m-        // Stats[m
+[31m-        "active-users": "Utilisateurs actifs",[m
+[31m-        "content-scanned": "Contenu scanné",[m
+[31m-        "success-rate": "Taux de réussite",[m
+[31m-        "platforms": "Plateformes",[m
+[31m-        "scans-used": "Scans utilisés (Test)",[m
+[31m-        [m
+[31m-        // Modals[m
+[31m-        "select-country": "Sélectionner le pays",[m
+[31m-        "insight-details": "Détails de l'aperçu",[m
+[31m-        [m
+[31m-        // Footer[m
+[31m-        "footer-text": "© 2025 CheckReel. Tous droits réservés. Protégé par le droit d'auteur."[m
+[31m-    }[m
+[31m-};[m
+[31m-[m
+[31m-window.loadLanguageContent = function(lang) {[m
+[31m-    if (!lang || !LANGUAGE_CONTENT[lang]) {[m
+[31m-        console.warn('Invalid language, defaulting to English');[m
+[31m-        lang = 'en';[m
+[31m-    }[m
+[31m-    [m
+[31m-    console.log('Loading dashboard language:', lang);[m
+[31m-    [m
+[31m-    // Set RTL for Arabic[m
+[31m-    if (lang === 'ar') {[m
+[31m-        document.body.setAttribute('dir', 'rtl');[m
+[31m-        document.documentElement.setAttribute('dir', 'rtl');[m
+[31m-        document.body.style.direction = 'rtl';[m
+[31m-        document.documentElement.style.direction = 'rtl';[m
+[31m-    } else {[m
+[31m-        document.body.removeAttribute('dir');[m
+[31m-        document.documentElement.removeAttribute('dir');[m
+[31m-        document.body.style.direction = 'ltr';[m
+[31m-        document.documentElement.style.direction = 'ltr';[m
+[31m-    }[m
+[31m-    [m
+[31m-    // Apply translations[m
+[31m-    const content = LANGUAGE_CONTENT[lang];[m
+[31m-    [m
+[31m-    // Update all text elements[m
+[31m-    document.querySelectorAll('*').forEach(el => {[m
+[31m-        if (el.childNodes.length === 1 && el.childNodes[0].nodeType === 3) {[m
+[31m-            const text = el.textContent.trim();[m
+[31m-            [m
+[31m-            // Direct text replacements[m
+[31m-            Object.keys(LANGUAGE_CONTENT.en).forEach(key => {[m
+[31m-                if (text === LANGUAGE_CONTENT.en[key]) {[m
+[31m-                    el.textContent = content[key];[m
+[31m-                }[m
+[31m-            });[m
+[31m-            [m
+[31m-            // Special cases with icons[m
+[31m-            if (text === '?? Select Region') el.textContent = `?? ${content['select-region']}`;[m
+[31m-            if (text === '?? Select Platform') el.textContent = `?? ${content['select-platform']}`;[m
+[31m-            if (text === '?? Upload Content') el.textContent = `?? ${content['upload-content']}`;[m
+[31m-            if (text === '?? Choose Your Plan') el.textContent = `?? ${content['choose-plan']}`;[m
+[31m-            if (text === '?? Compliance Results') el.textContent = `?? ${content['compliance-results']}`;[m
+[31m-            if (text === '?? Issues Found') el.textContent = `?? ${content['issues-found']}`;[m
+[31m-            if (text === '?? Recommendations') el.textContent = `?? ${content['recommendations']}`;[m
+[31m-            [m
+[31m-            // Scan counter[m
+[31m-            if (text.includes('scans left')) {[m
+[31m-                const num = text.match(/\d+/);[m
+[31m-                el.textContent = num ? `${num[0]} ${content['scans-left']}` : content['scans-left'];[m
+[31m-            }[m
+[31m-            [m
+[31m-            // Prices[m
+[31m-            if (text === '$4.99/mo') el.textContent = `$4.99${content['per-month']}`;[m
+[31m-            if (text === '$9.99/mo') el.textContent = `$9.99${content['per-month']}`;[m
+[31m-            [m
+[31m-            // Platform names[m
+[31m-            const platforms = ['TikTok', 'YouTube', 'Instagram', 'Facebook', 'Twitter', 'Snapchat'];[m
+[31m-            if (platforms.includes(text)) {[m
+[31m-                // Keep platform names as is (they're brand names)[m
+[31m-                return;[m
+[31m-            }[m
+[31m-        }[m
+[31m-    });[m
+[31m-    [m
+[31m-    // Update specific elements by ID[m
+[31m-    const scanBtn = document.getElementById('scan-btn-text');[m
+[31m-    if (scanBtn) scanBtn.textContent = content['start-check'];[m
+[31m-    [m
+[31m-    const selectionAlert = document.getElementById('selectionAlert');[m
+[31m-    if (selectionAlert && selectionAlert.textContent.includes('Please select')) {[m
+[31m-        selectionAlert.textContent = `?? ${content['selection-alert']}`;[m
+[31m-    }[m
+[31m-};[m
+[31m-[m
+[31m-// Initialize on load[m
+[31m-document.addEventListener('DOMContentLoaded', function() {[m
+[31m-    try {[m
+[31m-        const lang = safeStorage.getItem('checkreel_language') || 'en';[m
+[31m-        window.loadLanguageContent(lang);[m
+[31m-    } catch (e) {[m
+[31m-        console.error('Language initialization error:', e);[m
+[31m-        window.loadLanguageContent('en');[m
+[31m-    }[m
+[31m-});[m
+[31m-[m
+[31m-// Export for global access[m
+[31m-window.safeStorage = safeStorage;[m
+[31m-window.LANGUAGE_CONTENT = LANGUAGE_CONTENT;[m
+[32m+[m[32mï»¿if (!window.safeStorage) {[m
+[32m+[m[32m  window.safeStorage = {[m
+[32m+[m[32m    getItem:  (k) => { try { return localStorage.getItem(k); } catch { return null } },[m
+[32m+[m[32m    setItem:  (k,v)=> { try { localStorage.setItem(k,v) } catch {} },[m
+[32m+[m[32m    removeItem:(k)  => { try { localStorage.removeItem(k) } catch {} }[m
+[32m+[m[32m  };[m
+[32m+[m[32m}[m
+[32m+[m[32mconst safeStorage = window.safeStorage;[m
+\ No newline at end of file[m
