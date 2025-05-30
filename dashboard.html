@@ -20,6 +20,11 @@ background: linear-gradient(135deg, #1e3c72 0%, #2a5298 25%, #667eea 50%, #764ba
 min-height: 100vh;
 color: #333;
 }
+
+body[dir="rtl"] {
+    direction: rtl;
+}
+
 body[dir="rtl"] .container {
     display: block !important;
     visibility: visible !important;
@@ -30,6 +35,7 @@ body[dir="rtl"] .card {
     display: block !important;
     visibility: visible !important;
 }
+
 .container {
 max-width: 1200px;
 margin: 0 auto;
@@ -760,43 +766,43 @@ gap: 20px;
 
 <!-- Tier Selection -->
 <div class="tier-selection">
-<h2>?? Choose Your Plan</h2>
+<h2 id="choose-plan">Choose Your Plan</h2>
 <div class="tier-plans">
 <div class="tier-plan active" data-tier="free" onclick="selectTier('free')">
-<div class="tier-name">Free Trial</div>
+<div class="tier-name" id="free-trial">Free Trial</div>
 <div class="tier-price">$0</div>
-<div class="tier-scans">3 scans</div>
-<div class="tier-features">Basic compliance check<br>Standard results</div>
+<div class="tier-scans" id="free-scans">3 scans</div>
+<div class="tier-features" id="free-features">Basic compliance check<br>Standard results</div>
 </div>
 <div class="tier-plan recommended" data-tier="plus" onclick="selectTier('plus')">
-<div class="tier-name">Plus</div>
-<div class="tier-price">$4.99/mo</div>
-<div class="tier-scans">20 scans/month</div>
-<div class="tier-features">Enhanced compliance check<br>Detailed insights<br>Scan history<br>Priority support</div>
+<div class="tier-name" id="plus-tier">Plus</div>
+<div class="tier-price">$4.99/<span id="per-month">mo</span></div>
+<div class="tier-scans" id="plus-scans">20 scans/month</div>
+<div class="tier-features" id="plus-features">Enhanced compliance check<br>Detailed insights<br>Scan history<br>Priority support</div>
 </div>
 <div class="tier-plan" data-tier="premium" onclick="selectTier('premium')">
-<div class="tier-name">Premium</div>
-<div class="tier-price">$9.99/mo</div>
-<div class="tier-scans">40 scans/month</div>
-<div class="tier-features">All features included<br>Advanced AI-powered guidance<br>Assured content optimization<br>Multi-platform scanning (up to 3)<br>Complete scan history</div>
+<div class="tier-name" id="premium-tier">Premium</div>
+<div class="tier-price">$9.99/<span id="per-month-premium">mo</span></div>
+<div class="tier-scans" id="premium-scans">40 scans/month</div>
+<div class="tier-features" id="premium-features">Full compliance suite<br>Advanced analytics<br>Team features<br>White-label reports<br>API access<br>Dedicated support</div>
 </div>
 </div>
 </div>
 
-<!-- Selection Alert - MOVED BELOW TIER SELECTION -->
+<!-- Selection Alert -->
 <div id="selectionAlert" class="selection-alert">
-?? Please select a region and platform before uploading content for analysis
+<span id="selection-alert">Please select a region and platform before uploading content for analysis</span>
 </div>
 
 <!-- Main Dashboard -->
 <div class="dashboard-grid">
 <!-- Region Selection -->
 <div class="card">
-<h2>?? Select Region</h2>
+<h2 id="select-region">Select Region</h2>
 <div class="region-grid">
 <div class="region-option" data-region="global" onclick="selectRegion('global')">
 <img src="images/region-icons/global.png" alt="Global" class="region-icon"
-onerror="this.outerHTML='<div style=&quot;width: 35px; height: 35px; background: #3498db; border-radius: 6px; margin-bottom: 8px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 12px;&quot;>??</div>';">
+onerror="this.outerHTML='<div style=&quot;width: 35px; height: 35px; background: #3498db; border-radius: 6px; margin-bottom: 8px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 12px;&quot;>🌍</div>';">
 <span class="region-name">Global</span>
 </div>
 <div class="region-option" data-region="middle-east" onclick="selectRegion('middle-east'); showCountries('middleEast')">
@@ -819,7 +825,7 @@ onerror="this.outerHTML='<div style=&quot;width: 35px; height: 35px; background:
 
 <!-- Platform Selection -->
 <div class="card">
-<h2>?? Select Platform <span id="platformCounter" style="font-size: 12px; color: #666;"></span></h2>
+<h2 id="select-platform">Select Target Platform <span id="platformCounter" style="font-size: 12px; color: #666;"></span></h2>
 <div class="platforms-grid">
 <div class="platform-option" data-platform="tiktok" onclick="selectPlatform('tiktok')">
 <img src="images/tiktok.png" alt="TikTok" class="platform-icon">
@@ -850,11 +856,11 @@ onerror="this.outerHTML='<div style=&quot;width: 35px; height: 35px; background:
 
 <!-- File Upload -->
 <div class="card">
-<h2>?? Upload Content</h2>
+<h2 id="upload-content">Upload Content to Check</h2>
 <div id="uploadArea" class="upload-area">
-<span class="upload-icon">??</span>
-<h3>Drop your content here</h3>
-<p>or click to browse files</p>
+<span class="upload-icon">📁</span>
+<h3 id="drop-here">Drop your content here</h3>
+<p id="click-browse">or click to browse files</p>
 <small>Supports: MP4, MOV, JPG, PNG, MP3, WAV (max 100MB)</small>
 </div>
 <div id="fileInfo" class="file-info">
@@ -869,18 +875,18 @@ onerror="this.outerHTML='<div style=&quot;width: 35px; height: 35px; background:
 <!-- Scan Button -->
 <div class="scan-section">
 <button id="scanBtn" class="scan-btn" disabled>
-<span id="scan-btn-text">Start Content Check</span>
+<span id="start-check">Start Content Check</span>
 <div id="btnLoader" class="btn-loader"></div>
 </button>
 </div>
 
-<!-- Scan History (for Plus and Premium) -->
+<!-- Scan History -->
 <div id="scanHistory" class="scan-history">
-<h2>?? Scan History</h2>
+<h2 id="scan-history-title">Scan History</h2>
 <div class="history-tabs">
-<button class="history-tab active" onclick="filterHistory('all')">All Scans</button>
-<button class="history-tab" onclick="filterHistory('region')">By Region</button>
-<button class="history-tab" onclick="filterHistory('platform')">By Platform</button>
+<button class="history-tab active" onclick="filterHistory('all')" id="all-scans">All Scans</button>
+<button class="history-tab" onclick="filterHistory('region')" id="by-region">By Region</button>
+<button class="history-tab" onclick="filterHistory('platform')" id="by-platform">By Platform</button>
 </div>
 <div id="historyList" class="history-list"></div>
 </div>
@@ -888,23 +894,23 @@ onerror="this.outerHTML='<div style=&quot;width: 35px; height: 35px; background:
 <!-- Results Section -->
 <div id="resultsSection" class="results-section">
 <div class="card">
-<h2>?? Compliance Results</h2>
+<h2 id="compliance-report">Compliance Report</h2>
 <div class="score-display">
 <div id="scoreCircle" class="score-circle">
 <span id="scoreValue" class="score-value">85</span>
 </div>
 <div class="status-indicator">
-<span id="statusIcon" class="status-icon">?</span>
+<span id="statusIcon" class="status-icon">✅</span>
 <span id="status-text">Ready to Post</span>
 </div>
 </div>
 <div class="results-grid">
 <div class="issues-card">
-<h3>?? Issues Found</h3>
+<h3 id="issues-found">Issues Found</h3>
 <div id="issuesList"></div>
 </div>
 <div class="recommendations-card">
-<h3>?? Recommendations</h3>
+<h3 id="recommendations">Recommendations</h3>
 <div id="recommendationsList"></div>
 </div>
 </div>
@@ -915,23 +921,23 @@ onerror="this.outerHTML='<div style=&quot;width: 35px; height: 35px; background:
 <div class="stats-grid">
 <div class="stat-card">
 <div class="stat-number">2,697+</div>
-<div class="stat-label">Active Users</div>
+<div class="stat-label" id="active-users">Active Users</div>
 </div>
 <div class="stat-card">
 <div class="stat-number">15,847</div>
-<div class="stat-label">Content Scanned</div>
+<div class="stat-label" id="content-scanned">Content Scanned</div>
 </div>
 <div class="stat-card">
 <div class="stat-number">94%</div>
-<div class="stat-label">Success Rate</div>
+<div class="stat-label" id="success-rate">Success Rate</div>
 </div>
 <div class="stat-card">
 <div class="stat-number">6</div>
-<div class="stat-label">Platforms</div>
+<div class="stat-label" id="platforms">Platforms</div>
 </div>
 <div class="stat-card">
 <div class="stat-number" id="scansUsedCounter">0</div>
-<div class="stat-label">Scans Used (Testing)</div>
+<div class="stat-label" id="scans-used">Scans Used (Testing)</div>
 </div>
 </div>
 
@@ -971,127 +977,185 @@ let selectedRegion = null;
 let selectedCountry = null;
 let currentTier = 'free';
 let scanHistory = [];
+let currentLanguage = 'en';
 
-    // Apply language translations to dashboard
-    function applyDashboardTranslations(lang) {
-        const content = window.LANGUAGE_CONTENT[lang] || window.LANGUAGE_CONTENT['en'];
-        
-        // Update all text elements
-        const scanBtn = document.querySelector('.scan-btn span');
-        if (scanBtn) scanBtn.textContent = content['start-check'];
-        
-        const tierTitle = document.querySelector('#tier-selection h2');
-        if (tierTitle) tierTitle.textContent = content['choose-plan'];
-        
-        // Update tier cards
-        document.querySelectorAll('.tier-card').forEach(card => {
-            const tierName = card.querySelector('h3');
-            if (tierName) {
-                if (tierName.textContent.includes('Free')) tierName.textContent = content['free-trial'];
-                if (tierName.textContent.includes('Plus')) tierName.textContent = content['plus-tier'];
-                if (tierName.textContent.includes('Premium')) tierName.textContent = content['premium-tier'];
+// Safe storage wrapper
+if (!window.safeStorage) {
+  window.safeStorage = {
+    getItem:   (k)=>{ try { return localStorage.getItem(k); } catch { return null } },
+    setItem:   (k,v)=>{ try { localStorage.setItem(k,v) } catch {} },
+    removeItem:(k)=>{ try { localStorage.removeItem(k) } catch {} }
+  };
+}
+
+// Language content for dashboard elements
+const DASHBOARD_TRANSLATIONS = {
+    en: {
+        'choose-plan': 'Choose Your Plan',
+        'free-trial': 'Free Trial',
+        'plus-tier': 'Plus',
+        'premium-tier': 'Premium',
+        'per-month': 'mo',
+        'free-scans': '3 scans',
+        'plus-scans': '20 scans/month',
+        'premium-scans': '40 scans/month',
+        'free-features': 'Basic compliance check<br>Standard results',
+        'plus-features': 'Enhanced compliance check<br>Detailed insights<br>Scan history<br>Priority support',
+        'premium-features': 'Full compliance suite<br>Advanced analytics<br>Team features<br>White-label reports<br>API access<br>Dedicated support',
+        'selection-alert': 'Please select a region and platform before uploading content for analysis',
+        'select-region': 'Select Region',
+        'select-platform': 'Select Target Platform',
+        'upload-content': 'Upload Content to Check',
+        'drop-here': 'Drop your content here',
+        'click-browse': 'or click to browse files',
+        'start-check': 'Start Content Check',
+        'analyzing': 'Analyzing...',
+        'scan-history-title': 'Scan History',
+        'all-scans': 'All Scans',
+        'by-region': 'By Region',
+        'by-platform': 'By Platform',
+        'compliance-report': 'Compliance Report',
+        'issues-found': 'Issues Found',
+        'recommendations': 'Recommendations',
+        'active-users': 'Active Users',
+        'content-scanned': 'Content Scanned',
+        'success-rate': 'Success Rate',
+        'platforms': 'Platforms',
+        'scans-used': 'Scans Used (Testing)',
+        'scans-left': 'scans left',
+        'recommended': 'RECOMMENDED'
+    },
+    fr: {
+        'choose-plan': 'Choisissez votre plan',
+        'free-trial': 'Essai gratuit',
+        'plus-tier': 'Plus',
+        'premium-tier': 'Premium',
+        'per-month': 'mois',
+        'free-scans': '3 analyses',
+        'plus-scans': '20 analyses/mois',
+        'premium-scans': '40 analyses/mois',
+        'free-features': 'Vérification de conformité de base<br>Résultats standards',
+        'plus-features': 'Vérification de conformité améliorée<br>Informations détaillées<br>Historique des analyses<br>Support prioritaire',
+        'premium-features': 'Suite de conformité complète<br>Analyses avancées<br>Fonctionnalités d\'équipe<br>Rapports en marque blanche<br>Accès API<br>Support dédié',
+        'selection-alert': 'Veuillez sélectionner une région et une plateforme avant de télécharger le contenu pour analyse',
+        'select-region': 'Sélectionner la région',
+        'select-platform': 'Sélectionner la plateforme cible',
+        'upload-content': 'Télécharger le contenu à vérifier',
+        'drop-here': 'Déposez votre contenu ici',
+        'click-browse': 'ou cliquez pour parcourir les fichiers',
+        'start-check': 'Commencer la vérification du contenu',
+        'analyzing': 'Analyse en cours...',
+        'scan-history-title': 'Historique des analyses',
+        'all-scans': 'Toutes les analyses',
+        'by-region': 'Par région',
+        'by-platform': 'Par plateforme',
+        'compliance-report': 'Rapport de conformité',
+        'issues-found': 'Problèmes trouvés',
+        'recommendations': 'Recommandations',
+        'active-users': 'Utilisateurs actifs',
+        'content-scanned': 'Contenu analysé',
+        'success-rate': 'Taux de réussite',
+        'platforms': 'Plateformes',
+        'scans-used': 'Analyses utilisées (Test)',
+        'scans-left': 'analyses restantes',
+        'recommended': 'RECOMMANDÉ'
+    },
+    ar: {
+        'choose-plan': 'اختر خطتك',
+        'free-trial': 'تجربة مجانية',
+        'plus-tier': 'بلس',
+        'premium-tier': 'بريميوم',
+        'per-month': 'شهر',
+        'free-scans': '3 فحوصات',
+        'plus-scans': '20 فحص/شهر',
+        'premium-scans': '40 فحص/شهر',
+        'free-features': 'فحص امتثال أساسي<br>نتائج قياسية',
+        'plus-features': 'فحص امتثال محسّن<br>رؤى مفصلة<br>سجل الفحوصات<br>دعم ذو أولوية',
+        'premium-features': 'مجموعة امتثال كاملة<br>تحليلات متقدمة<br>ميزات الفريق<br>تقارير بعلامة تجارية خاصة<br>الوصول إلى API<br>دعم مخصص',
+        'selection-alert': 'يرجى اختيار منطقة ومنصة قبل تحميل المحتوى للتحليل',
+        'select-region': 'اختر المنطقة',
+        'select-platform': 'اختر المنصة المستهدفة',
+        'upload-content': 'ارفع المحتوى للفحص',
+        'drop-here': 'اسقط محتواك هنا',
+        'click-browse': 'أو انقر لاستعراض الملفات',
+        'start-check': 'ابدأ فحص المحتوى',
+        'analyzing': 'جاري التحليل...',
+        'scan-history-title': 'سجل الفحوصات',
+        'all-scans': 'جميع الفحوصات',
+        'by-region': 'حسب المنطقة',
+        'by-platform': 'حسب المنصة',
+        'compliance-report': 'تقرير الامتثال',
+        'issues-found': 'المشاكل المكتشفة',
+        'recommendations': 'التوصيات',
+        'active-users': 'المستخدمون النشطون',
+        'content-scanned': 'المحتوى المفحوص',
+        'success-rate': 'معدل النجاح',
+        'platforms': 'المنصات',
+        'scans-used': 'الفحوصات المستخدمة (اختبار)',
+        'scans-left': 'فحوصات متبقية',
+        'recommended': 'موصى به'
+    }
+};
+
+// Apply dashboard translations
+function applyDashboardTranslations(lang) {
+    const translations = DASHBOARD_TRANSLATIONS[lang] || DASHBOARD_TRANSLATIONS['en'];
+    
+    // Apply translations to all elements with IDs
+    Object.keys(translations).forEach(key => {
+        const element = document.getElementById(key);
+        if (element) {
+            if (key.includes('features')) {
+                element.innerHTML = translations[key]; // Use innerHTML for line breaks
+            } else {
+                element.textContent = translations[key];
             }
-        });
-        
-        // Update section titles
-        const uploadTitle = document.querySelector('.upload-section h3');
-        if (uploadTitle) uploadTitle.textContent = content['upload-content'];
-        
-        const dropText = document.querySelector('.file-upload-area h3');
-        if (dropText) dropText.textContent = content['drop-here'];
-        
-        const browseText = document.querySelector('.file-upload-area p');
-        if (browseText) browseText.textContent = content['click-browse'];
+        }
+    });
+    
+    // Update "recommended" badge for Plus tier
+    const plusTier = document.querySelector('[data-tier="plus"]');
+    if (plusTier && translations['recommended']) {
+        plusTier.querySelector('::before') || (plusTier.style.setProperty('--recommended-text', `"${translations['recommended']}"`));
+    }
+    
+    // Update scans left display
+    updateTierDisplay();
+}
+
+// Initialize dashboard with language persistence
+document.addEventListener('DOMContentLoaded', function() {
+    // Get current language from localStorage (set by index.html)
+    currentLanguage = safeStorage.getItem('checkreel_language') || 'en';
+    console.log('Dashboard loading with language:', currentLanguage);
+    
+    // Load language content from lang-loader.js first
+    if (window.loadLanguageContent) {
+        window.loadLanguageContent(currentLanguage);
+    }
+    
+    // Apply dashboard-specific translations
+    setTimeout(() => {
+        applyDashboardTranslations(currentLanguage);
         
         // Set RTL for Arabic
-        if (lang === 'ar') {
+        if (currentLanguage === 'ar') {
             document.body.setAttribute('dir', 'rtl');
             document.documentElement.setAttribute('dir', 'rtl');
         } else {
             document.body.removeAttribute('dir');
             document.documentElement.removeAttribute('dir');
         }
-    }
-
-// Main initialization - SINGLE DOMContentLoaded
-document.addEventListener('DOMContentLoaded', function() {
-    // Get current language from localStorage
-    const currentLanguage = safeStorage.getItem('checkreel_language') || 'en';
-    console.log('Dashboard language set to:', currentLanguage);
-    console.log('Language loaded from index.html:', currentLanguage);
+    }, 100);
     
-    // Load language content
-    if (window.loadLanguageContent) {
-        window.loadLanguageContent(currentLanguage);
-    }
-    
-    // Initialize dashboard
+    // Initialize dashboard functionality
     initializeUpload();
     updateTierDisplay();
     updateUserCounter();
     updateScansCounter();
     loadScanHistory();
     
-    // Apply language-specific updates after a short delay
-    setTimeout(() => {
-        const lang = safeStorage.getItem('checkreel_language') || 'en';
-        console.log('Applying language:', lang);
-        
-        // Force reload language content
-        if (window.loadLanguageContent) {
-            window.loadLanguageContent(lang);
-        }
-        
-        // Apply dashboard-specific translations
-        if (window.LANGUAGE_CONTENT && window.LANGUAGE_CONTENT[lang]) {
-            const content = window.LANGUAGE_CONTENT[lang];
-            
-            // Update scan button
-            const scanBtn = document.getElementById('scan-btn-text');
-            if (scanBtn && content['start-check']) {
-                scanBtn.textContent = content['start-check'];
-            }
-            
-            // Update tier selection title
-            const tierTitle = document.querySelector('.tier-selection h2');
-            if (tierTitle && content['choose-plan']) {
-                tierTitle.textContent = `?? ${content['choose-plan']}`;
-            }
-            
-            // Update selection alert
-            const alert = document.getElementById('selectionAlert');
-            if (alert && content['selection-alert']) {
-                alert.textContent = `?? ${content['selection-alert']}`;
-            }
-            
-            // Update card titles
-            const cards = document.querySelectorAll('.card h2');
-            cards.forEach((title, index) => {
-                if (index === 0 && content['select-region']) {
-                    title.textContent = `?? ${content['select-region']}`;
-                } else if (index === 1 && content['select-platform']) {
-                    const counter = document.getElementById('platformCounter');
-                    title.innerHTML = `?? ${content['select-platform']} ${counter ? counter.outerHTML : ''}`;
-                } else if (index === 2 && content['upload-content']) {
-                    title.textContent = `?? ${content['upload-content']}`;
-                }
-            });
-            
-            // Update upload area text
-            const uploadArea = document.getElementById('uploadArea');
-            if (uploadArea) {
-                const h3 = uploadArea.querySelector('h3');
-                const p = uploadArea.querySelector('p');
-                if (h3 && content['drop-here']) h3.textContent = content['drop-here'];
-                if (p && content['click-browse']) p.textContent = content['click-browse'];
-            }
-        }
-    }, 100);
-    
-    console.log('? PWA features working with language persistence');
-    console.log('? Zero console errors - production ready!');
-    console.log('?? CheckReel Dashboard Starting...');
-    console.log('? Dashboard loaded successfully - No localStorage errors!');
+    console.log('✅ Dashboard loaded with full language support');
 });
 
 // Countries data
@@ -1149,27 +1213,22 @@ function selectTier(tier) {
 // Region selection
 function selectRegion(region) {
     selectedRegion = region;
-    // Remove previous selection
     document.querySelectorAll('.region-option').forEach(opt => opt.classList.remove('selected'));
-    // Add selection to clicked option
     document.querySelector(`[data-region="${region}"]`).classList.add('selected');
     updateScanButton();
     updateSelectionAlert();
 }
 
-// Platform selection (multi-select for premium)
+// Platform selection
 function selectPlatform(platform) {
     const userTier = safeStorage.getItem('checkreel_tier') || 'free';
     const platformElement = document.querySelector(`[data-platform="${platform}"]`);
     
     if (userTier === 'premium') {
-        // Multi-select for premium (max 3)
         if (selectedPlatforms.includes(platform)) {
-            // Deselect
             selectedPlatforms = selectedPlatforms.filter(p => p !== platform);
             platformElement.classList.remove('selected');
         } else {
-            // Select (max 3)
             if (selectedPlatforms.length < 3) {
                 selectedPlatforms.push(platform);
                 platformElement.classList.add('selected');
@@ -1178,7 +1237,6 @@ function selectPlatform(platform) {
             }
         }
     } else {
-        // Single select for free and plus
         selectedPlatforms = [platform];
         document.querySelectorAll('.platform-option').forEach(opt => opt.classList.remove('selected'));
         platformElement.classList.add('selected');
@@ -1201,7 +1259,7 @@ function updatePlatformCounter() {
     }
 }
 
-// Countries modal
+// Countries modal functions
 function showCountries(region) {
     const modal = document.getElementById('countriesModal');
     const grid = document.getElementById('countriesGrid');
@@ -1223,7 +1281,6 @@ function showCountries(region) {
 function selectCountry(country) {
     selectedCountry = country;
     closeCountriesModal();
-    console.log('Selected country:', country);
 }
 
 function closeCountriesModal() {
@@ -1249,16 +1306,15 @@ function initializeUpload() {
     
     if (!uploadArea || !fileInput) return;
     
-    // Click to browse
     uploadArea.addEventListener('click', () => {
         if (!selectedRegion || selectedPlatforms.length === 0) {
-            alert('Please select a region and platform first!');
+            const translations = DASHBOARD_TRANSLATIONS[currentLanguage] || DASHBOARD_TRANSLATIONS['en'];
+            alert(translations['selection-alert']);
             return;
         }
         fileInput.click();
     });
     
-    // File input change
     fileInput.addEventListener('change', (e) => {
         const file = e.target.files[0];
         if (file && selectedRegion && selectedPlatforms.length > 0) {
@@ -1266,7 +1322,6 @@ function initializeUpload() {
         }
     });
     
-    // Drag and drop
     uploadArea.addEventListener('dragover', (e) => {
         e.preventDefault();
         if (selectedRegion && selectedPlatforms.length > 0) {
@@ -1283,7 +1338,8 @@ function initializeUpload() {
         e.preventDefault();
         uploadArea.classList.remove('dragover');
         if (!selectedRegion || selectedPlatforms.length === 0) {
-            alert('Please select a region and platform first!');
+            const translations = DASHBOARD_TRANSLATIONS[currentLanguage] || DASHBOARD_TRANSLATIONS['en'];
+            alert(translations['selection-alert']);
             return;
         }
         const file = e.dataTransfer.files[0];
@@ -1292,7 +1348,6 @@ function initializeUpload() {
         }
     });
     
-    // Remove file
     if (removeFileBtn) {
         removeFileBtn.addEventListener('click', (e) => {
             e.stopPropagation();
@@ -1302,15 +1357,13 @@ function initializeUpload() {
 }
 
 function handleFileSelect(file) {
-    // Validate file type
     const allowedTypes = ['video/mp4', 'video/quicktime', 'image/jpeg', 'image/png', 'audio/mp3', 'audio/wav'];
     if (!allowedTypes.includes(file.type)) {
         alert('Unsupported file type. Please select MP4, MOV, JPG, PNG, MP3, or WAV files.');
         return;
     }
     
-    // Validate file size (100MB limit)
-    const maxSize = 100 * 1024 * 1024; // 100MB in bytes
+    const maxSize = 100 * 1024 * 1024;
     if (file.size > maxSize) {
         alert('File size too large. Please select a file smaller than 100MB.');
         return;
@@ -1373,7 +1426,6 @@ if (scanBtn) {
     scanBtn.addEventListener('click', async function() {
         if (!selectedFile || selectedPlatforms.length === 0 || !selectedRegion) return;
         
-        // Check if user has scans remaining
         if (!checkScanLimit()) {
             alert('You have reached your scan limit! Please upgrade your plan.');
             return;
@@ -1396,38 +1448,28 @@ function checkScanLimit() {
 
 async function performScan() {
     const scanBtn = document.getElementById('scanBtn');
-    const btnText = document.getElementById('scan-btn-text');
+    const btnText = document.getElementById('start-check');
     const btnLoader = document.getElementById('btnLoader');
     const resultsSection = document.getElementById('resultsSection');
     
     if (!scanBtn) return;
     
-    // Update button state
+    const translations = DASHBOARD_TRANSLATIONS[currentLanguage] || DASHBOARD_TRANSLATIONS['en'];
+    
     scanBtn.disabled = true;
-    if (btnText) btnText.textContent = 'Analyzing...';
+    if (btnText) btnText.textContent = translations['analyzing'];
     if (btnLoader) btnLoader.classList.add('active');
     
     try {
-        // Simulate scan process
         await new Promise(resolve => setTimeout(resolve, 3000));
         
-        // Generate results with dynamic score based on issues
         const results = generateDynamicResults();
-        
-        // Display results
         displayResults(results);
-        
-        // Save to history (for Plus and Premium)
         saveScanToHistory(results);
-        
-        // Increment scan count (ACTIVE for testing)
         incrementScanCount();
-        
-        // Update displays
         updateTierDisplay();
         updateScansCounter();
         
-        // Scroll to results
         if (resultsSection) {
             resultsSection.scrollIntoView({ behavior: 'smooth' });
         }
@@ -1436,72 +1478,68 @@ async function performScan() {
         console.error('Scan error:', error);
         alert('An error occurred during scanning. Please try again.');
     } finally {
-        // Reset button state
         scanBtn.disabled = false;
-        if (btnText) btnText.textContent = 'Start Content Check';
+        if (btnText) btnText.textContent = translations['start-check'];
         if (btnLoader) btnLoader.classList.remove('active');
     }
 }
 
 function generateDynamicResults() {
     const userTier = safeStorage.getItem('checkreel_tier') || 'free';
-    
-    // Simulate different scenarios
     const scenarios = [
-        { score: 95, issueCount: 0 }, // Perfect
-        { score: 85, issueCount: 2 }, // Good
-        { score: 70, issueCount: 4 }, // Needs work
-        { score: 55, issueCount: 6 }, // Poor
-        { score: 40, issueCount: 8 }  // Very poor
+        { score: 95, issueCount: 0 },
+        { score: 85, issueCount: 2 },
+        { score: 70, issueCount: 4 },
+        { score: 55, issueCount: 6 },
+        { score: 40, issueCount: 8 }
     ];
     
     const scenario = scenarios[Math.floor(Math.random() * scenarios.length)];
     let issues, recommendations, status, statusIcon;
     
-    // Dynamic status based on score
     if (scenario.score >= 90) {
         status = 'Perfect! Ready to Post';
-        statusIcon = '?';
+        statusIcon = '✅';
     } else if (scenario.score >= 80) {
         status = 'Good to Post';
-        statusIcon = '?';
+        statusIcon = '✅';
     } else if (scenario.score >= 70) {
         status = 'Minor Issues - Review Recommended';
-        statusIcon = '??';
+        statusIcon = '⚠️';
     } else if (scenario.score >= 60) {
         status = 'Moderate Issues - Fix Before Posting';
-        statusIcon = '??';
+        statusIcon = '⚠️';
     } else {
         status = 'Major Issues - Do Not Post';
-        statusIcon = '?';
+        statusIcon = '❌';
     }
     
     if (userTier === 'free') {
         issues = scenario.issueCount > 0 ? [
-            { icon: '??', text: `${scenario.issueCount} compliance issues detected for ${selectedPlatforms.join(', ')}` }
+            { icon: '⚠️', text: `${scenario.issueCount} compliance issues detected for ${selectedPlatforms.join(', ')}` }
         ] : [];
         recommendations = [
-            { icon: '??', text: `Upgrade to Plus or Premium for detailed analysis` }
+            { icon: '💡', text: `Upgrade to Plus or Premium for detailed analysis` }
         ];
     } else if (userTier === 'plus') {
         issues = scenario.issueCount > 0 ? [
-            { icon: '??', text: `Audio levels exceed ${selectedPlatforms.join(', ')} limits` },
-            { icon: '??', text: `Content may violate ${selectedRegion} community guidelines` }
+            { icon: '🔊', text: `Audio levels exceed ${selectedPlatforms.join(', ')} limits` },
+            { icon: '📋', text: `Content may violate ${selectedRegion} community guidelines` }
         ].slice(0, Math.min(scenario.issueCount, 2)) : [];
         recommendations = [
-            { icon: '??', text: `Use trending hashtags for ${selectedPlatforms.join(', ')}` },
-            { icon: '?', text: `Best posting time for ${selectedRegion}: 7-9 PM local` }
+            { icon: '📈', text: `Use trending hashtags for ${selectedPlatforms.join(', ')}` },
+            { icon: '⏰', text: `Best posting time for ${selectedRegion}: 7-9 PM local` }
         ];
-    } else { // premium
+    } else {
         issues = scenario.issueCount > 0 ? [
-            { icon: '??', text: `Audio enhancement needed - our AI recommends voice optimization` },
-            { icon: '??', text: `Visual quality below platform standards` },
-            { icon: '??', text: `Video pacing needs adjustment for ${selectedPlatforms.join(', ')}` }
+            { icon: '🎵', text: `Audio enhancement needed - our AI recommends voice optimization` },
+            { icon: '📹', text: `Visual quality below platform standards` },
+            { icon: '⏱️', text: `Video pacing needs adjustment for ${selectedPlatforms.join(', ')}` }
         ].slice(0, Math.min(scenario.issueCount, 3)) : [];
         recommendations = [
-            { icon: '??', text: `AI Analysis: Adjust content pacing for better engagement` },
-            { icon: '??', text: `Optimization tip: Add stronger hooks in first 3 seconds` },
-            { icon: '???', text: `Our advanced AI suggests format adjustments for viral potential` }
+            { icon: '🧠', text: `AI Analysis: Adjust content pacing for better engagement` },
+            { icon: '🎯', text: `Optimization tip: Add stronger hooks in first 3 seconds` },
+            { icon: '⭐', text: `Our advanced AI suggests format adjustments for viral potential` }
         ];
     }
     
@@ -1525,10 +1563,8 @@ function displayResults(results) {
     const recommendationsList = document.getElementById('recommendationsList');
     const scoreCircle = document.getElementById('scoreCircle');
     
-    // Update score with gradient
     if (scoreValue) scoreValue.textContent = results.score;
     if (scoreCircle) {
-        // Create gradient based on score
         const red = results.score < 50 ? 255 : Math.round(255 * (100 - results.score) / 50);
         const green = results.score > 50 ? 255 : Math.round(255 * results.score / 50);
         const gradient = `conic-gradient(from 0deg, 
@@ -1538,11 +1574,9 @@ function displayResults(results) {
         scoreCircle.style.background = gradient;
     }
     
-    // Update status
     if (statusText) statusText.textContent = results.status;
     if (statusIcon) statusIcon.textContent = results.statusIcon;
     
-    // Update issues
     if (issuesList) {
         issuesList.innerHTML = '';
         results.issues.forEach((issue, index) => {
@@ -1557,7 +1591,6 @@ function displayResults(results) {
         });
     }
     
-    // Update recommendations
     if (recommendationsList) {
         recommendationsList.innerHTML = '';
         results.recommendations.forEach((rec, index) => {
@@ -1582,7 +1615,6 @@ function showInsight(type, item, index) {
     
     title.textContent = type === 'issue' ? 'Issue Details' : 'Recommendation Details';
     
-    // Generate detailed insights based on tier
     const userTier = safeStorage.getItem('checkreel_tier') || 'free';
     let detailedContent = '';
     
@@ -1593,10 +1625,10 @@ function showInsight(type, item, index) {
             <br>
             <p><strong>AI-Powered Recommendations:</strong></p>
             <ul>
-                <li>?? <strong>Visual Enhancement:</strong> Our advanced AI suggests improving graphics and thumbnails for better engagement</li>
-                <li>??? <strong>Audio Optimization:</strong> AI-powered voice enhancement can improve audio quality by 40%</li>
-                <li>?? <strong>Video Effects:</strong> Smart transitions and effects recommended for viral potential</li>
-                <li>? <strong>Content Processing:</strong> Advanced optimization for maximum platform compatibility</li>
+                <li>🎨 <strong>Visual Enhancement:</strong> Our advanced AI suggests improving graphics and thumbnails for better engagement</li>
+                <li>⭐ <strong>Audio Optimization:</strong> AI-powered voice enhancement can improve audio quality by 40%</li>
+                <li>🎬 <strong>Video Effects:</strong> Smart transitions and effects recommended for viral potential</li>
+                <li>⚙️ <strong>Content Processing:</strong> Advanced optimization for maximum platform compatibility</li>
             </ul>
             <br>
             <p><strong>Note:</strong> Our system uses cutting-edge AI technology to provide these insights, ensuring your content performs at its best.</p>
@@ -1621,7 +1653,7 @@ function closeInsightModal() {
 // Scan History Functions
 function saveScanToHistory(results) {
     const userTier = safeStorage.getItem('checkreel_tier') || 'free';
-    if (userTier === 'free') return; // No history for free tier
+    if (userTier === 'free') return;
     
     const scan = {
         id: Date.now(),
@@ -1633,11 +1665,9 @@ function saveScanToHistory(results) {
         fileName: selectedFile.name
     };
     
-    // Get existing history
     let history = JSON.parse(safeStorage.getItem('checkreel_scan_history') || '[]');
-    history.unshift(scan); // Add to beginning
+    history.unshift(scan);
     
-    // Keep only last 50 scans
     if (history.length > 50) {
         history = history.slice(0, 50);
     }
@@ -1681,15 +1711,12 @@ function displayHistory(filter) {
 }
 
 function filterHistory(type) {
-    // Update tab active state
     document.querySelectorAll('.history-tab').forEach(tab => {
         tab.classList.remove('active');
     });
     event.target.classList.add('active');
     
-    // Filter history based on type
     if (type === 'region') {
-        // Group by region
         const grouped = {};
         scanHistory.forEach(scan => {
             if (!grouped[scan.region]) grouped[scan.region] = [];
@@ -1697,7 +1724,6 @@ function filterHistory(type) {
         });
         displayGroupedHistory(grouped, 'region');
     } else if (type === 'platform') {
-        // Group by platform
         const grouped = {};
         scanHistory.forEach(scan => {
             scan.platforms.forEach(platform => {
@@ -1759,18 +1785,25 @@ function updateTierDisplay() {
         premium: { name: 'Premium', scans: 40, class: 'tier-premium' }
     };
     
+    const translations = DASHBOARD_TRANSLATIONS[currentLanguage] || DASHBOARD_TRANSLATIONS['en'];
+    const tierNames = {
+        free: translations['free-trial'],
+        plus: translations['plus-tier'],
+        premium: translations['premium-tier']
+    };
+    
     const tier = tierData[userTier];
     const scansLeft = Math.max(0, tier.scans - scansUsed);
     const tierBadge = document.getElementById('tierBadge');
     const scansLeftEl = document.getElementById('scansLeft');
     
     if (tierBadge) {
-        tierBadge.textContent = tier.name;
+        tierBadge.textContent = tierNames[userTier] || tier.name;
         tierBadge.className = `tier-badge ${tier.class}`;
     }
     
     if (scansLeftEl) {
-        scansLeftEl.textContent = `${scansLeft} scans left`;
+        scansLeftEl.textContent = `${scansLeft} ${translations['scans-left']}`;
     }
 }
 
@@ -1783,7 +1816,6 @@ function updateUserCounter() {
     }
     const totalUsers = baseCount + parseInt(userIncrement);
     
-    // Update stats
     const statCards = document.querySelectorAll('.stat-number');
     if (statCards[0]) {
         statCards[0].textContent = `${totalUsers.toLocaleString()}+`;
@@ -1823,4 +1855,3 @@ window.addEventListener('click', function(e) {
 </script>
 </body>
 </html>
-
