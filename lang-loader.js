@@ -1,4 +1,4 @@
-﻿// Safe storage wrapper
+// Safe storage wrapper
 const safeStorage = {
     getItem(key) {
         try { return localStorage.getItem(key); }
@@ -86,76 +86,76 @@ const LANGUAGE_CONTENT = {
         "insight-details": "Insight Details",
         
         // Footer
-        "footer-text": "© 2025 CheckReel. All rights reserved. Copyright Protected."
+        "footer-text": "� 2025 CheckReel. All rights reserved. Copyright Protected."
     },
     
     ar: {
         // Header
-        "scans-left": "فحوصات متبقية",
-        "tier-free": "تجربة مجانية",
-        "tier-plus": "بلس",
-        "tier-premium": "بريميوم",
+        "scans-left": "?????? ??????",
+        "tier-free": "????? ??????",
+        "tier-plus": "???",
+        "tier-premium": "???????",
         
         // Tier Selection
-        "choose-plan": "اختر خطتك",
-        "per-month": "/شهريًا",
-        "scans": "فحوصات",
-        "scans-month": "فحص/شهريًا",
-        "basic-compliance": "فحص امتثال أساسي",
-        "standard-results": "نتائج قياسية",
-        "enhanced-compliance": "فحص امتثال محسّن",
-        "detailed-insights": "رؤى مفصلة",
-        "scan-history": "سجل الفحص",
-        "priority-support": "دعم ذو أولوية",
-        "all-features": "جميع الميزات مشمولة",
-        "ai-guidance": "توجيه متقدم بالذكاء الاصطناعي",
-        "content-optimization": "تحسين محتوى مضمون",
-        "multi-platform": "فحص متعدد المنصات (حتى 3)",
-        "complete-history": "سجل فحص كامل",
+        "choose-plan": "???? ????",
+        "per-month": "/??????",
+        "scans": "??????",
+        "scans-month": "???/??????",
+        "basic-compliance": "??? ?????? ?????",
+        "standard-results": "????? ??????",
+        "enhanced-compliance": "??? ?????? ?????",
+        "detailed-insights": "??? ?????",
+        "scan-history": "??? ?????",
+        "priority-support": "??? ?? ??????",
+        "all-features": "???? ??????? ??????",
+        "ai-guidance": "????? ????? ??????? ?????????",
+        "content-optimization": "????? ????? ?????",
+        "multi-platform": "??? ????? ??????? (??? 3)",
+        "complete-history": "??? ??? ????",
         
         // Main Cards
-        "select-region": "اختر المنطقة",
-        "select-platform": "اختر المنصة",
-        "upload-content": "رفع المحتوى",
-        "global": "عالمي",
-        "middle-east": "الشرق الأوسط",
-        "mena": "الشرق الأوسط وشمال أفريقيا",
-        "europe": "أوروبا",
+        "select-region": "???? ???????",
+        "select-platform": "???? ??????",
+        "upload-content": "??? ???????",
+        "global": "?????",
+        "middle-east": "????? ??????",
+        "mena": "????? ?????? ????? ???????",
+        "europe": "??????",
         
         // Upload Area
-        "drop-here": "اسحب المحتوى هنا",
-        "click-browse": "أو انقر لتصفح الملفات",
-        "supports": "يدعم: MP4، MOV، JPG، PNG، MP3، WAV (بحد أقصى 100 ميجابايت)",
-        "remove-file": "إزالة الملف",
+        "drop-here": "???? ??????? ???",
+        "click-browse": "?? ???? ????? ???????",
+        "supports": "????: MP4? MOV? JPG? PNG? MP3? WAV (??? ???? 100 ????????)",
+        "remove-file": "????? ?????",
         
         // Selection Alert
-        "selection-alert": "يرجى اختيار منطقة ومنصة قبل رفع المحتوى للتحليل",
+        "selection-alert": "???? ?????? ????? ????? ??? ??? ??????? ???????",
         
         // Scan Button
-        "start-check": "بدء فحص المحتوى",
-        "analyzing": "جاري التحليل...",
+        "start-check": "??? ??? ???????",
+        "analyzing": "???? ???????...",
         
         // Results
-        "compliance-results": "نتائج الامتثال",
-        "ready-post": "جاهز للنشر",
-        "needs-review": "يحتاج مراجعة",
-        "do-not-post": "لا تنشر",
-        "issues-found": "المشاكل الموجودة",
-        "recommendations": "التوصيات",
+        "compliance-results": "????? ????????",
+        "ready-post": "???? ?????",
+        "needs-review": "????? ??????",
+        "do-not-post": "?? ????",
+        "issues-found": "??????? ????????",
+        "recommendations": "????????",
         
         // Stats
-        "active-users": "المستخدمون النشطون",
-        "content-scanned": "المحتوى المفحوص",
-        "success-rate": "معدل النجاح",
-        "platforms": "المنصات",
-        "scans-used": "الفحوصات المستخدمة (اختبار)",
+        "active-users": "?????????? ???????",
+        "content-scanned": "??????? ???????",
+        "success-rate": "???? ??????",
+        "platforms": "???????",
+        "scans-used": "???????? ????????? (??????)",
         
         // Modals
-        "select-country": "اختر الدولة",
-        "insight-details": "تفاصيل الرؤية",
+        "select-country": "???? ??????",
+        "insight-details": "?????? ??????",
         
         // Footer
-        "footer-text": "© 2025 تشيكريل. جميع الحقوق محفوظة. محمي بحقوق الطبع والنشر."
+        "footer-text": "� 2025 ???????. ???? ?????? ??????. ???? ????? ????? ??????."
     },
     
     fr: {
@@ -170,61 +170,61 @@ const LANGUAGE_CONTENT = {
         "per-month": "/mois",
         "scans": "scans",
         "scans-month": "scans/mois",
-        "basic-compliance": "Vérification de conformité de base",
-        "standard-results": "Résultats standards",
-        "enhanced-compliance": "Vérification de conformité améliorée",
-        "detailed-insights": "Aperçus détaillés",
+        "basic-compliance": "V�rification de conformit� de base",
+        "standard-results": "R�sultats standards",
+        "enhanced-compliance": "V�rification de conformit� am�lior�e",
+        "detailed-insights": "Aper�us d�taill�s",
         "scan-history": "Historique des scans",
         "priority-support": "Support prioritaire",
-        "all-features": "Toutes les fonctionnalités incluses",
-        "ai-guidance": "Conseils avancés par IA",
-        "content-optimization": "Optimisation de contenu assurée",
-        "multi-platform": "Scan multi-plateforme (jusqu'à 3)",
+        "all-features": "Toutes les fonctionnalit�s incluses",
+        "ai-guidance": "Conseils avanc�s par IA",
+        "content-optimization": "Optimisation de contenu assur�e",
+        "multi-platform": "Scan multi-plateforme (jusqu'� 3)",
         "complete-history": "Historique complet des scans",
         
         // Main Cards
-        "select-region": "Sélectionner la région",
-        "select-platform": "Sélectionner la plateforme",
-        "upload-content": "Télécharger le contenu",
+        "select-region": "S�lectionner la r�gion",
+        "select-platform": "S�lectionner la plateforme",
+        "upload-content": "T�l�charger le contenu",
         "global": "Global",
         "middle-east": "Moyen-Orient",
         "mena": "MENA",
         "europe": "Europe",
         
         // Upload Area
-        "drop-here": "Déposez votre contenu ici",
+        "drop-here": "D�posez votre contenu ici",
         "click-browse": "ou cliquez pour parcourir",
         "supports": "Supporte: MP4, MOV, JPG, PNG, MP3, WAV (max 100 Mo)",
         "remove-file": "Supprimer le fichier",
         
         // Selection Alert
-        "selection-alert": "Veuillez sélectionner une région et une plateforme avant de télécharger du contenu",
+        "selection-alert": "Veuillez s�lectionner une r�gion et une plateforme avant de t�l�charger du contenu",
         
         // Scan Button
-        "start-check": "Commencer la vérification",
+        "start-check": "Commencer la v�rification",
         "analyzing": "Analyse en cours...",
         
         // Results
-        "compliance-results": "Résultats de conformité",
-        "ready-post": "Prêt à publier",
-        "needs-review": "Nécessite une révision",
+        "compliance-results": "R�sultats de conformit�",
+        "ready-post": "Pr�t � publier",
+        "needs-review": "N�cessite une r�vision",
         "do-not-post": "Ne pas publier",
-        "issues-found": "Problèmes trouvés",
+        "issues-found": "Probl�mes trouv�s",
         "recommendations": "Recommandations",
         
         // Stats
         "active-users": "Utilisateurs actifs",
-        "content-scanned": "Contenu scanné",
-        "success-rate": "Taux de réussite",
+        "content-scanned": "Contenu scann�",
+        "success-rate": "Taux de r�ussite",
         "platforms": "Plateformes",
-        "scans-used": "Scans utilisés (Test)",
+        "scans-used": "Scans utilis�s (Test)",
         
         // Modals
-        "select-country": "Sélectionner le pays",
-        "insight-details": "Détails de l'aperçu",
+        "select-country": "S�lectionner le pays",
+        "insight-details": "D�tails de l'aper�u",
         
         // Footer
-        "footer-text": "© 2025 CheckReel. Tous droits réservés. Protégé par le droit d'auteur."
+        "footer-text": "� 2025 CheckReel. Tous droits r�serv�s. Prot�g� par le droit d'auteur."
     }
 };
 
@@ -265,13 +265,13 @@ window.loadLanguageContent = function(lang) {
             });
             
             // Special cases with icons
-            if (text === '🌍 Select Region') el.textContent = `🌍 ${content['select-region']}`;
-            if (text === '📱 Select Platform') el.textContent = `📱 ${content['select-platform']}`;
-            if (text === '📁 Upload Content') el.textContent = `📁 ${content['upload-content']}`;
-            if (text === '🎯 Choose Your Plan') el.textContent = `🎯 ${content['choose-plan']}`;
-            if (text === '📊 Compliance Results') el.textContent = `📊 ${content['compliance-results']}`;
-            if (text === '⚠️ Issues Found') el.textContent = `⚠️ ${content['issues-found']}`;
-            if (text === '💡 Recommendations') el.textContent = `💡 ${content['recommendations']}`;
+            if (text === '?? Select Region') el.textContent = `?? ${content['select-region']}`;
+            if (text === '?? Select Platform') el.textContent = `?? ${content['select-platform']}`;
+            if (text === '?? Upload Content') el.textContent = `?? ${content['upload-content']}`;
+            if (text === '?? Choose Your Plan') el.textContent = `?? ${content['choose-plan']}`;
+            if (text === '?? Compliance Results') el.textContent = `?? ${content['compliance-results']}`;
+            if (text === '?? Issues Found') el.textContent = `?? ${content['issues-found']}`;
+            if (text === '?? Recommendations') el.textContent = `?? ${content['recommendations']}`;
             
             // Scan counter
             if (text.includes('scans left')) {
@@ -298,7 +298,7 @@ window.loadLanguageContent = function(lang) {
     
     const selectionAlert = document.getElementById('selectionAlert');
     if (selectionAlert && selectionAlert.textContent.includes('Please select')) {
-        selectionAlert.textContent = `⚠️ ${content['selection-alert']}`;
+        selectionAlert.textContent = `?? ${content['selection-alert']}`;
     }
 };
 
