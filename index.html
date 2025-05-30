@@ -3,6 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- MUST load first so safeStorage is defined -->
+<script src="lang-loader.js"></script>
+
     <title>CheckReel - AI Content Compliance Checker</title>
     <link rel="icon" type="image/x-icon" href="images/favicon.ico">
     <link rel="manifest" href="manifest.json">
@@ -459,26 +462,7 @@
 <body>
     <!-- ADDED: safeStorage wrapper for localStorage safety -->
    
-            setItem(key, value) {
-                try {
-                    localStorage.setItem(key, value);
-                    return true;
-                } catch (e) {
-                    console.warn('localStorage.setItem failed:', e);
-                    return false;
-                }
-            },
-            removeItem(key) {
-                try {
-                    localStorage.removeItem(key);
-                    return true;
-                } catch (e) {
-                    console.warn('localStorage.removeItem failed:', e);
-                    return false;
-                }
-            }
-        };
-    </script>
+           
 
     <div class="container">
         <!-- Header -->
