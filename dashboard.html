@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -760,7 +760,7 @@ gap: 20px;
 
 <!-- Tier Selection -->
 <div class="tier-selection">
-<h2>🎯 Choose Your Plan</h2>
+<h2>?? Choose Your Plan</h2>
 <div class="tier-plans">
 <div class="tier-plan active" data-tier="free" onclick="selectTier('free')">
 <div class="tier-name">Free Trial</div>
@@ -785,18 +785,18 @@ gap: 20px;
 
 <!-- Selection Alert - MOVED BELOW TIER SELECTION -->
 <div id="selectionAlert" class="selection-alert">
-⚠️ Please select a region and platform before uploading content for analysis
+?? Please select a region and platform before uploading content for analysis
 </div>
 
 <!-- Main Dashboard -->
 <div class="dashboard-grid">
 <!-- Region Selection -->
 <div class="card">
-<h2>🌍 Select Region</h2>
+<h2>?? Select Region</h2>
 <div class="region-grid">
 <div class="region-option" data-region="global" onclick="selectRegion('global')">
 <img src="images/region-icons/global.png" alt="Global" class="region-icon"
-onerror="this.outerHTML='<div style=&quot;width: 35px; height: 35px; background: #3498db; border-radius: 6px; margin-bottom: 8px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 12px;&quot;>🌍</div>';">
+onerror="this.outerHTML='<div style=&quot;width: 35px; height: 35px; background: #3498db; border-radius: 6px; margin-bottom: 8px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 12px;&quot;>??</div>';">
 <span class="region-name">Global</span>
 </div>
 <div class="region-option" data-region="middle-east" onclick="selectRegion('middle-east'); showCountries('middleEast')">
@@ -819,7 +819,7 @@ onerror="this.outerHTML='<div style=&quot;width: 35px; height: 35px; background:
 
 <!-- Platform Selection -->
 <div class="card">
-<h2>📱 Select Platform <span id="platformCounter" style="font-size: 12px; color: #666;"></span></h2>
+<h2>?? Select Platform <span id="platformCounter" style="font-size: 12px; color: #666;"></span></h2>
 <div class="platforms-grid">
 <div class="platform-option" data-platform="tiktok" onclick="selectPlatform('tiktok')">
 <img src="images/tiktok.png" alt="TikTok" class="platform-icon">
@@ -850,9 +850,9 @@ onerror="this.outerHTML='<div style=&quot;width: 35px; height: 35px; background:
 
 <!-- File Upload -->
 <div class="card">
-<h2>📁 Upload Content</h2>
+<h2>?? Upload Content</h2>
 <div id="uploadArea" class="upload-area">
-<span class="upload-icon">📤</span>
+<span class="upload-icon">??</span>
 <h3>Drop your content here</h3>
 <p>or click to browse files</p>
 <small>Supports: MP4, MOV, JPG, PNG, MP3, WAV (max 100MB)</small>
@@ -876,7 +876,7 @@ onerror="this.outerHTML='<div style=&quot;width: 35px; height: 35px; background:
 
 <!-- Scan History (for Plus and Premium) -->
 <div id="scanHistory" class="scan-history">
-<h2>📊 Scan History</h2>
+<h2>?? Scan History</h2>
 <div class="history-tabs">
 <button class="history-tab active" onclick="filterHistory('all')">All Scans</button>
 <button class="history-tab" onclick="filterHistory('region')">By Region</button>
@@ -888,23 +888,23 @@ onerror="this.outerHTML='<div style=&quot;width: 35px; height: 35px; background:
 <!-- Results Section -->
 <div id="resultsSection" class="results-section">
 <div class="card">
-<h2>📊 Compliance Results</h2>
+<h2>?? Compliance Results</h2>
 <div class="score-display">
 <div id="scoreCircle" class="score-circle">
 <span id="scoreValue" class="score-value">85</span>
 </div>
 <div class="status-indicator">
-<span id="statusIcon" class="status-icon">✅</span>
+<span id="statusIcon" class="status-icon">?</span>
 <span id="status-text">Ready to Post</span>
 </div>
 </div>
 <div class="results-grid">
 <div class="issues-card">
-<h3>⚠️ Issues Found</h3>
+<h3>?? Issues Found</h3>
 <div id="issuesList"></div>
 </div>
 <div class="recommendations-card">
-<h3>💡 Recommendations</h3>
+<h3>?? Recommendations</h3>
 <div id="recommendationsList"></div>
 </div>
 </div>
@@ -1014,25 +1014,25 @@ document.addEventListener('DOMContentLoaded', function() {
             // Update tier selection title
             const tierTitle = document.querySelector('.tier-selection h2');
             if (tierTitle && content['choose-plan']) {
-                tierTitle.textContent = `🎯 ${content['choose-plan']}`;
+                tierTitle.textContent = `?? ${content['choose-plan']}`;
             }
             
             // Update selection alert
             const alert = document.getElementById('selectionAlert');
             if (alert && content['selection-alert']) {
-                alert.textContent = `⚠️ ${content['selection-alert']}`;
+                alert.textContent = `?? ${content['selection-alert']}`;
             }
             
             // Update card titles
             const cards = document.querySelectorAll('.card h2');
             cards.forEach((title, index) => {
                 if (index === 0 && content['select-region']) {
-                    title.textContent = `🌍 ${content['select-region']}`;
+                    title.textContent = `?? ${content['select-region']}`;
                 } else if (index === 1 && content['select-platform']) {
                     const counter = document.getElementById('platformCounter');
-                    title.innerHTML = `📱 ${content['select-platform']} ${counter ? counter.outerHTML : ''}`;
+                    title.innerHTML = `?? ${content['select-platform']} ${counter ? counter.outerHTML : ''}`;
                 } else if (index === 2 && content['upload-content']) {
-                    title.textContent = `📁 ${content['upload-content']}`;
+                    title.textContent = `?? ${content['upload-content']}`;
                 }
             });
             
@@ -1047,10 +1047,10 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }, 100);
     
-    console.log('✅ PWA features working with language persistence');
-    console.log('✅ Zero console errors - production ready!');
-    console.log('🚀 CheckReel Dashboard Starting...');
-    console.log('✅ Dashboard loaded successfully - No localStorage errors!');
+    console.log('? PWA features working with language persistence');
+    console.log('? Zero console errors - production ready!');
+    console.log('?? CheckReel Dashboard Starting...');
+    console.log('? Dashboard loaded successfully - No localStorage errors!');
 });
 
 // Countries data
@@ -1420,47 +1420,47 @@ function generateDynamicResults() {
     // Dynamic status based on score
     if (scenario.score >= 90) {
         status = 'Perfect! Ready to Post';
-        statusIcon = '✅';
+        statusIcon = '?';
     } else if (scenario.score >= 80) {
         status = 'Good to Post';
-        statusIcon = '✅';
+        statusIcon = '?';
     } else if (scenario.score >= 70) {
         status = 'Minor Issues - Review Recommended';
-        statusIcon = '⚠️';
+        statusIcon = '??';
     } else if (scenario.score >= 60) {
         status = 'Moderate Issues - Fix Before Posting';
-        statusIcon = '⚠️';
+        statusIcon = '??';
     } else {
         status = 'Major Issues - Do Not Post';
-        statusIcon = '❌';
+        statusIcon = '?';
     }
     
     if (userTier === 'free') {
         issues = scenario.issueCount > 0 ? [
-            { icon: '⚠️', text: `${scenario.issueCount} compliance issues detected for ${selectedPlatforms.join(', ')}` }
+            { icon: '??', text: `${scenario.issueCount} compliance issues detected for ${selectedPlatforms.join(', ')}` }
         ] : [];
         recommendations = [
-            { icon: '💡', text: `Upgrade to Plus or Premium for detailed analysis` }
+            { icon: '??', text: `Upgrade to Plus or Premium for detailed analysis` }
         ];
     } else if (userTier === 'plus') {
         issues = scenario.issueCount > 0 ? [
-            { icon: '🔊', text: `Audio levels exceed ${selectedPlatforms.join(', ')} limits` },
-            { icon: '📺', text: `Content may violate ${selectedRegion} community guidelines` }
+            { icon: '??', text: `Audio levels exceed ${selectedPlatforms.join(', ')} limits` },
+            { icon: '??', text: `Content may violate ${selectedRegion} community guidelines` }
         ].slice(0, Math.min(scenario.issueCount, 2)) : [];
         recommendations = [
-            { icon: '📈', text: `Use trending hashtags for ${selectedPlatforms.join(', ')}` },
-            { icon: '⏰', text: `Best posting time for ${selectedRegion}: 7-9 PM local` }
+            { icon: '??', text: `Use trending hashtags for ${selectedPlatforms.join(', ')}` },
+            { icon: '?', text: `Best posting time for ${selectedRegion}: 7-9 PM local` }
         ];
     } else { // premium
         issues = scenario.issueCount > 0 ? [
-            { icon: '🔊', text: `Audio enhancement needed - our AI recommends voice optimization` },
-            { icon: '📺', text: `Visual quality below platform standards` },
-            { icon: '🎬', text: `Video pacing needs adjustment for ${selectedPlatforms.join(', ')}` }
+            { icon: '??', text: `Audio enhancement needed - our AI recommends voice optimization` },
+            { icon: '??', text: `Visual quality below platform standards` },
+            { icon: '??', text: `Video pacing needs adjustment for ${selectedPlatforms.join(', ')}` }
         ].slice(0, Math.min(scenario.issueCount, 3)) : [];
         recommendations = [
-            { icon: '🤖', text: `AI Analysis: Adjust content pacing for better engagement` },
-            { icon: '💬', text: `Optimization tip: Add stronger hooks in first 3 seconds` },
-            { icon: '🛠️', text: `Our advanced AI suggests format adjustments for viral potential` }
+            { icon: '??', text: `AI Analysis: Adjust content pacing for better engagement` },
+            { icon: '??', text: `Optimization tip: Add stronger hooks in first 3 seconds` },
+            { icon: '???', text: `Our advanced AI suggests format adjustments for viral potential` }
         ];
     }
     
@@ -1552,10 +1552,10 @@ function showInsight(type, item, index) {
             <br>
             <p><strong>AI-Powered Recommendations:</strong></p>
             <ul>
-                <li>🎨 <strong>Visual Enhancement:</strong> Our advanced AI suggests improving graphics and thumbnails for better engagement</li>
-                <li>🎙️ <strong>Audio Optimization:</strong> AI-powered voice enhancement can improve audio quality by 40%</li>
-                <li>🎬 <strong>Video Effects:</strong> Smart transitions and effects recommended for viral potential</li>
-                <li>✨ <strong>Content Processing:</strong> Advanced optimization for maximum platform compatibility</li>
+                <li>?? <strong>Visual Enhancement:</strong> Our advanced AI suggests improving graphics and thumbnails for better engagement</li>
+                <li>??? <strong>Audio Optimization:</strong> AI-powered voice enhancement can improve audio quality by 40%</li>
+                <li>?? <strong>Video Effects:</strong> Smart transitions and effects recommended for viral potential</li>
+                <li>? <strong>Content Processing:</strong> Advanced optimization for maximum platform compatibility</li>
             </ul>
             <br>
             <p><strong>Note:</strong> Our system uses cutting-edge AI technology to provide these insights, ensuring your content performs at its best.</p>
