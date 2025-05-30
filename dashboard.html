@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -972,6 +972,47 @@ let selectedCountry = null;
 let currentTier = 'free';
 let scanHistory = [];
 
+    // Apply language translations to dashboard
+    function applyDashboardTranslations(lang) {
+        const content = window.LANGUAGE_CONTENT[lang] || window.LANGUAGE_CONTENT['en'];
+        
+        // Update all text elements
+        const scanBtn = document.querySelector('.scan-btn span');
+        if (scanBtn) scanBtn.textContent = content['start-check'];
+        
+        const tierTitle = document.querySelector('#tier-selection h2');
+        if (tierTitle) tierTitle.textContent = content['choose-plan'];
+        
+        // Update tier cards
+        document.querySelectorAll('.tier-card').forEach(card => {
+            const tierName = card.querySelector('h3');
+            if (tierName) {
+                if (tierName.textContent.includes('Free')) tierName.textContent = content['free-trial'];
+                if (tierName.textContent.includes('Plus')) tierName.textContent = content['plus-tier'];
+                if (tierName.textContent.includes('Premium')) tierName.textContent = content['premium-tier'];
+            }
+        });
+        
+        // Update section titles
+        const uploadTitle = document.querySelector('.upload-section h3');
+        if (uploadTitle) uploadTitle.textContent = content['upload-content'];
+        
+        const dropText = document.querySelector('.file-upload-area h3');
+        if (dropText) dropText.textContent = content['drop-here'];
+        
+        const browseText = document.querySelector('.file-upload-area p');
+        if (browseText) browseText.textContent = content['click-browse'];
+        
+        // Set RTL for Arabic
+        if (lang === 'ar') {
+            document.body.setAttribute('dir', 'rtl');
+            document.documentElement.setAttribute('dir', 'rtl');
+        } else {
+            document.body.removeAttribute('dir');
+            document.documentElement.removeAttribute('dir');
+        }
+    }
+
 // Main initialization - SINGLE DOMContentLoaded
 document.addEventListener('DOMContentLoaded', function() {
     // Get current language from localStorage
@@ -1782,3 +1823,4 @@ window.addEventListener('click', function(e) {
 </script>
 </body>
 </html>
+
