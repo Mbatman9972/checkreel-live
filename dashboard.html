@@ -468,6 +468,44 @@ display: none;
 display: block;
 }
 
+.history-header {
+display: flex;
+justify-content: space-between;
+align-items: center;
+cursor: pointer;
+padding: 15px 0;
+border-bottom: 2px solid #e0e0e0;
+margin-bottom: 20px;
+transition: all 0.3s ease;
+}
+
+.history-header:hover {
+background: rgba(30, 60, 114, 0.05);
+margin: 0 -25px 20px -25px;
+padding: 15px 25px;
+border-radius: 10px;
+}
+
+.history-toggle {
+font-size: 18px;
+transition: transform 0.3s ease;
+color: #1e3c72;
+}
+
+.history-toggle.expanded {
+transform: rotate(180deg);
+}
+
+.history-content {
+max-height: 0;
+overflow: hidden;
+transition: max-height 0.3s ease;
+}
+
+.history-content.expanded {
+max-height: 500px;
+}
+
 .history-tabs {
 display: flex;
 gap: 10px;
@@ -824,13 +862,18 @@ gap: 20px;
 </div>
 
 <div class="scan-history" id="scanHistory">
+<div class="history-header" onclick="toggleHistorySection()">
+<h3 id="scan-history-title">Scan History</h3>
+<span class="history-toggle" id="historyToggle">▼</span>
+</div>
+
+<div class="history-content" id="historyContent">
 <div class="history-tabs">
 <button class="history-tab active" data-filter="all" id="all-scans">All Scans</button>
 <button class="history-tab" data-filter="region" id="by-region">By Region</button>
 <button class="history-tab" data-filter="platform" id="by-platform">By Platform</button>
 </div>
 
-<h3 id="scan-history-title">Scan History</h3>
 <div class="history-list" id="historyList">
 <div class="history-item">
 <div>
@@ -841,6 +884,7 @@ gap: 20px;
 <span class="platform-tag">TikTok</span> | 
 <span class="region-tag">Middle East</span> | 
 <span class="score-tag">Score: 55</span>
+</div>
 </div>
 </div>
 </div>
@@ -1731,6 +1775,20 @@ function filterHistory(filter) {
 
 function closeInsightModal() {
     document.getElementById('insightModal').style.display = 'none';
+}
+
+// Toggle scan history section
+function toggleHistorySection() {
+    const historyContent = document.getElementById('historyContent');
+    const historyToggle = document.getElementById('historyToggle');
+    
+    if (historyContent.classList.contains('expanded')) {
+        historyContent.classList.remove('expanded');
+        historyToggle.classList.remove('expanded');
+    } else {
+        historyContent.classList.add('expanded');
+        historyToggle.classList.add('expanded');
+    }
 }
 
 // Add event listeners for history tabs
