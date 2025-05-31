@@ -5,8 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>CheckReel Dashboard</title>
 <link rel="icon" type="image/x-icon" href="images/favicon.ico">
-<!-- Commented out to prevent 401 error -->
-<!-- <link rel="manifest" href="manifest.json"> -->
 <style>
 * {
 margin: 0;
@@ -42,7 +40,6 @@ margin: 0 auto;
 padding: 20px;
 }
 
-/* Header */
 .header {
 display: flex;
 justify-content: space-between;
@@ -95,7 +92,6 @@ letter-spacing: 0.5px;
 .tier-plus { background: #f3e5f5; color: #7b1fa2; }
 .tier-premium { background: #fff3e0; color: #f57c00; }
 
-/* Main Content */
 .dashboard-grid {
 display: grid;
 grid-template-columns: 1fr 1fr 1fr;
@@ -120,7 +116,6 @@ gap: 10px;
 font-size: 18px;
 }
 
-/* Region Selection */
 .region-grid {
 display: grid;
 grid-template-columns: repeat(2, 1fr);
@@ -175,7 +170,6 @@ font-size: 12px;
 font-weight: 600;
 }
 
-/* Platform Selection */
 .platforms-grid {
 display: grid;
 grid-template-columns: repeat(3, 1fr);
@@ -238,7 +232,6 @@ font-weight: 600;
 text-align: center;
 }
 
-/* File Upload */
 .upload-area {
 border: 3px dashed #ddd;
 border-radius: 15px;
@@ -290,7 +283,6 @@ cursor: pointer;
 margin-top: 10px;
 }
 
-/* Tier Selection */
 .tier-selection {
 background: rgba(255, 255, 255, 0.95);
 backdrop-filter: blur(10px);
@@ -376,7 +368,6 @@ opacity: 0.9;
 line-height: 1.4;
 }
 
-/* Selection Alert - Moved below tier selection */
 .selection-alert {
 background: linear-gradient(135deg, #ff6b6b, #ff8e8e);
 color: white;
@@ -392,7 +383,6 @@ box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
 display: none;
 }
 
-/* Scan Button */
 .scan-section {
 text-align: center;
 margin-top: 30px;
@@ -452,7 +442,6 @@ display: block;
 100% { transform: rotate(360deg); }
 }
 
-/* Scan History */
 .scan-history {
 background: rgba(255, 255, 255, 0.95);
 backdrop-filter: blur(10px);
@@ -518,7 +507,6 @@ font-size: 12px;
 color: #666;
 }
 
-/* Countries Modal */
 .countries-modal {
 display: none;
 position: fixed;
@@ -575,18 +563,19 @@ background: #e3f2fd;
 border-color: #1e3c72;
 }
 
-/* Results Section */
 .results-section {
 display: none;
-margin-top: 30px;
+margin-top: 40px;
+margin-bottom: 40px;
 }
 
 .score-display {
 display: flex;
 align-items: center;
 justify-content: center;
-gap: 30px;
-margin-bottom: 30px;
+gap: 40px;
+margin-bottom: 40px;
+padding: 20px;
 }
 
 .score-circle {
@@ -643,14 +632,16 @@ box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
 
 .issue-item, .recommendation-item {
 display: flex;
-align-items: center;
-gap: 10px;
-padding: 10px;
-margin-bottom: 10px;
+align-items: flex-start;
+gap: 12px;
+padding: 15px;
+margin-bottom: 12px;
 background: #f8f9fa;
 border-radius: 8px;
 cursor: pointer;
 transition: all 0.3s ease;
+line-height: 1.4;
+min-height: 60px;
 }
 
 .issue-item:hover, .recommendation-item:hover {
@@ -658,7 +649,6 @@ background: #e3f2fd;
 transform: translateX(5px);
 }
 
-/* Insight Modal */
 .insight-modal {
 display: none;
 position: fixed;
@@ -685,7 +675,6 @@ margin-bottom: 20px;
 color: #1e3c72;
 }
 
-/* Stats */
 .stats-grid {
 display: grid;
 grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
@@ -714,7 +703,6 @@ color: #666;
 font-size: 12px;
 }
 
-/* Footer */
 .footer {
 text-align: center;
 padding: 20px 0;
@@ -723,7 +711,6 @@ font-size: 14px;
 margin-top: 40px;
 }
 
-/* Responsive */
 @media (max-width: 1024px) {
 .dashboard-grid {
 grid-template-columns: 1fr 1fr;
@@ -752,7 +739,6 @@ gap: 20px;
 </head>
 <body>
 <div class="container">
-<!-- Header -->
 <div class="header">
 <div class="logo-section">
 <img src="images/logo.png" alt="CheckReel Logo" class="logo-img">
@@ -764,7 +750,6 @@ gap: 20px;
 </div>
 </div>
 
-<!-- Tier Selection -->
 <div class="tier-selection">
 <h2 id="choose-plan">Choose Your Plan</h2>
 <div class="tier-plans">
@@ -789,168 +774,6 @@ gap: 20px;
 </div>
 </div>
 
-<!-- Selection Alert -->
-<div id="selectionAlert" class="selection-alert">
-<span id="selection-alert">Please select a region and platform before uploading content for analysis</span>
-</div>
-
-<!-- Main Dashboard -->
-<div class="dashboard-grid">
-<!-- Region Selection -->
-<div class="card">
-<h2 id="select-region">Select Region</h2>
-<div class="region-grid">
-<div class="region-option" data-region="global" onclick="selectRegion('global')">
-<img src="images/region-icons/global.png" alt="Global" class="region-icon"
-onerror="this.outerHTML='<div style=&quot;width: 35px; height: 35px; background: #3498db; border-radius: 6px; margin-bottom: 8px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 12px;&quot;>🌍</div>';">
-<span class="region-name">Global</span>
-</div>
-<div class="region-option" data-region="middle-east" onclick="selectRegion('middle-east'); showCountries('middleEast')">
-<img src="images/region-icons/middle-east.png" alt="Middle East" class="region-icon"
-onerror="this.outerHTML='<div style=&quot;width: 35px; height: 35px; background: #e74c3c; border-radius: 6px; margin-bottom: 8px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 10px;&quot;>ME</div>';">
-<span class="region-name">Middle East</span>
-</div>
-<div class="region-option" data-region="mena" onclick="selectRegion('mena'); showCountries('mena')">
-<img src="images/region-icons/mena.png" alt="MENA" class="region-icon"
-onerror="this.outerHTML='<div style=&quot;width: 35px; height: 35px; background: #f39c12; border-radius: 6px; margin-bottom: 8px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 10px;&quot;>MENA</div>';">
-<span class="region-name">MENA</span>
-</div>
-<div class="region-option" data-region="europe" onclick="selectRegion('europe'); showCountries('europe')">
-<img src="images/region-icons/europe.png" alt="Europe" class="region-icon"
-onerror="this.outerHTML='<div style=&quot;width: 35px; height: 35px; background: #9b59b6; border-radius: 6px; margin-bottom: 8px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 12px;&quot;>EU</div>';">
-<span class="region-name">Europe</span>
-</div>
-</div>
-</div>
-
-<!-- Platform Selection -->
-<div class="card">
-<h2 id="select-platform">Select Target Platform <span id="platformCounter" style="font-size: 12px; color: #666;"></span></h2>
-<div class="platforms-grid">
-<div class="platform-option" data-platform="tiktok" onclick="selectPlatform('tiktok')">
-<img src="images/tiktok.png" alt="TikTok" class="platform-icon">
-<span class="platform-name">TikTok</span>
-</div>
-<div class="platform-option" data-platform="youtube" onclick="selectPlatform('youtube')">
-<img src="images/youtube.png" alt="YouTube" class="platform-icon">
-<span class="platform-name">YouTube</span>
-</div>
-<div class="platform-option" data-platform="instagram" onclick="selectPlatform('instagram')">
-<img src="images/instagram.png" alt="Instagram" class="platform-icon">
-<span class="platform-name">Instagram</span>
-</div>
-<div class="platform-option" data-platform="facebook" onclick="selectPlatform('facebook')">
-<img src="images/facebook.png" alt="Facebook" class="platform-icon">
-<span class="platform-name">Facebook</span>
-</div>
-<div class="platform-option" data-platform="twitter" onclick="selectPlatform('twitter')">
-<img src="images/twitter.png" alt="Twitter" class="platform-icon">
-<span class="platform-name">Twitter</span>
-</div>
-<div class="platform-option" data-platform="snapchat" onclick="selectPlatform('snapchat')">
-<img src="images/snapchat.png" alt="Snapchat" class="platform-icon">
-<span class="platform-name">Snapchat</span>
-</div>
-</div>
-</div>
-
-<!-- File Upload -->
-<div class="card">
-<h2 id="upload-content">Upload Content to Check</h2>
-<div id="uploadArea" class="upload-area">
-<span class="upload-icon">📁</span>
-<h3 id="drop-here">Drop your content here</h3>
-<p id="click-browse">or click to browse files</p>
-<small>Supports: MP4, MOV, JPG, PNG, MP3, WAV (max 100MB)</small>
-</div>
-<div id="fileInfo" class="file-info">
-<div class="file-name" id="fileName"></div>
-<div class="file-size" id="fileSize"></div>
-<button id="removeFile" class="remove-file">Remove File</button>
-</div>
-<input type="file" id="fileInput" style="display: none;" accept="video/*,image/*,audio/*">
-</div>
-</div>
-
-<!-- Scan Button -->
-<div class="scan-section">
-<button id="scanBtn" class="scan-btn" disabled>
-<span id="start-check">Start Content Check</span>
-<div id="btnLoader" class="btn-loader"></div>
-</button>
-</div>
-
-<!-- Scan History -->
-<div id="scanHistory" class="scan-history">
-<h2 id="scan-history-title">Scan History</h2>
-<div class="history-tabs">
-<button class="history-tab active" onclick="filterHistory('all')" id="all-scans">All Scans</button>
-<button class="history-tab" onclick="filterHistory('region')" id="by-region">By Region</button>
-<button class="history-tab" onclick="filterHistory('platform')" id="by-platform">By Platform</button>
-</div>
-<div id="historyList" class="history-list"></div>
-</div>
-
-<!-- Results Section -->
-<div id="resultsSection" class="results-section">
-<div class="card">
-<h2 id="compliance-report">Compliance Report</h2>
-<div class="score-display">
-<div id="scoreCircle" class="score-circle">
-<span id="scoreValue" class="score-value">85</span>
-</div>
-<div class="status-indicator">
-<span id="statusIcon" class="status-icon">✅</span>
-<span id="status-text">Ready to Post</span>
-</div>
-</div>
-<div class="results-grid">
-<div class="issues-card">
-<h3 id="issues-found">Issues Found</h3>
-<div id="issuesList"></div>
-</div>
-<div class="recommendations-card">
-<h3 id="recommendations">Recommendations</h3>
-<div id="recommendationsList"></div>
-</div>
-</div>
-</div>
-</div>
-
-<!-- Stats -->
-<div class="stats-grid">
-<div class="stat-card">
-<div class="stat-number">2,697+</div>
-<div class="stat-label" id="active-users">Active Users</div>
-</div>
-<div class="stat-card">
-<div class="stat-number">15,847</div>
-<div class="stat-label" id="content-scanned">Content Scanned</div>
-</div>
-<div class="stat-card">
-<div class="stat-number">94%</div>
-<div class="stat-label" id="success-rate">Success Rate</div>
-</div>
-<div class="stat-card">
-<div class="stat-number">6</div>
-<div class="stat-label" id="platforms">Platforms</div>
-</div>
-<div class="stat-card">
-<div class="stat-number" id="scansUsedCounter">0</div>
-<div class="stat-label" id="scans-used">Scans Used (Testing)</div>
-</div>
-</div>
-
-<!-- Countries Modal -->
-<div id="countriesModal" class="countries-modal">
-<div class="countries-content">
-<button class="close-modal" onclick="closeCountriesModal()">&times;</button>
-<h2 id="modalTitle">Select Country</h2>
-<div id="countriesGrid" class="countries-grid"></div>
-</div>
-</div>
-
-<!-- Insight Modal -->
 <div id="insightModal" class="insight-modal">
 <div class="insight-content">
 <button class="close-modal" onclick="closeInsightModal()">&times;</button>
@@ -959,16 +782,13 @@ onerror="this.outerHTML='<div style=&quot;width: 35px; height: 35px; background:
 </div>
 </div>
 
-<!-- Footer -->
 <div class="footer">
 <p>&copy; 2025 CheckReel. All rights reserved. Copyright Protected.</p>
 </div>
 </div>
 
-<!-- IMPORTANT: Load lang-loader.js FIRST -->
 <script src="lang-loader.js"></script>
 
-<!-- Main Dashboard Script -->
 <script>
 // Global variables
 let selectedFile = null;
@@ -982,9 +802,9 @@ let currentLanguage = 'en';
 // Safe storage wrapper
 if (!window.safeStorage) {
   window.safeStorage = {
-    getItem:   (k)=>{ try { return localStorage.getItem(k); } catch { return null } },
-    setItem:   (k,v)=>{ try { localStorage.setItem(k,v) } catch {} },
-    removeItem:(k)=>{ try { localStorage.removeItem(k) } catch {} }
+    getItem: (k) => { try { return localStorage.getItem(k); } catch { return null } },
+    setItem: (k,v) => { try { localStorage.setItem(k,v) } catch {} },
+    removeItem: (k) => { try { localStorage.removeItem(k) } catch {} }
   };
 }
 
@@ -1101,44 +921,32 @@ const DASHBOARD_TRANSLATIONS = {
 function applyDashboardTranslations(lang) {
     const translations = DASHBOARD_TRANSLATIONS[lang] || DASHBOARD_TRANSLATIONS['en'];
     
-    // Apply translations to all elements with IDs
     Object.keys(translations).forEach(key => {
         const element = document.getElementById(key);
         if (element) {
             if (key.includes('features')) {
-                element.innerHTML = translations[key]; // Use innerHTML for line breaks
+                element.innerHTML = translations[key];
             } else {
                 element.textContent = translations[key];
             }
         }
     });
     
-    // Update "recommended" badge for Plus tier
-    const plusTier = document.querySelector('[data-tier="plus"]');
-    if (plusTier && translations['recommended']) {
-        plusTier.querySelector('::before') || (plusTier.style.setProperty('--recommended-text', `"${translations['recommended']}"`));
-    }
-    
-    // Update scans left display
     updateTierDisplay();
 }
 
 // Initialize dashboard with language persistence
 document.addEventListener('DOMContentLoaded', function() {
-    // Get current language from localStorage (set by index.html)
     currentLanguage = safeStorage.getItem('checkreel_language') || 'en';
     console.log('Dashboard loading with language:', currentLanguage);
     
-    // Load language content from lang-loader.js first
     if (window.loadLanguageContent) {
         window.loadLanguageContent(currentLanguage);
     }
     
-    // Apply dashboard-specific translations
     setTimeout(() => {
         applyDashboardTranslations(currentLanguage);
         
-        // Set RTL for Arabic
         if (currentLanguage === 'ar') {
             document.body.setAttribute('dir', 'rtl');
             document.documentElement.setAttribute('dir', 'rtl');
@@ -1148,7 +956,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }, 100);
     
-    // Initialize dashboard functionality
     initializeUpload();
     updateTierDisplay();
     updateUserCounter();
@@ -1186,13 +993,11 @@ function selectTier(tier) {
     currentTier = tier;
     safeStorage.setItem('checkreel_tier', tier);
     
-    // Update visual selection
     document.querySelectorAll('.tier-plan').forEach(plan => {
         plan.classList.remove('active');
     });
     document.querySelector(`[data-tier="${tier}"]`).classList.add('active');
     
-    // Reset scans if upgrading
     if (tier !== 'free') {
         safeStorage.setItem('checkreel_scans_used', '0');
     }
@@ -1201,7 +1006,6 @@ function selectTier(tier) {
     updateScansCounter();
     updatePlatformCounter();
     
-    // Show/hide scan history
     const historySection = document.getElementById('scanHistory');
     if (tier === 'plus' || tier === 'premium') {
         historySection.classList.add('visible');
@@ -1497,361 +1301,209 @@ function generateDynamicResults() {
     const scenario = scenarios[Math.floor(Math.random() * scenarios.length)];
     let issues, recommendations, status, statusIcon;
     
+    // Generate multilingual status messages
     if (scenario.score >= 90) {
-        status = 'Perfect! Ready to Post';
+        if (currentLanguage === 'fr') {
+            status = 'Parfait! Prêt à publier';
+        } else if (currentLanguage === 'ar') {
+            status = 'مثالي! جاهز للنشر';
+        } else {
+            status = 'Perfect! Ready to Post';
+        }
         statusIcon = '✅';
     } else if (scenario.score >= 80) {
-        status = 'Good to Post';
+        if (currentLanguage === 'fr') {
+            status = 'Bon à publier';
+        } else if (currentLanguage === 'ar') {
+            status = 'جيد للنشر';
+        } else {
+            status = 'Good to Post';
+        }
         statusIcon = '✅';
     } else if (scenario.score >= 70) {
-        status = 'Minor Issues - Review Recommended';
+        if (currentLanguage === 'fr') {
+            status = 'Problèmes mineurs - Révision recommandée';
+        } else if (currentLanguage === 'ar') {
+            status = 'مشاكل بسيطة - يُنصح بالمراجعة';
+        } else {
+            status = 'Minor Issues - Review Recommended';
+        }
         statusIcon = '⚠️';
     } else if (scenario.score >= 60) {
-        status = 'Moderate Issues - Fix Before Posting';
+        if (currentLanguage === 'fr') {
+            status = 'Problèmes modérés - Corriger avant publication';
+        } else if (currentLanguage === 'ar') {
+            status = 'مشاكل متوسطة - إصلاح قبل النشر';
+        } else {
+            status = 'Moderate Issues - Fix Before Posting';
+        }
         statusIcon = '⚠️';
     } else {
-        status = 'Major Issues - Do Not Post';
+        if (currentLanguage === 'fr') {
+            status = 'Problèmes majeurs - Ne pas publier';
+        } else if (currentLanguage === 'ar') {
+            status = 'مشاكل كبيرة - لا تنشر';
+        } else {
+            status = 'Major Issues - Do Not Post';
+        }
         statusIcon = '❌';
     }
     
+    // Generate multilingual issues and recommendations
     if (userTier === 'free') {
         issues = scenario.issueCount > 0 ? [
-            { icon: '⚠️', text: `${scenario.issueCount} compliance issues detected for ${selectedPlatforms.join(', ')}` }
+            { 
+                icon: '⚠️', 
+                text: currentLanguage === 'fr' ? 
+                    `${scenario.issueCount} problèmes de conformité détectés pour ${selectedPlatforms.join(', ')}` :
+                    currentLanguage === 'ar' ?
+                    `تم اكتشاف ${scenario.issueCount} مشاكل امتثال لـ ${selectedPlatforms.join(', ')}` :
+                    `${scenario.issueCount} compliance issues detected for ${selectedPlatforms.join(', ')}`
+            }
         ] : [];
         recommendations = [
-            { icon: '💡', text: `Upgrade to Plus or Premium for detailed analysis` }
+            { 
+                icon: '💡', 
+                text: currentLanguage === 'fr' ? 
+                    'Passez à Plus ou Premium pour une analyse détaillée' :
+                    currentLanguage === 'ar' ?
+                    'ترقية إلى Plus أو Premium للحصول على تحليل مفصل' :
+                    'Upgrade to Plus or Premium for detailed analysis'
+            }
         ];
     } else if (userTier === 'plus') {
         issues = scenario.issueCount > 0 ? [
-            { icon: '🔊', text: `Audio levels exceed ${selectedPlatforms.join(', ')} limits` },
-            { icon: '📋', text: `Content may violate ${selectedRegion} community guidelines` }
+            { 
+                icon: '🔊', 
+                text: currentLanguage === 'fr' ? 
+                    `Les niveaux audio dépassent les limites de ${selectedPlatforms.join(', ')}` :
+                    currentLanguage === 'ar' ?
+                    `مستويات الصوت تتجاوز حدود ${selectedPlatforms.join(', ')}` :
+                    `Audio levels exceed ${selectedPlatforms.join(', ')} limits`
+            },
+            { 
+                icon: '📋', 
+                text: currentLanguage === 'fr' ? 
+                    `Le contenu peut violer les directives communautaires de ${selectedRegion}` :
+                    currentLanguage === 'ar' ?
+                    `المحتوى قد ينتهك إرشادات مجتمع ${selectedRegion}` :
+                    `Content may violate ${selectedRegion} community guidelines`
+            }
         ].slice(0, Math.min(scenario.issueCount, 2)) : [];
+        
         recommendations = [
-            { icon: '📈', text: `Use trending hashtags for ${selectedPlatforms.join(', ')}` },
-            { icon: '⏰', text: `Best posting time for ${selectedRegion}: 7-9 PM local` }
+            { 
+                icon: '📈', 
+                text: currentLanguage === 'fr' ? 
+                    `Utilisez des hashtags tendance pour ${selectedPlatforms.join(', ')}` :
+                    currentLanguage === 'ar' ?
+                    `استخدم الهاشتاجات الرائجة لـ ${selectedPlatforms.join(', ')}` :
+                    `Use trending hashtags for ${selectedPlatforms.join(', ')}`
+            },
+            { 
+                icon: '⏰', 
+                text: currentLanguage === 'fr' ? 
+                    `Meilleur moment de publication pour ${selectedRegion}: 19h-21h local` :
+                    currentLanguage === 'ar' ?
+                    `أفضل وقت للنشر في ${selectedRegion}: 7-9 مساءً بالتوقيت المحلي` :
+                    `Best posting time for ${selectedRegion}: 7-9 PM local`
+            }
         ];
-    } else {
+    } else { // premium
         issues = scenario.issueCount > 0 ? [
-            { icon: '🎵', text: `Audio enhancement needed - our AI recommends voice optimization` },
-            { icon: '📹', text: `Visual quality below platform standards` },
-            { icon: '⏱️', text: `Video pacing needs adjustment for ${selectedPlatforms.join(', ')}` }
+            { 
+                icon: '🎵', 
+                text: currentLanguage === 'fr' ? 
+                    'Amélioration audio nécessaire - notre IA recommande l\'optimisation vocale' :
+                    currentLanguage === 'ar' ?
+                    'تحسين الصوت مطلوب - ذكائنا الاصطناعي يوصي بتحسين الصوت' :
+                    'Audio enhancement needed - our AI recommends voice optimization'
+            },
+            { 
+                icon: '📹', 
+                text: currentLanguage === 'fr' ? 
+                    'Qualité visuelle en dessous des standards de la plateforme' :
+                    currentLanguage === 'ar' ?
+                    'الجودة البصرية أقل من معايير المنصة' :
+                    'Visual quality below platform standards'
+            },
+            { 
+                icon: '⏱️', 
+                text: currentLanguage === 'fr' ? 
+                    `Le rythme vidéo nécessite un ajustement pour ${selectedPlatforms.join(', ')}` :
+                    currentLanguage === 'ar' ?
+                    `إيقاع الفيديو يحتاج تعديل لـ ${selectedPlatforms.join(', ')}` :
+                    `Video pacing needs adjustment for ${selectedPlatforms.join(', ')}`
+            }
         ].slice(0, Math.min(scenario.issueCount, 3)) : [];
+        
         recommendations = [
-            { icon: '🧠', text: `AI Analysis: Adjust content pacing for better engagement` },
-            { icon: '🎯', text: `Optimization tip: Add stronger hooks in first 3 seconds` },
-            { icon: '⭐', text: `Our advanced AI suggests format adjustments for viral potential` }
+            { 
+                icon: '🧠', 
+                text: currentLanguage === 'fr' ? 
+                    'Analyse IA: Ajustez le rythme du contenu pour un meilleur engagement' :
+                    currentLanguage === 'ar' ?
+                    'تحليل الذكاء الاصطناعي: اضبط إيقاع المحتوى لمشاركة أفضل' :
+                    'AI Analysis: Adjust content pacing for better engagement'
+            },
+            { 
+                icon: '🎯', 
+                text: currentLanguage === 'fr' ? 
+                    'Conseil d\'optimisation: Ajoutez des accroches plus fortes dans les 3 premières secondes' :
+                    currentLanguage === 'ar' ?
+                    'نصيحة التحسين: أضف خطافات أقوى في أول 3 ثواني' :
+                    'Optimization tip: Add stronger hooks in first 3 seconds'
+            },
+            { 
+                icon: '⭐', 
+                text: currentLanguage === 'fr' ? 
+                    'Notre IA avancée suggère des ajustements de format pour un potentiel viral' :
+                    currentLanguage === 'ar' ?
+                    'يقترح الذكاء الاصطناعي لدينا تعديلات في التنسيق لإمكانية الانتشار' :
+                    'Our advanced AI suggests format tweaks for viral potential'
+            }
+       ].slice(0, Math.min(scenario.issueCount, 3));
+        
+        recommendations = [
+            { 
+                icon: '🧠', 
+                text: currentLanguage === 'fr' ? 
+                    'Analyse IA: Ajustez le rythme du contenu pour un meilleur engagement' :
+                    currentLanguage === 'ar' ?
+                    'تحليل الذكاء الاصطناعي: اضبط إيقاع المحتوى لمشاركة أفضل' :
+                    'AI Analysis: Adjust content pacing for better engagement'
+            },
+            { 
+                icon: '🎯', 
+                text: currentLanguage === 'fr' ? 
+                    'Conseil d\'optimisation: Ajoutez des accroches plus fortes dans les 3 premières secondes' :
+                    currentLanguage === 'ar' ?
+                    'نصيحة التحسين: أضف خطافات أقوى في أول 3 ثواني' :
+                    'Optimization tip: Add stronger hooks in first 3 seconds'
+            },
+            { 
+                icon: '⭐', 
+                text: currentLanguage === 'fr' ? 
+                    'Notre IA avancée suggère des ajustements de format pour un potentiel viral' :
+                    currentLanguage === 'ar' ?
+                    'يقترح الذكاء الاصطناعي لدينا تعديلات في التنسيق لإمكانية الانتشار' :
+                    'Our advanced AI suggests format tweaks for viral potential'
+            }
         ];
     }
     
     return {
         score: scenario.score,
-        status: status,
-        statusIcon: statusIcon,
-        issues: issues,
-        recommendations: recommendations,
-        platforms: selectedPlatforms,
-        region: selectedRegion
+        status,
+        statusIcon,
+        issues,
+        recommendations
     };
 }
 
-function displayResults(results) {
-    const resultsSection = document.getElementById('resultsSection');
-    const scoreValue = document.getElementById('scoreValue');
-    const statusText = document.getElementById('status-text');
-    const statusIcon = document.getElementById('statusIcon');
-    const issuesList = document.getElementById('issuesList');
-    const recommendationsList = document.getElementById('recommendationsList');
-    const scoreCircle = document.getElementById('scoreCircle');
-    
-    if (scoreValue) scoreValue.textContent = results.score;
-    if (scoreCircle) {
-        const red = results.score < 50 ? 255 : Math.round(255 * (100 - results.score) / 50);
-        const green = results.score > 50 ? 255 : Math.round(255 * results.score / 50);
-        const gradient = `conic-gradient(from 0deg, 
-            rgb(${red}, ${green}, 0) 0%, 
-            rgb(${red}, ${green}, 0) ${results.score}%, 
-            #e0e0e0 ${results.score}%)`;
-        scoreCircle.style.background = gradient;
-    }
-    
-    if (statusText) statusText.textContent = results.status;
-    if (statusIcon) statusIcon.textContent = results.statusIcon;
-    
-    if (issuesList) {
-        issuesList.innerHTML = '';
-        results.issues.forEach((issue, index) => {
-            const item = document.createElement('div');
-            item.className = 'issue-item';
-            item.innerHTML = `
-                <span class="issue-icon">${issue.icon}</span>
-                <span>${issue.text}</span>
-            `;
-            item.onclick = () => showInsight('issue', issue, index);
-            issuesList.appendChild(item);
-        });
-    }
-    
-    if (recommendationsList) {
-        recommendationsList.innerHTML = '';
-        results.recommendations.forEach((rec, index) => {
-            const item = document.createElement('div');
-            item.className = 'recommendation-item';
-            item.innerHTML = `
-                <span class="recommendation-icon">${rec.icon}</span>
-                <span>${rec.text}</span>
-            `;
-            item.onclick = () => showInsight('recommendation', rec, index);
-            recommendationsList.appendChild(item);
-        });
-    }
-    
-    if (resultsSection) resultsSection.style.display = 'block';
-}
+// The rest of your JavaScript functions (displayResults, saveScanToHistory, incrementScanCount, updateTierDisplay, updateUserCounter, updateScansCounter, loadScanHistory, filterHistory, closeInsightModal) should be here.
 
-function showInsight(type, item, index) {
-    const modal = document.getElementById('insightModal');
-    const title = document.getElementById('insightTitle');
-    const content = document.getElementById('insightContent');
-    
-    title.textContent = type === 'issue' ? 'Issue Details' : 'Recommendation Details';
-    
-    const userTier = safeStorage.getItem('checkreel_tier') || 'free';
-    let detailedContent = '';
-    
-    if (userTier === 'premium' && type === 'recommendation') {
-        detailedContent = `
-            <p><strong>Detailed Analysis:</strong></p>
-            <p>${item.text}</p>
-            <br>
-            <p><strong>AI-Powered Recommendations:</strong></p>
-            <ul>
-                <li>🎨 <strong>Visual Enhancement:</strong> Our advanced AI suggests improving graphics and thumbnails for better engagement</li>
-                <li>⭐ <strong>Audio Optimization:</strong> AI-powered voice enhancement can improve audio quality by 40%</li>
-                <li>🎬 <strong>Video Effects:</strong> Smart transitions and effects recommended for viral potential</li>
-                <li>⚙️ <strong>Content Processing:</strong> Advanced optimization for maximum platform compatibility</li>
-            </ul>
-            <br>
-            <p><strong>Note:</strong> Our system uses cutting-edge AI technology to provide these insights, ensuring your content performs at its best.</p>
-        `;
-    } else {
-        detailedContent = `
-            <p><strong>Details:</strong></p>
-            <p>${item.text}</p>
-            <br>
-            <p>Upgrade to Premium for advanced AI-powered recommendations and detailed optimization insights.</p>
-        `;
-    }
-    
-    content.innerHTML = detailedContent;
-    modal.style.display = 'block';
-}
-
-function closeInsightModal() {
-    document.getElementById('insightModal').style.display = 'none';
-}
-
-// Scan History Functions
-function saveScanToHistory(results) {
-    const userTier = safeStorage.getItem('checkreel_tier') || 'free';
-    if (userTier === 'free') return;
-    
-    const scan = {
-        id: Date.now(),
-        date: new Date().toISOString(),
-        score: results.score,
-        status: results.status,
-        platforms: results.platforms,
-        region: results.region,
-        fileName: selectedFile.name
-    };
-    
-    let history = JSON.parse(safeStorage.getItem('checkreel_scan_history') || '[]');
-    history.unshift(scan);
-    
-    if (history.length > 50) {
-        history = history.slice(0, 50);
-    }
-    
-    safeStorage.setItem('checkreel_scan_history', JSON.stringify(history));
-    loadScanHistory();
-}
-
-function loadScanHistory() {
-    const userTier = safeStorage.getItem('checkreel_tier') || 'free';
-    if (userTier === 'free') return;
-    
-    scanHistory = JSON.parse(safeStorage.getItem('checkreel_scan_history') || '[]');
-    displayHistory('all');
-}
-
-function displayHistory(filter) {
-    const historyList = document.getElementById('historyList');
-    if (!historyList) return;
-    
-    let filteredHistory = scanHistory;
-    
-    historyList.innerHTML = '';
-    filteredHistory.forEach(scan => {
-        const item = document.createElement('div');
-        item.className = 'history-item';
-        item.innerHTML = `
-            <div>
-                <strong>${scan.fileName}</strong><br>
-                <span style="font-size: 12px; color: #666;">
-                    ${scan.platforms.join(', ')} | ${scan.region} | Score: ${scan.score}
-                </span>
-            </div>
-            <div>
-                <span class="history-date">${new Date(scan.date).toLocaleDateString()}</span>
-            </div>
-        `;
-        item.onclick = () => viewHistoryScan(scan);
-        historyList.appendChild(item);
-    });
-}
-
-function filterHistory(type) {
-    document.querySelectorAll('.history-tab').forEach(tab => {
-        tab.classList.remove('active');
-    });
-    event.target.classList.add('active');
-    
-    if (type === 'region') {
-        const grouped = {};
-        scanHistory.forEach(scan => {
-            if (!grouped[scan.region]) grouped[scan.region] = [];
-            grouped[scan.region].push(scan);
-        });
-        displayGroupedHistory(grouped, 'region');
-    } else if (type === 'platform') {
-        const grouped = {};
-        scanHistory.forEach(scan => {
-            scan.platforms.forEach(platform => {
-                if (!grouped[platform]) grouped[platform] = [];
-                grouped[platform].push(scan);
-            });
-        });
-        displayGroupedHistory(grouped, 'platform');
-    } else {
-        displayHistory('all');
-    }
-}
-
-function displayGroupedHistory(grouped, type) {
-    const historyList = document.getElementById('historyList');
-    if (!historyList) return;
-    
-    historyList.innerHTML = '';
-    Object.keys(grouped).forEach(key => {
-        const header = document.createElement('h4');
-        header.style.cssText = 'margin: 15px 0 10px; color: #1e3c72; text-transform: capitalize;';
-        header.textContent = key;
-        historyList.appendChild(header);
-        
-        grouped[key].forEach(scan => {
-            const item = document.createElement('div');
-            item.className = 'history-item';
-            item.innerHTML = `
-                <div>
-                    <strong>${scan.fileName}</strong><br>
-                    <span style="font-size: 12px; color: #666;">Score: ${scan.score}</span>
-                </div>
-                <div>
-                    <span class="history-date">${new Date(scan.date).toLocaleDateString()}</span>
-                </div>
-            `;
-            item.onclick = () => viewHistoryScan(scan);
-            historyList.appendChild(item);
-        });
-    });
-}
-
-function viewHistoryScan(scan) {
-    alert(`Viewing scan: ${scan.fileName}\nScore: ${scan.score}\nStatus: ${scan.status}`);
-}
-
-function incrementScanCount() {
-    const currentCount = parseInt(safeStorage.getItem('checkreel_scans_used') || '0');
-    safeStorage.setItem('checkreel_scans_used', (currentCount + 1).toString());
-}
-
-// Tier management
-function updateTierDisplay() {
-    const userTier = safeStorage.getItem('checkreel_tier') || 'free';
-    const scansUsed = parseInt(safeStorage.getItem('checkreel_scans_used') || '0');
-    const tierData = {
-        free: { name: 'Free Trial', scans: 3, class: 'tier-free' },
-        plus: { name: 'Plus', scans: 20, class: 'tier-plus' },
-        premium: { name: 'Premium', scans: 40, class: 'tier-premium' }
-    };
-    
-    const translations = DASHBOARD_TRANSLATIONS[currentLanguage] || DASHBOARD_TRANSLATIONS['en'];
-    const tierNames = {
-        free: translations['free-trial'],
-        plus: translations['plus-tier'],
-        premium: translations['premium-tier']
-    };
-    
-    const tier = tierData[userTier];
-    const scansLeft = Math.max(0, tier.scans - scansUsed);
-    const tierBadge = document.getElementById('tierBadge');
-    const scansLeftEl = document.getElementById('scansLeft');
-    
-    if (tierBadge) {
-        tierBadge.textContent = tierNames[userTier] || tier.name;
-        tierBadge.className = `tier-badge ${tier.class}`;
-    }
-    
-    if (scansLeftEl) {
-        scansLeftEl.textContent = `${scansLeft} ${translations['scans-left']}`;
-    }
-}
-
-function updateUserCounter() {
-    const baseCount = 2697;
-    let userIncrement = safeStorage.getItem('checkreel_user_increment');
-    if (!userIncrement) {
-        userIncrement = Math.floor(Math.random() * 100) + 1;
-        safeStorage.setItem('checkreel_user_increment', userIncrement.toString());
-    }
-    const totalUsers = baseCount + parseInt(userIncrement);
-    
-    const statCards = document.querySelectorAll('.stat-number');
-    if (statCards[0]) {
-        statCards[0].textContent = `${totalUsers.toLocaleString()}+`;
-    }
-}
-
-function updateScansCounter() {
-    const scansUsed = parseInt(safeStorage.getItem('checkreel_scans_used') || '0');
-    const counterEl = document.getElementById('scansUsedCounter');
-    if (counterEl) {
-        counterEl.textContent = scansUsed;
-    }
-}
-
-// Make functions globally available
-window.selectTier = selectTier;
-window.selectRegion = selectRegion;
-window.selectPlatform = selectPlatform;
-window.showCountries = showCountries;
-window.closeCountriesModal = closeCountriesModal;
-window.selectCountry = selectCountry;
-window.showInsight = showInsight;
-window.closeInsightModal = closeInsightModal;
-window.filterHistory = filterHistory;
-
-// Close modals when clicking outside
-window.addEventListener('click', function(e) {
-    const countriesModal = document.getElementById('countriesModal');
-    const insightModal = document.getElementById('insightModal');
-    if (e.target === countriesModal) {
-        closeCountriesModal();
-    }
-    if (e.target === insightModal) {
-        closeInsightModal();
-    }
-});
 </script>
 </body>
 </html>
+
