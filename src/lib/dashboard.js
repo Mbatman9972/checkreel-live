@@ -1,4 +1,4 @@
-﻿/* ---------- GLOBAL SINGLETONS ---------- */
+/* ---------- GLOBAL SINGLETONS ---------- */
 const safeStorage = {
   getItem: k => { try { return localStorage.getItem(k); } catch { return null; } },
   setItem: (k, v) => { try { localStorage.setItem(k, v); return true; } catch { return false; } },
@@ -31,8 +31,8 @@ async function loadLanguage(lang) {
 function applyDashboardTranslations() {
   const L = window.LANGUAGE_CONTENT?.[currentLanguage] ?? {};
   qs('#scan-btn-text').textContent      = L['dashboard-scan-btn']  ?? 'Start Content Check';
-  qs('.tier-selection h2').textContent  = L['dashboard-plan-title']?? '🎯 Choose Your Plan';
-  qs('#selectionAlert').textContent     = L['dashboard-alert']     ?? '⚠️ Please select a region and platform before uploading content for analysis';
+  qs('.tier-selection h2').textContent  = L['dashboard-plan-title']?? '?? Choose Your Plan';
+  qs('#selectionAlert').textContent     = L['dashboard-alert']     ?? '?? Please select a region and platform before uploading content for analysis';
   if (currentLanguage === 'ar')  document.body.dir = 'rtl'; else document.body.removeAttribute('dir');
 }
 
@@ -132,7 +132,7 @@ function incScan(){    safeStorage.setItem('checkreel_scans_used',scansUsed()+1)
 async function startScan(){
   if(scansUsed()>=scansLimit()) return alert('Scan limit reached');
   const btn=qs('#scanBtn'); const txt=qs('#scan-btn-text'); const loader=qs('#btnLoader');
-  btn.disabled=true; loader.classList.add('active'); txt.textContent='Analyzing…';
+  btn.disabled=true; loader.classList.add('active'); txt.textContent='Analyzing�';
   await new Promise(r=>setTimeout(r,3000));
   const res = fakeResults();
   renderResults(res);
@@ -143,10 +143,10 @@ async function startScan(){
 }
 function fakeResults(){
   const scenarios=[95,85,72,60,42]; const s=scenarios[Math.floor(Math.random()*scenarios.length)];
-  const status= s>=90?'✅ Perfect!':
-                s>=80?'✅ Good':
-                s>=70?'⚠️ Minor issues':
-                s>=60?'⚠️ Fix before post':'❌ Do NOT post';
+  const status= s>=90?'? Perfect!':
+                s>=80?'? Good':
+                s>=70?'?? Minor issues':
+                s>=60?'?? Fix before post':'? Do NOT post';
   const issues = s>=70?0:s>=60?3:5;
   return {score:s,status,issues};
 }
@@ -154,8 +154,8 @@ function renderResults({score,status,issues}){
   qs('#scoreValue').textContent=score;
   qs('#status-text').textContent=status.slice(2);
   qs('#statusIcon').textContent=status[0];
-  qs('#issuesList').innerHTML= issues? `<div class="issue-item"><span>⚠️</span><span>${issues} potential issues detected</span></div>`:'';
-  qs('#recommendationsList').innerHTML='<div class="recommendation-item"><span>💡</span><span>Upgrade for detailed recommendations</span></div>';
+  qs('#issuesList').innerHTML= issues? `<div class="issue-item"><span>??</span><span>${issues} potential issues detected</span></div>`:'';
+  qs('#recommendationsList').innerHTML='<div class="recommendation-item"><span>??</span><span>Upgrade for detailed recommendations</span></div>';
   // score gradient
   const red  = score<50?255:Math.round(255*(100-score)/50);
   const green= score>50?255:Math.round(255*score/50);
