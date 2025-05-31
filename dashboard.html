@@ -1,9 +1,4 @@
-﻿# Navigate to project
-cd "C:\Users\LENOVO\Desktop\checkreel-pwa"
-
-# Create the fixed admin.html with missing variables added
-@'
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -1004,7 +999,7 @@ gap: 20px;
 <div class="scan-history" id="scanHistory">
 <div class="history-header" onclick="toggleHistorySection()">
 <h3 id="scan-history-title">Scan History</h3>
-toggle" id="historyToggle">▼</span>
+<span class="history-toggle" id="historyToggle">▼</span>
 </div>
 
 <div class="history-content" id="historyContent">
@@ -1121,14 +1116,6 @@ Secure payment powered by Stripe. Cancel anytime.
 <script src="lang-loader.js"></script>
 
 <script>
-// CRITICAL FIX: Declare missing variables
-let currentLanguage = 'en';
-let currentTier = 'free';
-let selectedRegion = null;
-let selectedPlatforms = [];
-let selectedFile = null;
-let scanHistory = [];
-
 // Payment Configuration - UPDATE THESE URLs WHEN READY
 const PAYMENT_CONFIG = {
     // Stripe/PayPal URLs - replace with your actual payment processor URLs
@@ -1225,7 +1212,6 @@ function checkPaymentStatus() {
 }
 
 function handlePaymentSuccess() {
-    const urlParams = new URLSearchParams(window.location.search);
     // Show success message
     alert('Payment successful! Your subscription is now active.');
     
@@ -1404,7 +1390,6 @@ const DASHBOARD_TRANSLATIONS = {
         'useTrendingHashtags': 'Use trending hashtags for {platform}',
         'bestPostingTime': 'Best posting time for {region}: 7-9 PM local',
         'audioLevelsExceed': 'Audio levels exceed {platform} limits',
-        'contentViolateGuidelines': 'Content may violate {region} community guidelines',
         'secure-payment': 'Secure payment powered by Stripe. Cancel anytime.',
         'whats-included': 'What\'s Included',
         'feature-enhanced': 'Enhanced compliance checking',
@@ -2257,9 +2242,3 @@ console.log('✅ Dashboard fully loaded with complete multilingual support');
 </script>
 </body>
 </html>
-'@ | Out-File -FilePath "admin.html" -Encoding UTF8
-
-# Deploy the fix
-git add admin.html
-git commit -m "Fix missing variables - restore full functionality"
-git push origin main
