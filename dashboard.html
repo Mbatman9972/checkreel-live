@@ -642,7 +642,7 @@ background: #e3f2fd;
 transform: translateX(5px);
 }
 
-.insight-modal {
+.payment-modal {
 display: none;
 position: fixed;
 top: 0;
@@ -650,8 +650,143 @@ left: 0;
 width: 100%;
 height: 100%;
 background: rgba(0, 0, 0, 0.8);
-z-index: 1000;
+z-index: 2000;
 padding: 20px;
+}
+
+.payment-content {
+background: white;
+border-radius: 20px;
+padding: 40px;
+max-width: 500px;
+margin: 50px auto;
+position: relative;
+text-align: center;
+box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+}
+
+.payment-header {
+margin-bottom: 30px;
+}
+
+.payment-header h2 {
+color: #1e3c72;
+margin-bottom: 10px;
+font-size: 28px;
+}
+
+.payment-header .tier-highlight {
+background: linear-gradient(135deg, #1e3c72 0%, #667eea 100%);
+color: white;
+padding: 8px 20px;
+border-radius: 25px;
+display: inline-block;
+font-weight: bold;
+margin-bottom: 20px;
+}
+
+.payment-features {
+text-align: left;
+margin: 30px 0;
+background: #f8f9fa;
+padding: 25px;
+border-radius: 15px;
+}
+
+.payment-features h4 {
+color: #1e3c72;
+margin-bottom: 15px;
+text-align: center;
+}
+
+.payment-features ul {
+list-style: none;
+padding: 0;
+}
+
+.payment-features li {
+padding: 8px 0;
+display: flex;
+align-items: center;
+gap: 10px;
+}
+
+.payment-features li::before {
+content: "✅";
+font-size: 16px;
+}
+
+.payment-price {
+font-size: 36px;
+font-weight: bold;
+color: #1e3c72;
+margin: 20px 0;
+}
+
+.payment-buttons {
+display: flex;
+gap: 15px;
+margin-top: 30px;
+}
+
+.payment-btn {
+flex: 1;
+padding: 15px 25px;
+border: none;
+border-radius: 10px;
+font-size: 16px;
+font-weight: 600;
+cursor: pointer;
+transition: all 0.3s ease;
+}
+
+.payment-btn.primary {
+background: linear-gradient(135deg, #1e3c72 0%, #667eea 100%);
+color: white;
+}
+
+.payment-btn.primary:hover {
+transform: translateY(-2px);
+box-shadow: 0 8px 25px rgba(30, 60, 114, 0.4);
+}
+
+.payment-btn.secondary {
+background: #f8f9fa;
+color: #666;
+border: 2px solid #e0e0e0;
+}
+
+.payment-btn.secondary:hover {
+background: #e9ecef;
+}
+
+.close-payment {
+position: absolute;
+top: 15px;
+right: 20px;
+background: none;
+border: none;
+font-size: 28px;
+cursor: pointer;
+color: #999;
+transition: color 0.3s ease;
+}
+
+.close-payment:hover {
+color: #333;
+}
+
+.payment-security {
+margin-top: 25px;
+padding-top: 20px;
+border-top: 1px solid #e0e0e0;
+font-size: 12px;
+color: #666;
+}
+
+.payment-security::before {
+content: "🔒";
+margin-right: 5px;
 }
 
 .insight-content {
@@ -766,13 +901,13 @@ gap: 20px;
 <div class="tier-scans" id="free-scans">3 scans</div>
 <div class="tier-features" id="free-features">Basic compliance check<br>Standard results</div>
 </div>
-<div class="tier-plan recommended" data-tier="plus" onclick="selectTier('plus')">
+<div class="tier-plan recommended" data-tier="plus" onclick="showPaymentModal('plus')">
 <div class="tier-name" id="plus-tier">Plus</div>
 <div class="tier-price">$4.99/<span id="per-month">mo</span></div>
 <div class="tier-scans" id="plus-scans">20 scans/month</div>
 <div class="tier-features" id="plus-features">Enhanced compliance check<br>Detailed insights<br>Scan history<br>Priority support</div>
 </div>
-<div class="tier-plan" data-tier="premium" onclick="selectTier('premium')">
+<div class="tier-plan" data-tier="premium" onclick="showPaymentModal('premium')">
 <div class="tier-name" id="premium-tier">Premium</div>
 <div class="tier-price">$9.99/<span id="per-month-premium">mo</span></div>
 <div class="tier-scans" id="premium-scans">40 scans/month</div>
@@ -944,6 +1079,35 @@ gap: 20px;
 </div>
 </div>
 
+<!-- Payment Modal -->
+<div id="paymentModal" class="payment-modal">
+<div class="payment-content">
+<button class="close-payment" onclick="closePaymentModal()">&times;</button>
+<div class="payment-header">
+<h2 id="upgrade-to">Upgrade to</h2>
+<div class="tier-highlight" id="selectedTierName">Plus</div>
+<p id="unlock-features">Unlock premium features and boost your content success!</p>
+</div>
+<div class="payment-price" id="paymentPrice">$4.99/month</div>
+<div class="payment-features" id="paymentFeatures">
+<h4 id="whats-included">What's Included:</h4>
+<ul>
+<li id="feature-enhanced">Enhanced compliance checking</li>
+<li id="feature-insights">Detailed content insights</li>
+<li id="feature-history">Complete scan history</li>
+<li id="feature-support">Priority customer support</li>
+</ul>
+</div>
+<div class="payment-buttons">
+<button class="payment-btn secondary" onclick="closePaymentModal()" id="maybe-later">Maybe Later</button>
+<button class="payment-btn primary" onclick="proceedToPayment()" id="subscribe-now">Subscribe Now</button>
+</div>
+<div class="payment-security" id="secure-payment">
+Secure payment powered by Stripe. Cancel anytime.
+</div>
+</div>
+</div>
+
 <div class="footer">
 <p>&copy; 2025 CheckReel. All rights reserved. Copyright Protected.</p>
 </div>
@@ -952,14 +1116,217 @@ gap: 20px;
 <script src="lang-loader.js"></script>
 
 <script>
-// Global variables
-let selectedFile = null;
-let selectedPlatforms = [];
-let selectedRegion = null;
-let selectedCountry = null;
-let currentTier = 'free';
-let scanHistory = [];
-let currentLanguage = 'en';
+// Payment Configuration - UPDATE THESE URLs WHEN READY
+const PAYMENT_CONFIG = {
+    // Stripe/PayPal URLs - replace with your actual payment processor URLs
+    plus: {
+        url: 'https://checkout.stripe.com/pay/cs_test_plus_plan', // Replace with real Stripe URL
+        priceId: 'price_plus_monthly', // Your Stripe price ID
+        amount: '$4.99/month'
+    },
+    premium: {
+        url: 'https://checkout.stripe.com/pay/cs_test_premium_plan', // Replace with real Stripe URL  
+        priceId: 'price_premium_monthly', // Your Stripe price ID
+        amount: '$9.99/month'
+    },
+    // Success/cancel URLs
+    successUrl: window.location.origin + '/dashboard.html?payment=success',
+    cancelUrl: window.location.origin + '/dashboard.html?payment=cancelled'
+};
+
+// Payment Modal Functions
+let selectedPaymentTier = null;
+
+function showPaymentModal(tier) {
+    selectedPaymentTier = tier;
+    const modal = document.getElementById('paymentModal');
+    const tierName = document.getElementById('selectedTierName');
+    const price = document.getElementById('paymentPrice');
+    const features = document.getElementById('paymentFeatures');
+    
+    // Update modal content based on tier
+    if (tier === 'plus') {
+        tierName.textContent = getTranslation('plus-tier');
+        price.textContent = PAYMENT_CONFIG.plus.amount;
+        features.innerHTML = `
+            <h4>${getTranslation('whats-included')}:</h4>
+            <ul>
+                <li>${getTranslation('feature-enhanced')}</li>
+                <li>${getTranslation('feature-insights')}</li>
+                <li>${getTranslation('feature-history')}</li>
+                <li>${getTranslation('feature-support')}</li>
+            </ul>
+        `;
+    } else if (tier === 'premium') {
+        tierName.textContent = getTranslation('premium-tier');
+        price.textContent = PAYMENT_CONFIG.premium.amount;
+        features.innerHTML = `
+            <h4>${getTranslation('whats-included')}:</h4>
+            <ul>
+                <li>${getTranslation('feature-compliance')}</li>
+                <li>${getTranslation('feature-analytics')}</li>
+                <li>${getTranslation('feature-team')}</li>
+                <li>${getTranslation('feature-reports')}</li>
+                <li>${getTranslation('feature-api')}</li>
+                <li>${getTranslation('feature-dedicated')}</li>
+            </ul>
+        `;
+    }
+    
+    modal.style.display = 'block';
+}
+
+function closePaymentModal() {
+    document.getElementById('paymentModal').style.display = 'none';
+    selectedPaymentTier = null;
+}
+
+function proceedToPayment() {
+    if (!selectedPaymentTier) return;
+    
+    // Get payment URL for selected tier
+    const paymentUrl = PAYMENT_CONFIG[selectedPaymentTier].url;
+    
+    // Add success/cancel URLs and user info
+    const fullPaymentUrl = `${paymentUrl}?success_url=${encodeURIComponent(PAYMENT_CONFIG.successUrl)}&cancel_url=${encodeURIComponent(PAYMENT_CONFIG.cancelUrl)}&client_reference_id=${Date.now()}`;
+    
+    // Close modal and redirect to payment
+    closePaymentModal();
+    
+    // Open payment in same window (Stripe/PayPal best practice)
+    window.location.href = fullPaymentUrl;
+}
+
+// Check for payment status on page load
+function checkPaymentStatus() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const paymentStatus = urlParams.get('payment');
+    
+    if (paymentStatus === 'success') {
+        // Payment successful - activate paid tier
+        handlePaymentSuccess();
+    } else if (paymentStatus === 'cancelled') {
+        // Payment cancelled - show message
+        handlePaymentCancelled();
+    }
+}
+
+function handlePaymentSuccess() {
+    // Show success message
+    alert('Payment successful! Your subscription is now active.');
+    
+    // Activate the paid tier (you'll need to verify this server-side in production)
+    const tier = urlParams.get('tier') || 'plus'; // Get tier from URL or default to plus
+    selectTier(tier);
+    
+    // Clean URL
+    window.history.replaceState({}, document.title, window.location.pathname);
+    
+    // Update UI to show paid features
+    updateTierDisplay();
+}
+
+function handlePaymentCancelled() {
+    // Show cancelled message
+    alert('Payment was cancelled. You can try again anytime.');
+    
+    // Clean URL
+    window.history.replaceState({}, document.title, window.location.pathname);
+}
+
+// Enhanced tier selection with payment verification
+function selectTier(tier) {
+    // Free tier - always allowed
+    if (tier === 'free') {
+        currentTier = tier;
+        safeStorage.setItem('checkreel_tier', tier);
+        updateTierUI(tier);
+        return;
+    }
+    
+    // Paid tiers - check if user has valid subscription
+    const hasValidSubscription = checkSubscriptionStatus(tier);
+    
+    if (hasValidSubscription) {
+        currentTier = tier;
+        safeStorage.setItem('checkreel_tier', tier);
+        updateTierUI(tier);
+        
+        if (tier !== 'free') {
+            safeStorage.setItem('checkreel_scans_used', '0');
+        }
+        
+        updateTierDisplay();
+        updateScansCounter();
+        updatePlatformCounter();
+        
+        const historySection = document.getElementById('scanHistory');
+        if (tier === 'plus' || tier === 'premium') {
+            historySection.classList.add('visible');
+        } else {
+            historySection.classList.remove('visible');
+        }
+    } else {
+        // No valid subscription - show payment modal
+        showPaymentModal(tier);
+    }
+}
+
+function updateTierUI(tier) {
+    document.querySelectorAll('.tier-plan').forEach(plan => {
+        plan.classList.remove('active');
+    });
+    document.querySelector(`[data-tier="${tier}"]`).classList.add('active');
+}
+
+// Check subscription status (integrate with your backend)
+function checkSubscriptionStatus(tier) {
+    // In production, verify with your backend/Stripe
+    // For now, check if user has stored subscription
+    const storedSubscription = safeStorage.getItem('checkreel_subscription');
+    const subscriptionData = storedSubscription ? JSON.parse(storedSubscription) : null;
+    
+    if (subscriptionData && subscriptionData.tier === tier && subscriptionData.active) {
+        return true;
+    }
+    
+    return false;
+}
+
+// Block premium features for non-subscribers
+function checkFeatureAccess(feature) {
+    const userTier = safeStorage.getItem('checkreel_tier') || 'free';
+    
+    const featureAccess = {
+        'scan-history': ['plus', 'premium'],
+        'multi-platform': ['premium'],
+        'detailed-insights': ['plus', 'premium'],
+        'api-access': ['premium']
+    };
+    
+    if (featureAccess[feature] && !featureAccess[feature].includes(userTier)) {
+        // Show upgrade prompt
+        showUpgradePrompt(feature);
+        return false;
+    }
+    
+    return true;
+}
+
+function showUpgradePrompt(feature) {
+    const featureNames = {
+        'scan-history': 'Scan History',
+        'multi-platform': 'Multi-Platform Selection', 
+        'detailed-insights': 'Detailed Insights',
+        'api-access': 'API Access'
+    };
+    
+    const message = `${featureNames[feature]} is available in our paid plans. Would you like to upgrade?`;
+    
+    if (confirm(message)) {
+        showPaymentModal('plus');
+    }
+}
 
 // Safe storage wrapper
 if (!window.safeStorage) {
@@ -1023,7 +1390,22 @@ const DASHBOARD_TRANSLATIONS = {
         'useTrendingHashtags': 'Use trending hashtags for {platform}',
         'bestPostingTime': 'Best posting time for {region}: 7-9 PM local',
         'audioLevelsExceed': 'Audio levels exceed {platform} limits',
-        'contentViolateGuidelines': 'Content may violate {region} community guidelines'
+        'secure-payment': 'Secure payment powered by Stripe. Cancel anytime.',
+        'whats-included': 'What\'s Included',
+        'feature-enhanced': 'Enhanced compliance checking',
+        'feature-insights': 'Detailed content insights', 
+        'feature-history': 'Complete scan history',
+        'feature-support': 'Priority customer support',
+        'feature-compliance': 'Full compliance suite',
+        'feature-analytics': 'Advanced analytics',
+        'feature-team': 'Team collaboration features',
+        'feature-reports': 'White-label reports',
+        'feature-api': 'API access',
+        'feature-dedicated': 'Dedicated account manager',
+        'upgrade-to': 'Upgrade to',
+        'unlock-features': 'Unlock premium features and boost your content success!',
+        'maybe-later': 'Maybe Later',
+        'subscribe-now': 'Subscribe Now'
     },
     fr: {
         'choose-plan': 'Choisissez votre plan',
@@ -1076,7 +1458,23 @@ const DASHBOARD_TRANSLATIONS = {
         'useTrendingHashtags': 'Utilisez des hashtags tendance pour {platform}',
         'bestPostingTime': 'Meilleur moment pour publier au {region}: 19h-21h heure locale',
         'audioLevelsExceed': 'Les niveaux audio dépassent les limites {platform}',
-        'contentViolateGuidelines': 'Le contenu peut violer les directives communautaires du {region}'
+        'contentViolateGuidelines': 'Le contenu peut violer les directives communautaires du {region}',
+        'secure-payment': 'Paiement sécurisé par Stripe. Annulez à tout moment.',
+        'whats-included': 'Ce qui est inclus',
+        'feature-enhanced': 'Vérification de conformité améliorée',
+        'feature-insights': 'Insights de contenu détaillés',
+        'feature-history': 'Historique complet des analyses',
+        'feature-support': 'Support client prioritaire',
+        'feature-compliance': 'Suite de conformité complète',
+        'feature-analytics': 'Analyses avancées',
+        'feature-team': 'Fonctionnalités de collaboration',
+        'feature-reports': 'Rapports en marque blanche',
+        'feature-api': 'Accès API',
+        'feature-dedicated': 'Gestionnaire de compte dédié',
+        'upgrade-to': 'Mettre à niveau vers',
+        'unlock-features': 'Débloquez les fonctionnalités premium et boostez votre succès!',
+        'maybe-later': 'Peut-être plus tard',
+        'subscribe-now': 'S\'abonner maintenant'
     },
     ar: {
         'choose-plan': 'اختر خطتك',
@@ -1129,7 +1527,23 @@ const DASHBOARD_TRANSLATIONS = {
         'useTrendingHashtags': 'استخدم الهاشتاجات الرائجة لـ {platform}',
         'bestPostingTime': 'أفضل وقت للنشر في {region}: 7-9 مساءً بالتوقيت المحلي',
         'audioLevelsExceed': 'مستويات الصوت تتجاوز حدود {platform}',
-        'contentViolateGuidelines': 'قد يخالف المحتوى إرشادات مجتمع {region}'
+        'contentViolateGuidelines': 'قد يخالف المحتوى إرشادات مجتمع {region}',
+        'secure-payment': 'دفع آمن بواسطة Stripe. إلغاء في أي وقت.',
+        'whats-included': 'ما هو مشمول',
+        'feature-enhanced': 'فحص امتثال محسن',
+        'feature-insights': 'رؤى مفصلة للمحتوى',
+        'feature-history': 'سجل كامل للفحوصات',
+        'feature-support': 'دعم عملاء ذو أولوية',
+        'feature-compliance': 'مجموعة امتثال كاملة',
+        'feature-analytics': 'تحليلات متقدمة',
+        'feature-team': 'ميزات التعاون الجماعي',
+        'feature-reports': 'تقارير بعلامة تجارية خاصة',
+        'feature-api': 'وصول API',
+        'feature-dedicated': 'مدير حساب مخصص',
+        'upgrade-to': 'الترقية إلى',
+        'unlock-features': 'افتح الميزات المميزة وعزز نجاح محتواك!',
+        'maybe-later': 'ربما لاحقاً',
+        'subscribe-now': 'اشترك الآن'
     }
 };
 
@@ -1209,6 +1623,9 @@ function updateScanHistoryTranslations() {
 // Initialize dashboard with language persistence
 document.addEventListener('DOMContentLoaded', function() {
     currentLanguage = safeStorage.getItem('checkreel_language') || 'en';
+    
+    // Check payment status first
+    checkPaymentStatus();
     
     if (window.loadLanguageContent) {
         window.loadLanguageContent(currentLanguage);
