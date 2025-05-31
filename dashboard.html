@@ -785,7 +785,7 @@ gap: 20px;
 <div class="card">
 <h2 id="select-region">🌍 Select Region</h2>
 <div class="region-grid">
-<div class="region-option selected" data-region="middle-east" onclick="selectRegion('middle-east')">
+<div class="region-option" data-region="middle-east" onclick="selectRegion('middle-east')">
 <img src="images/region-icons/middle-east.png" alt="Middle East" class="region-icon">
 <span class="region-name" id="middle-east">Middle East</span>
 </div>
@@ -807,7 +807,7 @@ gap: 20px;
 <div class="card">
 <h2 id="select-platform">📱 Select Target Platform <span id="platformCounter"></span></h2>
 <div class="platforms-grid">
-<div class="platform-option selected" data-platform="tiktok" onclick="selectPlatform('tiktok')">
+<div class="platform-option" data-platform="tiktok" onclick="selectPlatform('tiktok')">
 <img src="images/tiktok.png" alt="TikTok" class="platform-icon">
 <span class="platform-name">TikTok</span>
 </div>
@@ -954,8 +954,8 @@ gap: 20px;
 <script>
 // Global variables
 let selectedFile = null;
-let selectedPlatforms = ['tiktok'];
-let selectedRegion = 'middle-east';
+let selectedPlatforms = [];
+let selectedRegion = null;
 let selectedCountry = null;
 let currentTier = 'free';
 let scanHistory = [];
@@ -1236,6 +1236,9 @@ document.addEventListener('DOMContentLoaded', function() {
     updateUserCounter();
     updateScansCounter();
     loadScanHistory();
+    
+    // Show selection alert initially since nothing is selected
+    updateSelectionAlert();
 });
 
 // Tier selection
