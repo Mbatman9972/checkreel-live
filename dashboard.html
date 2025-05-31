@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>CheckReel Dashboard</title>
-<link rel="icon" type="image/x-icon" href="images/favicon.ico">
+<link rel="icon" type="image/x-icon" href="images/logo.png">
 <style>
 * {
 margin: 0;
@@ -450,7 +450,7 @@ padding: 25px;
 margin-top: 50px;
 margin-bottom: 30px;
 box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-display: none;
+display: block;
 }
 
 .scan-history.visible {
@@ -505,62 +505,6 @@ transform: translateX(5px);
 .history-date {
 font-size: 12px;
 color: #666;
-}
-
-.countries-modal {
-display: none;
-position: fixed;
-top: 0;
-left: 0;
-width: 100%;
-height: 100%;
-background: rgba(0, 0, 0, 0.8);
-z-index: 1000;
-padding: 20px;
-}
-
-.countries-content {
-background: white;
-border-radius: 20px;
-padding: 30px;
-max-width: 600px;
-max-height: 80vh;
-margin: 50px auto;
-overflow-y: auto;
-position: relative;
-}
-
-.close-modal {
-position: absolute;
-top: 15px;
-right: 20px;
-background: none;
-border: none;
-font-size: 24px;
-cursor: pointer;
-color: #666;
-}
-
-.countries-grid {
-display: grid;
-grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-gap: 10px;
-margin-top: 20px;
-}
-
-.country-item {
-padding: 10px;
-background: #f8f9fa;
-border-radius: 8px;
-text-align: center;
-cursor: pointer;
-transition: all 0.3s ease;
-border: 2px solid transparent;
-}
-
-.country-item:hover {
-background: #e3f2fd;
-border-color: #1e3c72;
 }
 
 .results-section {
@@ -711,6 +655,15 @@ font-size: 14px;
 margin-top: 40px;
 }
 
+.platform-tag, .region-tag, .score-tag {
+background: #e3f2fd;
+color: #1976d2;
+padding: 2px 8px;
+border-radius: 12px;
+font-size: 11px;
+font-weight: 600;
+}
+
 @media (max-width: 1024px) {
 .dashboard-grid {
 grid-template-columns: 1fr 1fr;
@@ -830,7 +783,7 @@ gap: 20px;
 
 <div class="card">
 <h2 id="upload-content">📁 Upload Content to Check</h2>
-<div id="selectionAlert" class="selection-alert">
+<div id="selectionAlert" class="selection-alert hidden">
 <span id="selection-alert">Please select a region and platform before uploading content for analysis</span>
 </div>
 <div class="upload-area" id="uploadArea">
@@ -849,14 +802,14 @@ gap: 20px;
 </div>
 
 <div class="scan-section">
-<button class="scan-btn" id="scanBtn" disabled>
+<button class="scan-btn ready" id="scanBtn">
 <div class="btn-loader" id="btnLoader"></div>
 <span id="start-check">Start Content Check</span>
 </button>
 </div>
 
 <!-- Scan History Section -->
-<div class="scan-history" id="scanHistory">
+<div class="scan-history visible" id="scanHistory">
 <div class="history-tabs">
 <button class="history-tab active" data-filter="all" id="all-scans">All Scans</button>
 <button class="history-tab" data-filter="region" id="by-region">By Region</button>
@@ -904,45 +857,47 @@ gap: 20px;
 <!-- Results Section -->
 <div class="results-section" id="resultsSection">
 <div class="score-display" id="scoreDisplay">
-<div class="score-circle" id="scoreCircle">
+<div class="score-circle" id="scoreCircle" style="background: linear-gradient(135deg, #dc3545, #e74c3c);">
 <div class="score-value" id="scoreValue">55</div>
 </div>
 <div class="status-indicator">
 <span class="status-icon" id="statusIcon">❌</span>
-<span id="statusText">Major Issues - Do Not Post</span>
+<span id="statusText">مشاكل كبيرة - لا تنشر</span>
 </div>
 </div>
 
 <div class="results-grid">
 <div class="issues-card">
 <h3 id="issues-found">Issues Found</h3>
-<div id="issuesList"></div>
+<div id="issuesList">
+<div class="issue-item">
+<span style="font-size: 18px;">🔊</span>
+<span>مستويات الصوت تتجاوز حدود تيك توك</span>
+</div>
+<div class="issue-item">
+<span style="font-size: 18px;">📋</span>
+<span>قد يخالف المحتوى إرشادات مجتمع الشرق الأوسط</span>
+</div>
+</div>
 </div>
 <div class="recommendations-card">
 <h3 id="recommendations">Recommendations</h3>
-<div id="recommendationsList"></div>
+<div id="recommendationsList">
+<div class="recommendation-item">
+<span style="font-size: 18px;">📈</span>
+<span>استخدم الهاشتاجات الرائجة لتيك توك</span>
+</div>
+<div class="recommendation-item">
+<span style="font-size: 18px;">⏰</span>
+<span>أفضل وقت للنشر في الشرق الأوسط: 7-9 مساءً بالتوقيت المحلي</span>
+</div>
+</div>
 </div>
 </div>
 </div>
 
 <!-- Stats Grid -->
 <div class="stats-grid">
-<div class="stat-card">
-<div class="stat-number" id="statUsers">2,845</div>
-<div class="stat-label" id="active-users">Active Users</div>
-</div>
-<div class="stat-card">
-<div class="stat-number" id="statScanned">18,492</div>
-<div class="stat-label" id="content-scanned">Content Scanned</div>
-</div>
-<div class="stat-card">
-<div class="stat-number" id="statSuccess">94%</div>
-<div class="stat-label" id="success-rate">Success Rate</div>
-</div>
-<div class="stat-card">
-<div class="stat-number" id="statPlatforms">6</div>
-<div class="stat-label" id="platforms">Platforms</div>
-</div>
 <div class="stat-card">
 <div class="stat-number" id="statScansUsed">0</div>
 <div class="stat-label" id="scans-used">Scans Used (Testing)</div>
@@ -1224,29 +1179,6 @@ document.addEventListener('DOMContentLoaded', function() {
     
     console.log('✅ Dashboard loaded with full language support');
 });
-
-// Countries data
-const countriesData = {
-    middleEast: [
-        'Palestine', 'Jordan', 'Lebanon', 'Syria', 'Iraq', 'Kuwait', 'Saudi Arabia',
-        'Bahrain', 'Qatar', 'United Arab Emirates', 'Oman', 'Yemen', 'Iran', 'Turkey', 'Cyprus'
-    ],
-    mena: [
-        'Palestine', 'Jordan', 'Lebanon', 'Syria', 'Iraq', 'Kuwait', 'Saudi Arabia',
-        'Bahrain', 'Qatar', 'United Arab Emirates', 'Oman', 'Yemen', 'Iran', 'Turkey',
-        'Egypt', 'Libya', 'Tunisia', 'Algeria', 'Morocco', 'Sudan', 'Mauritania', 'Djibouti', 'Somalia'
-    ],
-    europe: [
-        'Albania', 'Andorra', 'Armenia', 'Austria', 'Azerbaijan', 'Belarus', 'Belgium',
-        'Bosnia and Herzegovina', 'Bulgaria', 'Croatia', 'Cyprus', 'Czech Republic',
-        'Denmark', 'Estonia', 'Finland', 'France', 'Georgia', 'Germany', 'Greece',
-        'Hungary', 'Iceland', 'Ireland', 'Italy', 'Kazakhstan', 'Kosovo', 'Latvia',
-        'Liechtenstein', 'Lithuania', 'Luxembourg', 'Malta', 'Moldova', 'Monaco',
-        'Montenegro', 'Netherlands', 'North Macedonia', 'Norway', 'Poland', 'Portugal',
-        'Romania', 'Russia', 'San Marino', 'Serbia', 'Slovakia', 'Slovenia', 'Spain',
-        'Sweden', 'Switzerland', 'Ukraine', 'United Kingdom', 'Vatican City'
-    ]
-};
 
 // Tier selection
 function selectTier(tier) {
@@ -1817,4 +1749,20 @@ window.addEventListener('languageChanged', function(event) {
 console.log('✅ Dashboard fully loaded with complete multilingual support');
 </script>
 </body>
-</html>
+</html>card">
+<div class="stat-number" id="statUsers">2,845</div>
+<div class="stat-label" id="active-users">Active Users</div>
+</div>
+<div class="stat-card">
+<div class="stat-number" id="statScanned">18,492</div>
+<div class="stat-label" id="content-scanned">Content Scanned</div>
+</div>
+<div class="stat-card">
+<div class="stat-number" id="statSuccess">94%</div>
+<div class="stat-label" id="success-rate">Success Rate</div>
+</div>
+<div class="stat-card">
+<div class="stat-number" id="statPlatforms">6</div>
+<div class="stat-label" id="platforms">Platforms</div>
+</div>
+<div class="stat-
