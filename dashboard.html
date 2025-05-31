@@ -848,6 +848,143 @@ font-size: 11px;
 font-weight: 600;
 }
 
+/* Country Selection Modal CSS */
+.country-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    z-index: 3000;
+    padding: 20px;
+}
+
+.country-modal-content {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(15px);
+    border-radius: 20px;
+    padding: 30px;
+    max-width: 600px;
+    max-height: 80vh;
+    margin: 50px auto;
+    position: relative;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    overflow: hidden;
+}
+
+.country-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid #e0e0e0;
+}
+
+.country-modal-title {
+    font-size: 24px;
+    font-weight: bold;
+    color: #1e3c72;
+    margin: 0;
+}
+
+.close-country-modal {
+    background: none;
+    border: none;
+    font-size: 28px;
+    cursor: pointer;
+    color: #999;
+    transition: color 0.3s ease;
+    padding: 0;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.close-country-modal:hover {
+    color: #333;
+}
+
+.country-search {
+    width: 100%;
+    padding: 12px 20px;
+    border: 2px solid #e0e0e0;
+    border-radius: 25px;
+    font-size: 16px;
+    margin-bottom: 20px;
+    background: white;
+    transition: border-color 0.3s ease;
+}
+
+.country-search:focus {
+    outline: none;
+    border-color: #1e3c72;
+}
+
+.country-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    max-height: 400px;
+    overflow-y: auto;
+    padding-right: 10px;
+}
+
+.country-option {
+    background: white;
+    border: 2px solid #e0e0e0;
+    border-radius: 12px;
+    padding: 15px 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-align: left;
+    font-weight: 500;
+    color: #333;
+}
+
+.country-option:hover {
+    background: #f8f9fa;
+    border-color: #1e3c72;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(30, 60, 114, 0.2);
+}
+
+.country-option.hidden {
+    display: none;
+}
+
+/* RTL Support for Country Modal */
+[dir="rtl"] .country-modal-header {
+    flex-direction: row-reverse;
+}
+
+[dir="rtl"] .country-option {
+    text-align: right;
+}
+
+/* Custom scrollbar for country grid */
+.country-grid::-webkit-scrollbar {
+    width: 6px;
+}
+
+.country-grid::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+}
+
+.country-grid::-webkit-scrollbar-thumb {
+    background: #1e3c72;
+    border-radius: 10px;
+}
+
+.country-grid::-webkit-scrollbar-thumb:hover {
+    background: #667eea;
+}
+
 @media (max-width: 1024px) {
 .dashboard-grid {
 grid-template-columns: 1fr 1fr;
@@ -870,6 +1007,21 @@ grid-template-columns: 1fr;
 .score-display {
 flex-direction: column;
 gap: 20px;
+}
+
+.country-modal-content {
+    margin: 20px auto;
+    max-height: 90vh;
+    padding: 20px;
+}
+
+.country-grid {
+    grid-template-columns: 1fr;
+    max-height: 350px;
+}
+
+.country-modal-title {
+    font-size: 20px;
 }
 }
 </style>
@@ -1108,6 +1260,22 @@ Secure payment powered by Stripe. Cancel anytime.
 </div>
 </div>
 
+<!-- Country Selection Modal -->
+<div id="countryModal" class="country-modal">
+<div class="country-modal-content">
+<div class="country-modal-header">
+<h3 class="country-modal-title" id="countryModalTitle">Select Country</h3>
+<button class="close-country-modal" onclick="closeCountryModal()">&times;</button>
+</div>
+
+<input type="text" class="country-search" id="countrySearch" placeholder="Search countries..." onkeyup="filterCountries()">
+
+<div class="country-grid" id="countryGrid">
+<!-- Countries will be populated here by JavaScript -->
+</div>
+</div>
+</div>
+
 <div class="footer">
 <p>&copy; 2025 CheckReel. All rights reserved. Copyright Protected.</p>
 </div>
@@ -1123,6 +1291,10 @@ let selectedRegion = null;
 let selectedPlatforms = [];
 let selectedFile = null;
 let scanHistory = [];
+
+// Country Modal Variables
+let selectedCountry = null;
+let currentModalRegion = null;
 
 // Safe storage wrapper
 if (!window.safeStorage) {
@@ -1304,6 +1476,11 @@ function updateTierUI(tier) {
 
 // Check subscription status (integrate with your backend)
 function checkSubscriptionStatus(tier) {
+    // TESTING OVERRIDE - set to true to test tier functionality
+    const TESTING_MODE = true;
+    if (TESTING_MODE && (tier === 'plus' || tier === 'premium')) {
+        return true;
+    }
     // In production, verify with your backend/Stripe
     // For now, check if user has stored subscription
     const storedSubscription = safeStorage.getItem('checkreel_subscription');
@@ -1351,14 +1528,136 @@ function showUpgradePrompt(feature) {
     }
 }
 
-// Region selection
+// COUNTRY MODAL FUNCTIONS
+// Modified region selection function
 function selectRegion(region) {
-    selectedRegion = region;
-    document.querySelectorAll('.region-option').forEach(opt => opt.classList.remove('selected'));
-    document.querySelector(`[data-region="${region}"]`).classList.add('selected');
+    // Show country modal instead of directly selecting region
+    currentModalRegion = region;
+    showCountryModal(region);
+}
+
+// Show country modal
+function showCountryModal(region) {
+    const modal = document.getElementById('countryModal');
+    const title = document.getElementById('countryModalTitle');
+    const grid = document.getElementById('countryGrid');
+    const searchInput = document.getElementById('countrySearch');
+    
+    // Update modal title
+    const regionName = getTranslation(region);
+    title.textContent = `Select Country - ${regionName}`;
+    
+    // Clear search
+    if (searchInput) searchInput.value = '';
+    
+    // Populate countries
+    populateCountries(region);
+    
+    // Show modal
+    modal.style.display = 'block';
+}
+
+// Close country modal
+function closeCountryModal() {
+    const modal = document.getElementById('countryModal');
+    modal.style.display = 'none';
+    currentModalRegion = null;
+    selectedCountry = null;
+}
+
+// Populate countries based on region
+function populateCountries(region) {
+    const grid = document.getElementById('countryGrid');
+    if (!grid) return;
+    
+    grid.innerHTML = '';
+    
+    // Get countries for the region
+    const countries = DASHBOARD_TRANSLATIONS[currentLanguage]?.countries?.[region];
+    if (!countries) return;
+    
+    // Create country options
+    Object.keys(countries).forEach(countryKey => {
+        const countryDiv = document.createElement('div');
+        countryDiv.className = 'country-option';
+        countryDiv.setAttribute('data-country', countryKey);
+        countryDiv.setAttribute('data-country-name', countries[countryKey].toLowerCase());
+        countryDiv.textContent = countries[countryKey];
+        countryDiv.onclick = () => selectCountry(countryKey, countries[countryKey]);
+        grid.appendChild(countryDiv);
+    });
+}
+
+// Select country and close modal
+function selectCountry(countryKey, countryName) {
+    selectedCountry = countryKey;
+    selectedRegion = currentModalRegion;
+    
+    // Update UI to show region + country selection
+    updateRegionSelection(currentModalRegion, countryName);
+    
+    // Close modal
+    closeCountryModal();
+    
+    // Update other UI elements
     updateScanButton();
     updateSelectionAlert();
 }
+
+// Update region selection UI to show country
+function updateRegionSelection(region, countryName) {
+    // Clear all region selections
+    document.querySelectorAll('.region-option').forEach(opt => opt.classList.remove('selected'));
+    
+    // Select the chosen region
+    const regionElement = document.querySelector(`[data-region="${region}"]`);
+    if (regionElement) {
+        regionElement.classList.add('selected');
+        
+        // Update region name to include country
+        const regionNameEl = regionElement.querySelector('.region-name');
+        if (regionNameEl) {
+            const regionTranslation = getTranslation(region);
+            regionNameEl.textContent = `${regionTranslation} - ${countryName}`;
+        }
+    }
+}
+
+// Filter countries based on search
+function filterCountries() {
+    const searchInput = document.getElementById('countrySearch');
+    const countryOptions = document.querySelectorAll('.country-option');
+    
+    if (!searchInput) return;
+    
+    const searchTerm = searchInput.value.toLowerCase();
+    
+    countryOptions.forEach(option => {
+        const countryName = option.getAttribute('data-country-name');
+        if (countryName && countryName.includes(searchTerm)) {
+            option.classList.remove('hidden');
+        } else {
+            option.classList.add('hidden');
+        }
+    });
+}
+
+// Close modal when clicking outside
+document.addEventListener('click', function(event) {
+    const modal = document.getElementById('countryModal');
+    const modalContent = document.querySelector('.country-modal-content');
+    
+    if (modal && event.target === modal && !modalContent.contains(event.target)) {
+        closeCountryModal();
+    }
+});
+
+// Close modal with Escape key
+document.addEventListener('keydown', function(event) {
+    if (event.key === 'Escape') {
+        closeCountryModal();
+    }
+});
 
 // Platform selection
 function selectPlatform(platform) {
@@ -1957,7 +2256,93 @@ const DASHBOARD_TRANSLATIONS = {
         'upgrade-to': 'Upgrade to',
         'unlock-features': 'Unlock premium features and boost your content success!',
         'maybe-later': 'Maybe Later',
-        'subscribe-now': 'Subscribe Now'
+        'subscribe-now': 'Subscribe Now',
+        'remove-file': 'Remove File',
+        countries: {
+            "middle-east": {
+                uae: "United Arab Emirates",
+                saudi: "Saudi Arabia",
+                qatar: "Qatar", 
+                kuwait: "Kuwait",
+                bahrain: "Bahrain",
+                oman: "Oman",
+                iraq: "Iraq",
+                yemen: "Yemen", 
+                palestine: "Palestine",
+                lebanon: "Lebanon",
+                jordan: "Jordan",
+                syria: "Syria",
+                turkey: "Turkey",
+                iran: "Iran"
+            },
+            "global": {
+                usa: "United States",
+                uk: "United Kingdom", 
+                canada: "Canada",
+                australia: "Australia",
+                newzealand: "New Zealand",
+                japan: "Japan",
+                southkorea: "South Korea",
+                singapore: "Singapore",
+                india: "India",
+                brazil: "Brazil",
+                mexico: "Mexico",
+                argentina: "Argentina", 
+                china: "China",
+                russia: "Russia",
+                southafrica: "South Africa",
+                indonesia: "Indonesia"
+            },
+            "europe": {
+                france: "France",
+                germany: "Germany",
+                italy: "Italy",
+                spain: "Spain",
+                netherlands: "Netherlands",
+                sweden: "Sweden",
+                norway: "Norway",
+                denmark: "Denmark",
+                finland: "Finland",
+                belgium: "Belgium",
+                switzerland: "Switzerland",
+                austria: "Austria",
+                portugal: "Portugal",
+                greece: "Greece",
+                poland: "Poland",
+                czech: "Czech Republic",
+                ireland: "Ireland",
+                hungary: "Hungary",
+                slovakia: "Slovakia",
+                romania: "Romania",
+                bulgaria: "Bulgaria",
+                estonia: "Estonia",
+                latvia: "Latvia",
+                lithuania: "Lithuania"
+            },
+            "mena": {
+                egypt: "Egypt",
+                morocco: "Morocco",
+                tunisia: "Tunisia",
+                algeria: "Algeria",
+                libya: "Libya",
+                sudan: "Sudan",
+                palestine: "Palestine",
+                jordan: "Jordan",
+                lebanon: "Lebanon",
+                syria: "Syria",
+                iraq: "Iraq",
+                yemen: "Yemen",
+                mauritania: "Mauritania",
+                djibouti: "Djibouti",
+                comoros: "Comoros",
+                somalia: "Somalia",
+                saudi: "Saudi Arabia",
+                uae: "United Arab Emirates",
+                kuwait: "Kuwait",
+                bahrain: "Bahrain",
+                oman: "Oman"
+            }
+        }
     },
     fr: {
         'choose-plan': 'Choisissez votre plan',
@@ -2026,7 +2411,93 @@ const DASHBOARD_TRANSLATIONS = {
         'upgrade-to': 'Mettre à niveau vers',
         'unlock-features': 'Débloquez les fonctionnalités premium et boostez votre succès!',
         'maybe-later': 'Peut-être plus tard',
-        'subscribe-now': 'S\'abonner maintenant'
+        'subscribe-now': 'S\'abonner maintenant',
+        'remove-file': 'Supprimer le fichier',
+        countries: {
+            "middle-east": {
+                uae: "Émirats Arabes Unis",
+                saudi: "Arabie Saoudite",
+                qatar: "Qatar",
+                kuwait: "Koweït",
+                bahrain: "Bahreïn",
+                oman: "Oman",
+                iraq: "Irak",
+                yemen: "Yémen",
+                palestine: "Palestine",
+                lebanon: "Liban",
+                jordan: "Jordanie",
+                syria: "Syrie",
+                turkey: "Turquie",
+                iran: "Iran"
+            },
+            "global": {
+                usa: "États-Unis",
+                uk: "Royaume-Uni",
+                canada: "Canada",
+                australia: "Australie",
+                newzealand: "Nouvelle-Zélande",
+                japan: "Japon",
+                southkorea: "Corée du Sud",
+                singapore: "Singapour",
+                india: "Inde",
+                brazil: "Brésil",
+                mexico: "Mexique",
+                argentina: "Argentine",
+                china: "Chine",
+                russia: "Russie",
+                southafrica: "Afrique du Sud",
+                indonesia: "Indonésie"
+            },
+            "europe": {
+                france: "France",
+                germany: "Allemagne",
+                italy: "Italie",
+                spain: "Espagne",
+                netherlands: "Pays-Bas",
+                sweden: "Suède",
+                norway: "Norvège",
+                denmark: "Danemark",
+                finland: "Finlande",
+                belgium: "Belgique",
+                switzerland: "Suisse",
+                austria: "Autriche",
+                portugal: "Portugal",
+                greece: "Grèce",
+                poland: "Pologne",
+                czech: "République Tchèque",
+                ireland: "Irlande",
+                hungary: "Hongrie",
+                slovakia: "Slovaquie",
+                romania: "Roumanie",
+                bulgaria: "Bulgarie",
+                estonia: "Estonie",
+                latvia: "Lettonie",
+                lithuania: "Lituanie"
+            },
+            "mena": {
+                egypt: "Égypte",
+                morocco: "Maroc",
+                tunisia: "Tunisie",
+                algeria: "Algérie",
+                libya: "Libye",
+                sudan: "Soudan",
+                palestine: "Palestine",
+                jordan: "Jordanie",
+                lebanon: "Liban",
+                syria: "Syrie",
+                iraq: "Irak",
+                yemen: "Yémen",
+                mauritania: "Mauritanie",
+                djibouti: "Djibouti",
+                comoros: "Comores",
+                somalia: "Somalie",
+                saudi: "Arabie Saoudite",
+                uae: "Émirats Arabes Unis",
+                kuwait: "Koweït",
+                bahrain: "Bahreïn",
+                oman: "Oman"
+            }
+        }
     },
     ar: {
         'choose-plan': 'اختر خطتك',
@@ -2095,7 +2566,93 @@ const DASHBOARD_TRANSLATIONS = {
         'upgrade-to': 'الترقية إلى',
         'unlock-features': 'افتح الميزات المميزة وعزز نجاح محتواك!',
         'maybe-later': 'ربما لاحقاً',
-        'subscribe-now': 'اشترك الآن'
+        'subscribe-now': 'اشترك الآن',
+        'remove-file': 'إزالة الملف',
+        countries: {
+            "middle-east": {
+                uae: "الإمارات العربية المتحدة",
+                saudi: "المملكة العربية السعودية",
+                qatar: "قطر",
+                kuwait: "الكويت",
+                bahrain: "البحرين",
+                oman: "عُمان",
+                iraq: "العراق",
+                yemen: "اليمن",
+                palestine: "فلسطين",
+                lebanon: "لبنان",
+                jordan: "الأردن",
+                syria: "سوريا",
+                turkey: "تركيا",
+                iran: "إيران"
+            },
+            "global": {
+                usa: "الولايات المتحدة",
+                uk: "المملكة المتحدة",
+                canada: "كندا",
+                australia: "أستراليا",
+                newzealand: "نيوزيلندا",
+                japan: "اليابان",
+                southkorea: "كوريا الجنوبية",
+                singapore: "سنغافورة",
+                india: "الهند",
+                brazil: "البرازيل",
+                mexico: "المكسيك",
+                argentina: "الأرجنتين",
+                china: "الصين",
+                russia: "روسيا",
+                southafrica: "جنوب أفريقيا",
+                indonesia: "إندونيسيا"
+            },
+            "europe": {
+                france: "فرنسا",
+                germany: "ألمانيا",
+                italy: "إيطاليا",
+                spain: "إسبانيا",
+                netherlands: "هولندا",
+                sweden: "السويد",
+                norway: "النرويج",
+                denmark: "الدنمارك",
+                finland: "فنلندا",
+                belgium: "بلجيكا",
+                switzerland: "سويسرا",
+                austria: "النمسا",
+                portugal: "البرتغال",
+                greece: "اليونان",
+                poland: "بولندا",
+                czech: "جمهورية التشيك",
+                ireland: "أيرلندا",
+                hungary: "المجر",
+                slovakia: "سلوفاكيا",
+                romania: "رومانيا",
+                bulgaria: "بلغاريا",
+                estonia: "إستونيا",
+                latvia: "لاتفيا",
+                lithuania: "ليتوانيا"
+            },
+            "mena": {
+                egypt: "مصر",
+                morocco: "المغرب",
+                tunisia: "تونس",
+                algeria: "الجزائر",
+                libya: "ليبيا",
+                sudan: "السودان",
+                palestine: "فلسطين",
+                jordan: "الأردن",
+                lebanon: "لبنان",
+                syria: "سوريا",
+                iraq: "العراق",
+                yemen: "اليمن",
+                mauritania: "موريتانيا",
+                djibouti: "جيبوتي",
+                comoros: "جزر القمر",
+                somalia: "الصومال",
+                saudi: "المملكة العربية السعودية",
+                uae: "الإمارات العربية المتحدة",
+                kuwait: "الكويت",
+                bahrain: "البحرين",
+                oman: "عُمان"
+            }
+        }
     }
 };
 
@@ -2151,6 +2708,64 @@ function applyDashboardTranslations(lang) {
             }
         }
     });
+    
+    // Update dynamic content and buttons
+    const removeFileBtn = document.getElementById('removeFile');
+    if (removeFileBtn) removeFileBtn.textContent = getTranslation('remove-file');
+    
+    const maybeLaterlBtn = document.getElementById('maybe-later');
+    if (maybeLaterlBtn) maybeLaterlBtn.textContent = getTranslation('maybe-later');
+    
+    const subscribeBtn = document.getElementById('subscribe-now');
+    if (subscribeBtn) subscribeBtn.textContent = getTranslation('subscribe-now');
+    
+    // Update file upload text
+    const dropHereEl = document.getElementById('drop-here');
+    if (dropHereEl) dropHereEl.textContent = getTranslation('drop-here');
+    
+    const clickBrowseEl = document.getElementById('click-browse');
+    if (clickBrowseEl) clickBrowseEl.textContent = getTranslation('click-browse');
+    
+    // Update scan button text
+    const startCheckEl = document.getElementById('start-check');
+    if (startCheckEl) startCheckEl.textContent = getTranslation('start-check');
+    
+    // Update alerts and dynamic messages
+    const selectionAlertEl = document.getElementById('selection-alert');
+    if (selectionAlertEl) selectionAlertEl.textContent = getTranslation('selection-alert');
+    
+    // Update payment modal content if visible
+    const upgradeToEl = document.getElementById('upgrade-to');
+    if (upgradeToEl) upgradeToEl.textContent = getTranslation('upgrade-to');
+    
+    const unlockFeaturesEl = document.getElementById('unlock-features');
+    if (unlockFeaturesEl) unlockFeaturesEl.textContent = getTranslation('unlock-features');
+    
+    const securePaymentEl = document.getElementById('secure-payment');
+    if (securePaymentEl) securePaymentEl.textContent = getTranslation('secure-payment');
+    
+    // Add country modal translations
+    const countryModalTitle = document.getElementById('countryModalTitle');
+    const countrySearch = document.getElementById('countrySearch');
+    
+    if (countryModalTitle && currentModalRegion) {
+        const regionName = getTranslation(currentModalRegion);
+        countryModalTitle.textContent = `Select Country - ${regionName}`;
+    }
+    
+    if (countrySearch) {
+        const searchPlaceholders = {
+            en: 'Search countries...',
+            fr: 'Rechercher des pays...',
+            ar: 'البحث عن البلدان...'
+        };
+        countrySearch.placeholder = searchPlaceholders[lang] || searchPlaceholders['en'];
+    }
+    
+    // Refresh country list if modal is open
+    if (currentModalRegion && document.getElementById('countryModal').style.display === 'block') {
+        populateCountries(currentModalRegion);
+    }
     
     // Update scan history platform/region tags
     updateScanHistoryTranslations();

@@ -591,3 +591,158 @@ body {
         padding: 20px 15px;
     }
 }
+/* Country Selection Modal CSS - ADD TO YOUR <style> SECTION */
+
+.country-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    z-index: 3000;
+    padding: 20px;
+}
+
+.country-modal-content {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(15px);
+    border-radius: 20px;
+    padding: 30px;
+    max-width: 600px;
+    max-height: 80vh;
+    margin: 50px auto;
+    position: relative;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    overflow: hidden;
+}
+
+.country-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid #e0e0e0;
+}
+
+.country-modal-title {
+    font-size: 24px;
+    font-weight: bold;
+    color: #1e3c72;
+    margin: 0;
+}
+
+.close-country-modal {
+    background: none;
+    border: none;
+    font-size: 28px;
+    cursor: pointer;
+    color: #999;
+    transition: color 0.3s ease;
+    padding: 0;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.close-country-modal:hover {
+    color: #333;
+}
+
+.country-search {
+    width: 100%;
+    padding: 12px 20px;
+    border: 2px solid #e0e0e0;
+    border-radius: 25px;
+    font-size: 16px;
+    margin-bottom: 20px;
+    background: white;
+    transition: border-color 0.3s ease;
+}
+
+.country-search:focus {
+    outline: none;
+    border-color: #1e3c72;
+}
+
+.country-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    max-height: 400px;
+    overflow-y: auto;
+    padding-right: 10px;
+}
+
+.country-option {
+    background: white;
+    border: 2px solid #e0e0e0;
+    border-radius: 12px;
+    padding: 15px 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-align: left;
+    font-weight: 500;
+    color: #333;
+}
+
+.country-option:hover {
+    background: #f8f9fa;
+    border-color: #1e3c72;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(30, 60, 114, 0.2);
+}
+
+.country-option.hidden {
+    display: none;
+}
+
+/* RTL Support for Country Modal */
+[dir="rtl"] .country-modal-header {
+    flex-direction: row-reverse;
+}
+
+[dir="rtl"] .country-option {
+    text-align: right;
+}
+
+/* Custom scrollbar for country grid */
+.country-grid::-webkit-scrollbar {
+    width: 6px;
+}
+
+.country-grid::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+}
+
+.country-grid::-webkit-scrollbar-thumb {
+    background: #1e3c72;
+    border-radius: 10px;
+}
+
+.country-grid::-webkit-scrollbar-thumb:hover {
+    background: #667eea;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+    .country-modal-content {
+        margin: 20px auto;
+        max-height: 90vh;
+        padding: 20px;
+    }
+    
+    .country-grid {
+        grid-template-columns: 1fr;
+        max-height: 350px;
+    }
+    
+    .country-modal-title {
+        font-size: 20px;
+    }
+}
