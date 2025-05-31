@@ -396,11 +396,9 @@ display: none;
 
 .scan-section {
 text-align: center;
-margin-top: 40px;
-margin-bottom: 40px;
+margin-top: 30px;
 position: relative;
 z-index: 10;
-clear: both;
 }
 
 .scan-btn {
@@ -1118,15 +1116,6 @@ Secure payment powered by Stripe. Cancel anytime.
 <script src="lang-loader.js"></script>
 
 <script>
-// Global variables
-let selectedFile = null;
-let selectedPlatforms = [];
-let selectedRegion = null;
-let selectedCountry = null;
-let currentTier = 'free';
-let scanHistory = [];
-let currentLanguage = 'en';
-
 // Payment Configuration - UPDATE THESE URLs WHEN READY
 const PAYMENT_CONFIG = {
     // Stripe/PayPal URLs - replace with your actual payment processor URLs
