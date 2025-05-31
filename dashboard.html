@@ -1004,7 +1004,7 @@ gap: 20px;
 
 <div class="history-content" id="historyContent">
 <div class="history-tabs">
-<button class="history-tab active" data-filter="all" id="all-scans">All Scans</button>
+tab active" data-filter="all" id="all-scans">All Scans</button>
 <button class="history-tab" data-filter="region" id="by-region">By Region</button>
 <button class="history-tab" data-filter="platform" id="by-platform">By Platform</button>
 </div>
@@ -1116,6 +1116,14 @@ Secure payment powered by Stripe. Cancel anytime.
 <script src="lang-loader.js"></script>
 
 <script>
+// CRITICAL FIX: Declare missing variables
+let currentLanguage = 'en';
+let currentTier = 'free';
+let selectedRegion = null;
+let selectedPlatforms = [];
+let selectedFile = null;
+let scanHistory = [];
+
 // Payment Configuration - UPDATE THESE URLs WHEN READY
 const PAYMENT_CONFIG = {
     // Stripe/PayPal URLs - replace with your actual payment processor URLs
@@ -1212,6 +1220,7 @@ function checkPaymentStatus() {
 }
 
 function handlePaymentSuccess() {
+    const urlParams = new URLSearchParams(window.location.search);
     // Show success message
     alert('Payment successful! Your subscription is now active.');
     
@@ -1223,440 +1232,13 @@ function handlePaymentSuccess() {
     window.history.replaceState({}, document.title, window.location.pathname);
     
     // Update UI to show paid features
-    updateTierDisplay();
-}
-
-function handlePaymentCancelled() {
-    // Show cancelled message
-    alert('Payment was cancelled. You can try again anytime.');
-    
-    // Clean URL
-    window.history.replaceState({}, document.title, window.location.pathname);
-}
-
-// Enhanced tier selection with payment verification
-function selectTier(tier) {
-    // Free tier - always allowed
-    if (tier === 'free') {
-        currentTier = tier;
-        safeStorage.setItem('checkreel_tier', tier);
-        updateTierUI(tier);
-        return;
-    }
-    
-    // Paid tiers - check if user has valid subscription
-    const hasValidSubscription = checkSubscriptionStatus(tier);
-    
-    if (hasValidSubscription) {
-        currentTier = tier;
-        safeStorage.setItem('checkreel_tier', tier);
-        updateTierUI(tier);
-        
-        if (tier !== 'free') {
-            safeStorage.setItem('checkreel_scans_used', '0');
-        }
-        
-        updateTierDisplay();
-        updateScansCounter();
-        updatePlatformCounter();
-        
-        const historySection = document.getElementById('scanHistory');
-        if (tier === 'plus' || tier === 'premium') {
-            historySection.classList.add('visible');
-        } else {
-            historySection.classList.remove('visible');
-        }
-    } else {
-        // No valid subscription - show payment modal
-        showPaymentModal(tier);
-    }
-}
-
-function updateTierUI(tier) {
-    document.querySelectorAll('.tier-plan').forEach(plan => {
-        plan.classList.remove('active');
-    });
-    document.querySelector(`[data-tier="${tier}"]`).classList.add('active');
-}
-
-// Check subscription status (integrate with your backend)
-function checkSubscriptionStatus(tier) {
-    // In production, verify with your backend/Stripe
-    // For now, check if user has stored subscription
-    const storedSubscription = safeStorage.getItem('checkreel_subscription');
-    const subscriptionData = storedSubscription ? JSON.parse(storedSubscription) : null;
-    
-    if (subscriptionData && subscriptionData.tier === tier && subscriptionData.active) {
-        return true;
-    }
-    
-    return false;
-}
-
-// Block premium features for non-subscribers
-function checkFeatureAccess(feature) {
-    const userTier = safeStorage.getItem('checkreel_tier') || 'free';
-    
-    const featureAccess = {
-        'scan-history': ['plus', 'premium'],
-        'multi-platform': ['premium'],
-        'detailed-insights': ['plus', 'premium'],
-        'api-access': ['premium']
-    };
-    
-    if (featureAccess[feature] && !featureAccess[feature].includes(userTier)) {
-        // Show upgrade prompt
-        showUpgradePrompt(feature);
-        return false;
-    }
-    
-    return true;
-}
-
-function showUpgradePrompt(feature) {
-    const featureNames = {
-        'scan-history': 'Scan History',
-        'multi-platform': 'Multi-Platform Selection', 
-        'detailed-insights': 'Detailed Insights',
-        'api-access': 'API Access'
-    };
-    
-    const message = `${featureNames[feature]} is available in our paid plans. Would you like to upgrade?`;
-    
-    if (confirm(message)) {
-        showPaymentModal('plus');
-    }
-}
-
-// Safe storage wrapper
-if (!window.safeStorage) {
-  window.safeStorage = {
-    getItem: (k) => { try { return localStorage.getItem(k); } catch { return null } },
-    setItem: (k,v) => { try { localStorage.setItem(k,v) } catch {} },
-    removeItem: (k) => { try { localStorage.removeItem(k) } catch {} }
-  };
-}
-
-// Complete language content including scan results translations
-const DASHBOARD_TRANSLATIONS = {
-    en: {
-        'choose-plan': 'Choose Your Plan',
-        'free-trial': 'Free Trial',
-        'plus-tier': 'Plus',
-        'premium-tier': 'Premium',
-        'per-month': 'mo',
-        'free-scans': '3 scans',
-        'plus-scans': '20 scans/month',
-        'premium-scans': '40 scans/month',
-        'free-features': 'Basic compliance check<br>Standard results',
-        'plus-features': 'Enhanced compliance check<br>Detailed insights<br>Scan history<br>Priority support',
-        'premium-features': 'Full compliance suite<br>Advanced analytics<br>Team features<br>White-label reports<br>API access<br>Dedicated support',
-        'selection-alert': 'Please select a region and platform before uploading content for analysis',
-        'select-region': '🌍 Select Region',
-        'select-platform': '📱 Select Target Platform',
-        'upload-content': '📁 Upload Content to Check',
-        'drop-here': 'Drop your content here',
-        'click-browse': 'or click to browse files',
-        'start-check': 'Start Content Check',
-        'analyzing': 'Analyzing...',
-        'scan-history-title': 'Scan History',
-        'all-scans': 'All Scans',
-        'by-region': 'By Region',
-        'by-platform': 'By Platform',
-        'compliance-report': 'Compliance Report',
-        'issues-found': 'Issues Found',
-        'recommendations': 'Recommendations',
-        'active-users': 'Active Users',
-        'content-scanned': 'Content Scanned',
-        'success-rate': 'Success Rate',
-        'platforms': 'Platforms',
-        'scans-used': 'Scans Used (Testing)',
-        'scans-left': 'scans left',
-        'recommended': 'RECOMMENDED',
-        'middle-east': 'Middle East',
-        'global': 'Global',
-        'europe': 'Europe',
-        'mena': 'MENA',
-        'tiktok': 'TikTok',
-        'youtube': 'YouTube',
-        'instagram': 'Instagram',
-        'facebook': 'Facebook',
-        'twitter': 'Twitter',
-        'snapchat': 'Snapchat',
-        'score': 'Score',
-        'majorIssues': 'Major Issues - Do Not Post',
-        'minorIssues': 'Minor Issues - Review Recommended',
-        'noIssues': 'Perfect! Ready to Post',
-        'useTrendingHashtags': 'Use trending hashtags for {platform}',
-        'bestPostingTime': 'Best posting time for {region}: 7-9 PM local',
-        'audioLevelsExceed': 'Audio levels exceed {platform} limits',
-        'secure-payment': 'Secure payment powered by Stripe. Cancel anytime.',
-        'whats-included': 'What\'s Included',
-        'feature-enhanced': 'Enhanced compliance checking',
-        'feature-insights': 'Detailed content insights', 
-        'feature-history': 'Complete scan history',
-        'feature-support': 'Priority customer support',
-        'feature-compliance': 'Full compliance suite',
-        'feature-analytics': 'Advanced analytics',
-        'feature-team': 'Team collaboration features',
-        'feature-reports': 'White-label reports',
-        'feature-api': 'API access',
-        'feature-dedicated': 'Dedicated account manager',
-        'upgrade-to': 'Upgrade to',
-        'unlock-features': 'Unlock premium features and boost your content success!',
-        'maybe-later': 'Maybe Later',
-        'subscribe-now': 'Subscribe Now'
-    },
-    fr: {
-        'choose-plan': 'Choisissez votre plan',
-        'free-trial': 'Essai gratuit',
-        'plus-tier': 'Plus',
-        'premium-tier': 'Premium',
-        'per-month': 'mois',
-        'free-scans': '3 analyses',
-        'plus-scans': '20 analyses/mois',
-        'premium-scans': '40 analyses/mois',
-        'free-features': 'Vérification de conformité de base<br>Résultats standards',
-        'plus-features': 'Vérification de conformité améliorée<br>Informations détaillées<br>Historique des analyses<br>Support prioritaire',
-        'premium-features': 'Suite de conformité complète<br>Analyses avancées<br>Fonctionnalités d\'équipe<br>Rapports en marque blanche<br>Accès API<br>Support dédié',
-        'selection-alert': 'Veuillez sélectionner une région et une plateforme avant de télécharger le contenu pour analyse',
-        'select-region': '🌍 Sélectionner la région',
-        'select-platform': '📱 Sélectionner la plateforme cible',
-        'upload-content': '📁 Télécharger le contenu à vérifier',
-        'drop-here': 'Déposez votre contenu ici',
-        'click-browse': 'ou cliquez pour parcourir les fichiers',
-        'start-check': 'Commencer la vérification du contenu',
-        'analyzing': 'Analyse en cours...',
-        'scan-history-title': 'Historique des analyses',
-        'all-scans': 'Toutes les analyses',
-        'by-region': 'Par région',
-        'by-platform': 'Par plateforme',
-        'compliance-report': 'Rapport de conformité',
-        'issues-found': 'Problèmes trouvés',
-        'recommendations': 'Recommandations',
-        'active-users': 'Utilisateurs actifs',
-        'content-scanned': 'Contenu analysé',
-        'success-rate': 'Taux de réussite',
-        'platforms': 'Plateformes',
-        'scans-used': 'Analyses utilisées (Test)',
-        'scans-left': 'analyses restantes',
-        'recommended': 'RECOMMANDÉ',
-        'middle-east': 'Moyen-Orient',
-        'global': 'Global',
-        'europe': 'Europe',
-        'mena': 'MENA',
-        'tiktok': 'TikTok',
-        'youtube': 'YouTube',
-        'instagram': 'Instagram',
-        'facebook': 'Facebook',
-        'twitter': 'Twitter',
-        'snapchat': 'Snapchat',
-        'score': 'Score',
-        'majorIssues': 'Problèmes majeurs - Ne pas publier',
-        'minorIssues': 'Problèmes mineurs - Révision recommandée',
-        'noIssues': 'Parfait! Prêt à publier',
-        'useTrendingHashtags': 'Utilisez des hashtags tendance pour {platform}',
-        'bestPostingTime': 'Meilleur moment pour publier au {region}: 19h-21h heure locale',
-        'audioLevelsExceed': 'Les niveaux audio dépassent les limites {platform}',
-        'contentViolateGuidelines': 'Le contenu peut violer les directives communautaires du {region}',
-        'secure-payment': 'Paiement sécurisé par Stripe. Annulez à tout moment.',
-        'whats-included': 'Ce qui est inclus',
-        'feature-enhanced': 'Vérification de conformité améliorée',
-        'feature-insights': 'Insights de contenu détaillés',
-        'feature-history': 'Historique complet des analyses',
-        'feature-support': 'Support client prioritaire',
-        'feature-compliance': 'Suite de conformité complète',
-        'feature-analytics': 'Analyses avancées',
-        'feature-team': 'Fonctionnalités de collaboration',
-        'feature-reports': 'Rapports en marque blanche',
-        'feature-api': 'Accès API',
-        'feature-dedicated': 'Gestionnaire de compte dédié',
-        'upgrade-to': 'Mettre à niveau vers',
-        'unlock-features': 'Débloquez les fonctionnalités premium et boostez votre succès!',
-        'maybe-later': 'Peut-être plus tard',
-        'subscribe-now': 'S\'abonner maintenant'
-    },
-    ar: {
-        'choose-plan': 'اختر خطتك',
-        'free-trial': 'تجربة مجانية',
-        'plus-tier': 'بلس',
-        'premium-tier': 'بريميوم',
-        'per-month': 'شهر',
-        'free-scans': '3 فحوصات',
-        'plus-scans': '20 فحص/شهر',
-        'premium-scans': '40 فحص/شهر',
-        'free-features': 'فحص امتثال أساسي<br>نتائج قياسية',
-        'plus-features': 'فحص امتثال محسّن<br>رؤى مفصلة<br>سجل الفحوصات<br>دعم ذو أولوية',
-        'premium-features': 'مجموعة امتثال كاملة<br>تحليلات متقدمة<br>ميزات الفريق<br>تقارير بعلامة تجارية خاصة<br>الوصول إلى API<br>دعم مخصص',
-        'selection-alert': 'يرجى اختيار منطقة ومنصة قبل تحميل المحتوى للتحليل',
-        'select-region': '🌍 اختر المنطقة',
-        'select-platform': '📱 اختر المنصة المستهدفة',
-        'upload-content': '📁 ارفع المحتوى للفحص',
-        'drop-here': 'اسقط محتواك هنا',
-        'click-browse': 'أو انقر لاستعراض الملفات',
-        'start-check': 'ابدأ فحص المحتوى',
-        'analyzing': 'جاري التحليل...',
-        'scan-history-title': 'سجل الفحوصات',
-        'all-scans': 'جميع الفحوصات',
-        'by-region': 'حسب المنطقة',
-        'by-platform': 'حسب المنصة',
-        'compliance-report': 'تقرير الامتثال',
-        'issues-found': 'المشاكل المكتشفة',
-        'recommendations': 'التوصيات',
-        'active-users': 'المستخدمون النشطون',
-        'content-scanned': 'المحتوى المفحوص',
-        'success-rate': 'معدل النجاح',
-        'platforms': 'المنصات',
-        'scans-used': 'الفحوصات المستخدمة (اختبار)',
-        'scans-left': 'فحوصات متبقية',
-        'recommended': 'موصى به',
-        'middle-east': 'الشرق الأوسط',
-        'global': 'عالمي',
-        'europe': 'أوروبا',
-        'mena': 'منطقة الشرق الأوسط وشمال أفريقيا',
-        'tiktok': 'تيك توك',
-        'youtube': 'يوتيوب',
-        'instagram': 'إنستغرام',
-        'facebook': 'فيسبوك',
-        'twitter': 'تويتر',
-        'snapchat': 'سناب شات',
-        'score': 'النتيجة',
-        'majorIssues': 'مشاكل كبيرة - لا تنشر',
-        'minorIssues': 'مشاكل بسيطة - يُنصح بالمراجعة',
-        'noIssues': 'مثالي! جاهز للنشر',
-        'useTrendingHashtags': 'استخدم الهاشتاجات الرائجة لـ {platform}',
-        'bestPostingTime': 'أفضل وقت للنشر في {region}: 7-9 مساءً بالتوقيت المحلي',
-        'audioLevelsExceed': 'مستويات الصوت تتجاوز حدود {platform}',
-        'contentViolateGuidelines': 'قد يخالف المحتوى إرشادات مجتمع {region}',
-        'secure-payment': 'دفع آمن بواسطة Stripe. إلغاء في أي وقت.',
-        'whats-included': 'ما هو مشمول',
-        'feature-enhanced': 'فحص امتثال محسن',
-        'feature-insights': 'رؤى مفصلة للمحتوى',
-        'feature-history': 'سجل كامل للفحوصات',
-        'feature-support': 'دعم عملاء ذو أولوية',
-        'feature-compliance': 'مجموعة امتثال كاملة',
-        'feature-analytics': 'تحليلات متقدمة',
-        'feature-team': 'ميزات التعاون الجماعي',
-        'feature-reports': 'تقارير بعلامة تجارية خاصة',
-        'feature-api': 'وصول API',
-        'feature-dedicated': 'مدير حساب مخصص',
-        'upgrade-to': 'الترقية إلى',
-        'unlock-features': 'افتح الميزات المميزة وعزز نجاح محتواك!',
-        'maybe-later': 'ربما لاحقاً',
-        'subscribe-now': 'اشترك الآن'
-    }
-};
-
-// Language switching function
-function setLanguage(lang) {
-    currentLanguage = lang;
-    
-    // Update language buttons
-    document.querySelectorAll('.lang-btn').forEach(btn => {
-        btn.classList.toggle('active', btn.textContent === lang.toUpperCase());
-    });
-    
-    // Update RTL for Arabic
-    if (lang === 'ar') {
-        document.body.setAttribute('dir', 'rtl');
-        document.documentElement.setAttribute('dir', 'rtl');
-    } else {
-        document.body.removeAttribute('dir');
-        document.documentElement.removeAttribute('dir');
-    }
-    
-    // Apply all translations
-    applyDashboardTranslations(lang);
-    
-    // Save language preference
-    safeStorage.setItem('checkreel_language', lang);
-}
-
-// Get translation with placeholder replacement
-function getTranslation(key, placeholders = {}) {
-    const translations = DASHBOARD_TRANSLATIONS[currentLanguage] || DASHBOARD_TRANSLATIONS['en'];
-    let text = translations[key] || key;
-    
-    // Replace placeholders
-    Object.keys(placeholders).forEach(placeholder => {
-        text = text.replace(`{${placeholder}}`, placeholders[placeholder]);
-    });
-    
-    return text;
-}
-
-// Apply dashboard translations
-function applyDashboardTranslations(lang) {
-    const translations = DASHBOARD_TRANSLATIONS[lang] || DASHBOARD_TRANSLATIONS['en'];
-    
-    Object.keys(translations).forEach(key => {
-        const element = document.getElementById(key);
-        if (element) {
-            if (key.includes('features')) {
-                element.innerHTML = translations[key];
-            } else {
-                element.textContent = translations[key];
-            }
-        }
-    });
-    
-    // Update scan history platform/region tags
-    updateScanHistoryTranslations();
-    updateTierDisplay();
-}
-
-// Update scan history translations
-function updateScanHistoryTranslations() {
-    document.querySelectorAll('[data-translate]').forEach(element => {
-        const key = element.getAttribute('data-translate');
-        if (key === 'score') {
-            const scoreMatch = element.textContent.match(/Score: (\d+)/);
-            if (scoreMatch) {
-                element.textContent = `${getTranslation('score')}: ${scoreMatch[1]}`;
-            }
-        } else {
-            element.textContent = getTranslation(key);
-        }
-    });
-}
-
-// Initialize dashboard with language persistence
-document.addEventListener('DOMContentLoaded', function() {
-    currentLanguage = safeStorage.getItem('checkreel_language') || 'en';
-    
-    // Check payment status first
-    checkPaymentStatus();
-    
-    if (window.loadLanguageContent) {
-        window.loadLanguageContent(currentLanguage);
-    }
-    
-    setTimeout(() => {
-        applyDashboardTranslations(currentLanguage);
-        
-        if (currentLanguage === 'ar') {
-            document.body.setAttribute('dir', 'rtl');
-            document.documentElement.setAttribute('dir', 'rtl');
-        } else {
-            document.body.removeAttribute('dir');
-            document.documentElement.removeAttribute('dir');
-        }
-        
-        // Update language button states
-        document.querySelectorAll('.lang-btn').forEach(btn => {
-            btn.classList.toggle('active', btn.textContent === currentLanguage.toUpperCase());
-        });
-    }, 100);
-    
-    initializeUpload();
-    updateTierDisplay();
     updateUserCounter();
     updateScansCounter();
     loadScanHistory();
     
     // Show selection alert initially since nothing is selected
     updateSelectionAlert();
-});
+};
 
 // Tier selection
 function selectTier(tier) {
@@ -2242,3 +1824,430 @@ console.log('✅ Dashboard fully loaded with complete multilingual support');
 </script>
 </body>
 </html>
+}
+
+function handlePaymentCancelled() {
+    // Show cancelled message
+    alert('Payment was cancelled. You can try again anytime.');
+    
+    // Clean URL
+    window.history.replaceState({}, document.title, window.location.pathname);
+}
+
+// Enhanced tier selection with payment verification
+function selectTier(tier) {
+    // Free tier - always allowed
+    if (tier === 'free') {
+        currentTier = tier;
+        safeStorage.setItem('checkreel_tier', tier);
+        updateTierUI(tier);
+        return;
+    }
+    
+    // Paid tiers - check if user has valid subscription
+    const hasValidSubscription = checkSubscriptionStatus(tier);
+    
+    if (hasValidSubscription) {
+        currentTier = tier;
+        safeStorage.setItem('checkreel_tier', tier);
+        updateTierUI(tier);
+        
+        if (tier !== 'free') {
+            safeStorage.setItem('checkreel_scans_used', '0');
+        }
+        
+        updateTierDisplay();
+        updateScansCounter();
+        updatePlatformCounter();
+        
+        const historySection = document.getElementById('scanHistory');
+        if (tier === 'plus' || tier === 'premium') {
+            historySection.classList.add('visible');
+        } else {
+            historySection.classList.remove('visible');
+        }
+    } else {
+        // No valid subscription - show payment modal
+        showPaymentModal(tier);
+    }
+}
+
+function updateTierUI(tier) {
+    document.querySelectorAll('.tier-plan').forEach(plan => {
+        plan.classList.remove('active');
+    });
+    document.querySelector(`[data-tier="${tier}"]`).classList.add('active');
+}
+
+// Check subscription status (integrate with your backend)
+function checkSubscriptionStatus(tier) {
+    // In production, verify with your backend/Stripe
+    // For now, check if user has stored subscription
+    const storedSubscription = safeStorage.getItem('checkreel_subscription');
+    const subscriptionData = storedSubscription ? JSON.parse(storedSubscription) : null;
+    
+    if (subscriptionData && subscriptionData.tier === tier && subscriptionData.active) {
+        return true;
+    }
+    
+    return false;
+}
+
+// Block premium features for non-subscribers
+function checkFeatureAccess(feature) {
+    const userTier = safeStorage.getItem('checkreel_tier') || 'free';
+    
+    const featureAccess = {
+        'scan-history': ['plus', 'premium'],
+        'multi-platform': ['premium'],
+        'detailed-insights': ['plus', 'premium'],
+        'api-access': ['premium']
+    };
+    
+    if (featureAccess[feature] && !featureAccess[feature].includes(userTier)) {
+        // Show upgrade prompt
+        showUpgradePrompt(feature);
+        return false;
+    }
+    
+    return true;
+}
+
+function showUpgradePrompt(feature) {
+    const featureNames = {
+        'scan-history': 'Scan History',
+        'multi-platform': 'Multi-Platform Selection', 
+        'detailed-insights': 'Detailed Insights',
+        'api-access': 'API Access'
+    };
+    
+    const message = `${featureNames[feature]} is available in our paid plans. Would you like to upgrade?`;
+    
+    if (confirm(message)) {
+        showPaymentModal('plus');
+    }
+}
+
+// Safe storage wrapper
+if (!window.safeStorage) {
+  window.safeStorage = {
+    getItem: (k) => { try { return localStorage.getItem(k); } catch { return null } },
+    setItem: (k,v) => { try { localStorage.setItem(k,v) } catch {} },
+    removeItem: (k) => { try { localStorage.removeItem(k) } catch {} }
+  };
+}
+
+// Complete language content including scan results translations
+const DASHBOARD_TRANSLATIONS = {
+    en: {
+        'choose-plan': 'Choose Your Plan',
+        'free-trial': 'Free Trial',
+        'plus-tier': 'Plus',
+        'premium-tier': 'Premium',
+        'per-month': 'mo',
+        'free-scans': '3 scans',
+        'plus-scans': '20 scans/month',
+        'premium-scans': '40 scans/month',
+        'free-features': 'Basic compliance check<br>Standard results',
+        'plus-features': 'Enhanced compliance check<br>Detailed insights<br>Scan history<br>Priority support',
+        'premium-features': 'Full compliance suite<br>Advanced analytics<br>Team features<br>White-label reports<br>API access<br>Dedicated support',
+        'selection-alert': 'Please select a region and platform before uploading content for analysis',
+        'select-region': '🌍 Select Region',
+        'select-platform': '📱 Select Target Platform',
+        'upload-content': '📁 Upload Content to Check',
+        'drop-here': 'Drop your content here',
+        'click-browse': 'or click to browse files',
+        'start-check': 'Start Content Check',
+        'analyzing': 'Analyzing...',
+        'scan-history-title': 'Scan History',
+        'all-scans': 'All Scans',
+        'by-region': 'By Region',
+        'by-platform': 'By Platform',
+        'compliance-report': 'Compliance Report',
+        'issues-found': 'Issues Found',
+        'recommendations': 'Recommendations',
+        'active-users': 'Active Users',
+        'content-scanned': 'Content Scanned',
+        'success-rate': 'Success Rate',
+        'platforms': 'Platforms',
+        'scans-used': 'Scans Used (Testing)',
+        'scans-left': 'scans left',
+        'recommended': 'RECOMMENDED',
+        'middle-east': 'Middle East',
+        'global': 'Global',
+        'europe': 'Europe',
+        'mena': 'MENA',
+        'tiktok': 'TikTok',
+        'youtube': 'YouTube',
+        'instagram': 'Instagram',
+        'facebook': 'Facebook',
+        'twitter': 'Twitter',
+        'snapchat': 'Snapchat',
+        'score': 'Score',
+        'majorIssues': 'Major Issues - Do Not Post',
+        'minorIssues': 'Minor Issues - Review Recommended',
+        'noIssues': 'Perfect! Ready to Post',
+        'useTrendingHashtags': 'Use trending hashtags for {platform}',
+        'bestPostingTime': 'Best posting time for {region}: 7-9 PM local',
+        'audioLevelsExceed': 'Audio levels exceed {platform} limits',
+        'contentViolateGuidelines': 'Content may violate {region} community guidelines',
+        'secure-payment': 'Secure payment powered by Stripe. Cancel anytime.',
+        'whats-included': 'What\'s Included',
+        'feature-enhanced': 'Enhanced compliance checking',
+        'feature-insights': 'Detailed content insights', 
+        'feature-history': 'Complete scan history',
+        'feature-support': 'Priority customer support',
+        'feature-compliance': 'Full compliance suite',
+        'feature-analytics': 'Advanced analytics',
+        'feature-team': 'Team collaboration features',
+        'feature-reports': 'White-label reports',
+        'feature-api': 'API access',
+        'feature-dedicated': 'Dedicated account manager',
+        'upgrade-to': 'Upgrade to',
+        'unlock-features': 'Unlock premium features and boost your content success!',
+        'maybe-later': 'Maybe Later',
+        'subscribe-now': 'Subscribe Now'
+    },
+    fr: {
+        'choose-plan': 'Choisissez votre plan',
+        'free-trial': 'Essai gratuit',
+        'plus-tier': 'Plus',
+        'premium-tier': 'Premium',
+        'per-month': 'mois',
+        'free-scans': '3 analyses',
+        'plus-scans': '20 analyses/mois',
+        'premium-scans': '40 analyses/mois',
+        'free-features': 'Vérification de conformité de base<br>Résultats standards',
+        'plus-features': 'Vérification de conformité améliorée<br>Informations détaillées<br>Historique des analyses<br>Support prioritaire',
+        'premium-features': 'Suite de conformité complète<br>Analyses avancées<br>Fonctionnalités d\'équipe<br>Rapports en marque blanche<br>Accès API<br>Support dédié',
+        'selection-alert': 'Veuillez sélectionner une région et une plateforme avant de télécharger le contenu pour analyse',
+        'select-region': '🌍 Sélectionner la région',
+        'select-platform': '📱 Sélectionner la plateforme cible',
+        'upload-content': '📁 Télécharger le contenu à vérifier',
+        'drop-here': 'Déposez votre contenu ici',
+        'click-browse': 'ou cliquez pour parcourir les fichiers',
+        'start-check': 'Commencer la vérification du contenu',
+        'analyzing': 'Analyse en cours...',
+        'scan-history-title': 'Historique des analyses',
+        'all-scans': 'Toutes les analyses',
+        'by-region': 'Par région',
+        'by-platform': 'Par plateforme',
+        'compliance-report': 'Rapport de conformité',
+        'issues-found': 'Problèmes trouvés',
+        'recommendations': 'Recommandations',
+        'active-users': 'Utilisateurs actifs',
+        'content-scanned': 'Contenu analysé',
+        'success-rate': 'Taux de réussite',
+        'platforms': 'Plateformes',
+        'scans-used': 'Analyses utilisées (Test)',
+        'scans-left': 'analyses restantes',
+        'recommended': 'RECOMMANDÉ',
+        'middle-east': 'Moyen-Orient',
+        'global': 'Global',
+        'europe': 'Europe',
+        'mena': 'MENA',
+        'tiktok': 'TikTok',
+        'youtube': 'YouTube',
+        'instagram': 'Instagram',
+        'facebook': 'Facebook',
+        'twitter': 'Twitter',
+        'snapchat': 'Snapchat',
+        'score': 'Score',
+        'majorIssues': 'Problèmes majeurs - Ne pas publier',
+        'minorIssues': 'Problèmes mineurs - Révision recommandée',
+        'noIssues': 'Parfait! Prêt à publier',
+        'useTrendingHashtags': 'Utilisez des hashtags tendance pour {platform}',
+        'bestPostingTime': 'Meilleur moment pour publier au {region}: 19h-21h heure locale',
+        'audioLevelsExceed': 'Les niveaux audio dépassent les limites {platform}',
+        'contentViolateGuidelines': 'Le contenu peut violer les directives communautaires du {region}',
+        'secure-payment': 'Paiement sécurisé par Stripe. Annulez à tout moment.',
+        'whats-included': 'Ce qui est inclus',
+        'feature-enhanced': 'Vérification de conformité améliorée',
+        'feature-insights': 'Insights de contenu détaillés',
+        'feature-history': 'Historique complet des analyses',
+        'feature-support': 'Support client prioritaire',
+        'feature-compliance': 'Suite de conformité complète',
+        'feature-analytics': 'Analyses avancées',
+        'feature-team': 'Fonctionnalités de collaboration',
+        'feature-reports': 'Rapports en marque blanche',
+        'feature-api': 'Accès API',
+        'feature-dedicated': 'Gestionnaire de compte dédié',
+        'upgrade-to': 'Mettre à niveau vers',
+        'unlock-features': 'Débloquez les fonctionnalités premium et boostez votre succès!',
+        'maybe-later': 'Peut-être plus tard',
+        'subscribe-now': 'S\'abonner maintenant'
+    },
+    ar: {
+        'choose-plan': 'اختر خطتك',
+        'free-trial': 'تجربة مجانية',
+        'plus-tier': 'بلس',
+        'premium-tier': 'بريميوم',
+        'per-month': 'شهر',
+        'free-scans': '3 فحوصات',
+        'plus-scans': '20 فحص/شهر',
+        'premium-scans': '40 فحص/شهر',
+        'free-features': 'فحص امتثال أساسي<br>نتائج قياسية',
+        'plus-features': 'فحص امتثال محسّن<br>رؤى مفصلة<br>سجل الفحوصات<br>دعم ذو أولوية',
+        'premium-features': 'مجموعة امتثال كاملة<br>تحليلات متقدمة<br>ميزات الفريق<br>تقارير بعلامة تجارية خاصة<br>الوصول إلى API<br>دعم مخصص',
+        'selection-alert': 'يرجى اختيار منطقة ومنصة قبل تحميل المحتوى للتحليل',
+        'select-region': '🌍 اختر المنطقة',
+        'select-platform': '📱 اختر المنصة المستهدفة',
+        'upload-content': '📁 ارفع المحتوى للفحص',
+        'drop-here': 'اسقط محتواك هنا',
+        'click-browse': 'أو انقر لاستعراض الملفات',
+        'start-check': 'ابدأ فحص المحتوى',
+        'analyzing': 'جاري التحليل...',
+        'scan-history-title': 'سجل الفحوصات',
+        'all-scans': 'جميع الفحوصات',
+        'by-region': 'حسب المنطقة',
+        'by-platform': 'حسب المنصة',
+        'compliance-report': 'تقرير الامتثال',
+        'issues-found': 'المشاكل المكتشفة',
+        'recommendations': 'التوصيات',
+        'active-users': 'المستخدمون النشطون',
+        'content-scanned': 'المحتوى المفحوص',
+        'success-rate': 'معدل النجاح',
+        'platforms': 'المنصات',
+        'scans-used': 'الفحوصات المستخدمة (اختبار)',
+        'scans-left': 'فحوصات متبقية',
+        'recommended': 'موصى به',
+        'middle-east': 'الشرق الأوسط',
+        'global': 'عالمي',
+        'europe': 'أوروبا',
+        'mena': 'منطقة الشرق الأوسط وشمال أفريقيا',
+        'tiktok': 'تيك توك',
+        'youtube': 'يوتيوب',
+        'instagram': 'إنستغرام',
+        'facebook': 'فيسبوك',
+        'twitter': 'تويتر',
+        'snapchat': 'سناب شات',
+        'score': 'النتيجة',
+        'majorIssues': 'مشاكل كبيرة - لا تنشر',
+        'minorIssues': 'مشاكل بسيطة - يُنصح بالمراجعة',
+        'noIssues': 'مثالي! جاهز للنشر',
+        'useTrendingHashtags': 'استخدم الهاشتاجات الرائجة لـ {platform}',
+        'bestPostingTime': 'أفضل وقت للنشر في {region}: 7-9 مساءً بالتوقيت المحلي',
+        'audioLevelsExceed': 'مستويات الصوت تتجاوز حدود {platform}',
+        'contentViolateGuidelines': 'قد يخالف المحتوى إرشادات مجتمع {region}',
+        'secure-payment': 'دفع آمن بواسطة Stripe. إلغاء في أي وقت.',
+        'whats-included': 'ما هو مشمول',
+        'feature-enhanced': 'فحص امتثال محسن',
+        'feature-insights': 'رؤى مفصلة للمحتوى',
+        'feature-history': 'سجل كامل للفحوصات',
+        'feature-support': 'دعم عملاء ذو أولوية',
+        'feature-compliance': 'مجموعة امتثال كاملة',
+        'feature-analytics': 'تحليلات متقدمة',
+        'feature-team': 'ميزات التعاون الجماعي',
+        'feature-reports': 'تقارير بعلامة تجارية خاصة',
+        'feature-api': 'وصول API',
+        'feature-dedicated': 'مدير حساب مخصص',
+        'upgrade-to': 'الترقية إلى',
+        'unlock-features': 'افتح الميزات المميزة وعزز نجاح محتواك!',
+        'maybe-later': 'ربما لاحقاً',
+        'subscribe-now': 'اشترك الآن'
+    }
+};
+
+// Language switching function
+function setLanguage(lang) {
+    currentLanguage = lang;
+    
+    // Update language buttons
+    document.querySelectorAll('.lang-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.textContent === lang.toUpperCase());
+    });
+    
+    // Update RTL for Arabic
+    if (lang === 'ar') {
+        document.body.setAttribute('dir', 'rtl');
+        document.documentElement.setAttribute('dir', 'rtl');
+    } else {
+        document.body.removeAttribute('dir');
+        document.documentElement.removeAttribute('dir');
+    }
+    
+    // Apply all translations
+    applyDashboardTranslations(lang);
+    
+    // Save language preference
+    safeStorage.setItem('checkreel_language', lang);
+}
+
+// Get translation with placeholder replacement
+function getTranslation(key, placeholders = {}) {
+    const translations = DASHBOARD_TRANSLATIONS[currentLanguage] || DASHBOARD_TRANSLATIONS['en'];
+    let text = translations[key] || key;
+    
+    // Replace placeholders
+    Object.keys(placeholders).forEach(placeholder => {
+        text = text.replace(`{${placeholder}}`, placeholders[placeholder]);
+    });
+    
+    return text;
+}
+
+// Apply dashboard translations
+function applyDashboardTranslations(lang) {
+    const translations = DASHBOARD_TRANSLATIONS[lang] || DASHBOARD_TRANSLATIONS['en'];
+    
+    Object.keys(translations).forEach(key => {
+        const element = document.getElementById(key);
+        if (element) {
+            if (key.includes('features')) {
+                element.innerHTML = translations[key];
+            } else {
+                element.textContent = translations[key];
+            }
+        }
+    });
+    
+    // Update scan history platform/region tags
+    updateScanHistoryTranslations();
+    updateTierDisplay();
+}
+
+// Update scan history translations
+function updateScanHistoryTranslations() {
+    document.querySelectorAll('[data-translate]').forEach(element => {
+        const key = element.getAttribute('data-translate');
+        if (key === 'score') {
+            const scoreMatch = element.textContent.match(/Score: (\d+)/);
+            if (scoreMatch) {
+                element.textContent = `${getTranslation('score')}: ${scoreMatch[1]}`;
+            }
+        } else {
+            element.textContent = getTranslation(key);
+        }
+    });
+}
+
+// Initialize dashboard with language persistence
+document.addEventListener('DOMContentLoaded', function() {
+    currentLanguage = safeStorage.getItem('checkreel_language') || 'en';
+    
+    // Check payment status first
+    checkPaymentStatus();
+    
+    if (window.loadLanguageContent) {
+        window.loadLanguageContent(currentLanguage);
+    }
+    
+    setTimeout(() => {
+        applyDashboardTranslations(currentLanguage);
+        
+        if (currentLanguage === 'ar') {
+            document.body.setAttribute('dir', 'rtl');
+            document.documentElement.setAttribute('dir', 'rtl');
+        } else {
+            document.body.removeAttribute('dir');
+            document.documentElement.removeAttribute('dir');
+        }
+        
+        // Update language button states
+        document.querySelectorAll('.lang-btn').forEach(btn => {
+            btn.classList.toggle('active', btn.textContent === currentLanguage.toUpperCase());
+        });
+    }, 100);
+    
+    initializeUpload();
+    updateTierDisplay();
