@@ -1004,7 +1004,7 @@ gap: 20px;
 
 <div class="history-content" id="historyContent">
 <div class="history-tabs">
-tab active" data-filter="all" id="all-scans">All Scans</button>
+<button class="history-tab active" data-filter="all" id="all-scans">All Scans</button>
 <button class="history-tab" data-filter="region" id="by-region">By Region</button>
 <button class="history-tab" data-filter="platform" id="by-platform">By Platform</button>
 </div>
@@ -1124,6 +1124,15 @@ let selectedPlatforms = [];
 let selectedFile = null;
 let scanHistory = [];
 
+// Safe storage wrapper
+if (!window.safeStorage) {
+  window.safeStorage = {
+    getItem: (k) => { try { return localStorage.getItem(k); } catch { return null } },
+    setItem: (k,v) => { try { localStorage.setItem(k,v) } catch {} },
+    removeItem: (k) => { try { localStorage.removeItem(k) } catch {} }
+  };
+}
+
 // Payment Configuration - UPDATE THESE URLs WHEN READY
 const PAYMENT_CONFIG = {
     // Stripe/PayPal URLs - replace with your actual payment processor URLs
@@ -1238,31 +1247,107 @@ function handlePaymentSuccess() {
     
     // Show selection alert initially since nothing is selected
     updateSelectionAlert();
-};
+}
 
-// Tier selection
-function selectTier(tier) {
-    currentTier = tier;
-    safeStorage.setItem('checkreel_tier', tier);
+function handlePaymentCancelled() {
+    // Show cancelled message
+    alert('Payment was cancelled. You can try again anytime.');
     
+    // Clean URL
+    window.history.replaceState({}, document.title, window.location.pathname);
+}
+
+// Enhanced tier selection with payment verification
+function selectTier(tier) {
+    // Free tier - always allowed
+    if (tier === 'free') {
+        currentTier = tier;
+        safeStorage.setItem('checkreel_tier', tier);
+        updateTierUI(tier);
+        return;
+    }
+    
+    // Paid tiers - check if user has valid subscription
+    const hasValidSubscription = checkSubscriptionStatus(tier);
+    
+    if (hasValidSubscription) {
+        currentTier = tier;
+        safeStorage.setItem('checkreel_tier', tier);
+        updateTierUI(tier);
+        
+        if (tier !== 'free') {
+            safeStorage.setItem('checkreel_scans_used', '0');
+        }
+        
+        updateTierDisplay();
+        updateScansCounter();
+        updatePlatformCounter();
+        
+        const historySection = document.getElementById('scanHistory');
+        if (tier === 'plus' || tier === 'premium') {
+            historySection.classList.add('visible');
+        } else {
+            historySection.classList.remove('visible');
+        }
+    } else {
+        // No valid subscription - show payment modal
+        showPaymentModal(tier);
+    }
+}
+
+function updateTierUI(tier) {
     document.querySelectorAll('.tier-plan').forEach(plan => {
         plan.classList.remove('active');
     });
     document.querySelector(`[data-tier="${tier}"]`).classList.add('active');
+}
+
+// Check subscription status (integrate with your backend)
+function checkSubscriptionStatus(tier) {
+    // In production, verify with your backend/Stripe
+    // For now, check if user has stored subscription
+    const storedSubscription = safeStorage.getItem('checkreel_subscription');
+    const subscriptionData = storedSubscription ? JSON.parse(storedSubscription) : null;
     
-    if (tier !== 'free') {
-        safeStorage.setItem('checkreel_scans_used', '0');
+    if (subscriptionData && subscriptionData.tier === tier && subscriptionData.active) {
+        return true;
     }
     
-    updateTierDisplay();
-    updateScansCounter();
-    updatePlatformCounter();
+    return false;
+}
+
+// Block premium features for non-subscribers
+function checkFeatureAccess(feature) {
+    const userTier = safeStorage.getItem('checkreel_tier') || 'free';
     
-    const historySection = document.getElementById('scanHistory');
-    if (tier === 'plus' || tier === 'premium') {
-        historySection.classList.add('visible');
-    } else {
-        historySection.classList.remove('visible');
+    const featureAccess = {
+        'scan-history': ['plus', 'premium'],
+        'multi-platform': ['premium'],
+        'detailed-insights': ['plus', 'premium'],
+        'api-access': ['premium']
+    };
+    
+    if (featureAccess[feature] && !featureAccess[feature].includes(userTier)) {
+        // Show upgrade prompt
+        showUpgradePrompt(feature);
+        return false;
+    }
+    
+    return true;
+}
+
+function showUpgradePrompt(feature) {
+    const featureNames = {
+        'scan-history': 'Scan History',
+        'multi-platform': 'Multi-Platform Selection', 
+        'detailed-insights': 'Detailed Insights',
+        'api-access': 'API Access'
+    };
+    
+    const message = `${featureNames[feature]} is available in our paid plans. Would you like to upgrade?`;
+    
+    if (confirm(message)) {
+        showPaymentModal('plus');
     }
 }
 
@@ -1803,140 +1888,6 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
-// Language change handler - listen for changes from lang-loader.js
-window.addEventListener('languageChanged', function(event) {
-    currentLanguage = event.detail.language;
-    applyDashboardTranslations(currentLanguage);
-    
-    if (currentLanguage === 'ar') {
-        document.body.setAttribute('dir', 'rtl');
-        document.documentElement.setAttribute('dir', 'rtl');
-    } else {
-        document.body.removeAttribute('dir');
-        document.documentElement.removeAttribute('dir');
-    }
-    
-    // Refresh scan history with new translations
-    loadScanHistory();
-});
-
-console.log('✅ Dashboard fully loaded with complete multilingual support');
-</script>
-</body>
-</html>
-}
-
-function handlePaymentCancelled() {
-    // Show cancelled message
-    alert('Payment was cancelled. You can try again anytime.');
-    
-    // Clean URL
-    window.history.replaceState({}, document.title, window.location.pathname);
-}
-
-// Enhanced tier selection with payment verification
-function selectTier(tier) {
-    // Free tier - always allowed
-    if (tier === 'free') {
-        currentTier = tier;
-        safeStorage.setItem('checkreel_tier', tier);
-        updateTierUI(tier);
-        return;
-    }
-    
-    // Paid tiers - check if user has valid subscription
-    const hasValidSubscription = checkSubscriptionStatus(tier);
-    
-    if (hasValidSubscription) {
-        currentTier = tier;
-        safeStorage.setItem('checkreel_tier', tier);
-        updateTierUI(tier);
-        
-        if (tier !== 'free') {
-            safeStorage.setItem('checkreel_scans_used', '0');
-        }
-        
-        updateTierDisplay();
-        updateScansCounter();
-        updatePlatformCounter();
-        
-        const historySection = document.getElementById('scanHistory');
-        if (tier === 'plus' || tier === 'premium') {
-            historySection.classList.add('visible');
-        } else {
-            historySection.classList.remove('visible');
-        }
-    } else {
-        // No valid subscription - show payment modal
-        showPaymentModal(tier);
-    }
-}
-
-function updateTierUI(tier) {
-    document.querySelectorAll('.tier-plan').forEach(plan => {
-        plan.classList.remove('active');
-    });
-    document.querySelector(`[data-tier="${tier}"]`).classList.add('active');
-}
-
-// Check subscription status (integrate with your backend)
-function checkSubscriptionStatus(tier) {
-    // In production, verify with your backend/Stripe
-    // For now, check if user has stored subscription
-    const storedSubscription = safeStorage.getItem('checkreel_subscription');
-    const subscriptionData = storedSubscription ? JSON.parse(storedSubscription) : null;
-    
-    if (subscriptionData && subscriptionData.tier === tier && subscriptionData.active) {
-        return true;
-    }
-    
-    return false;
-}
-
-// Block premium features for non-subscribers
-function checkFeatureAccess(feature) {
-    const userTier = safeStorage.getItem('checkreel_tier') || 'free';
-    
-    const featureAccess = {
-        'scan-history': ['plus', 'premium'],
-        'multi-platform': ['premium'],
-        'detailed-insights': ['plus', 'premium'],
-        'api-access': ['premium']
-    };
-    
-    if (featureAccess[feature] && !featureAccess[feature].includes(userTier)) {
-        // Show upgrade prompt
-        showUpgradePrompt(feature);
-        return false;
-    }
-    
-    return true;
-}
-
-function showUpgradePrompt(feature) {
-    const featureNames = {
-        'scan-history': 'Scan History',
-        'multi-platform': 'Multi-Platform Selection', 
-        'detailed-insights': 'Detailed Insights',
-        'api-access': 'API Access'
-    };
-    
-    const message = `${featureNames[feature]} is available in our paid plans. Would you like to upgrade?`;
-    
-    if (confirm(message)) {
-        showPaymentModal('plus');
-    }
-}
-
-// Safe storage wrapper
-if (!window.safeStorage) {
-  window.safeStorage = {
-    getItem: (k) => { try { return localStorage.getItem(k); } catch { return null } },
-    setItem: (k,v) => { try { localStorage.setItem(k,v) } catch {} },
-    removeItem: (k) => { try { localStorage.removeItem(k) } catch {} }
-  };
-}
-
 // Complete language content including scan results translations
 const DASHBOARD_TRANSLATIONS = {
     en: {
@@ -2221,6 +2172,23 @@ function updateScanHistoryTranslations() {
     });
 }
 
+// Language change handler - listen for changes from lang-loader.js
+window.addEventListener('languageChanged', function(event) {
+    currentLanguage = event.detail.language;
+    applyDashboardTranslations(currentLanguage);
+    
+    if (currentLanguage === 'ar') {
+        document.body.setAttribute('dir', 'rtl');
+        document.documentElement.setAttribute('dir', 'rtl');
+    } else {
+        document.body.removeAttribute('dir');
+        document.documentElement.removeAttribute('dir');
+    }
+    
+    // Refresh scan history with new translations
+    loadScanHistory();
+});
+
 // Initialize dashboard with language persistence
 document.addEventListener('DOMContentLoaded', function() {
     currentLanguage = safeStorage.getItem('checkreel_language') || 'en';
@@ -2251,3 +2219,15 @@ document.addEventListener('DOMContentLoaded', function() {
     
     initializeUpload();
     updateTierDisplay();
+    updateUserCounter();
+    updateScansCounter();
+    loadScanHistory();
+    
+    // Show selection alert initially since nothing is selected
+    updateSelectionAlert();
+});
+
+console.log('✅ Dashboard fully loaded with complete multilingual support');
+</script>
+</body>
+</html>
