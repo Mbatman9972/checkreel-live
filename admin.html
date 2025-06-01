@@ -49,6 +49,7 @@
             font-size: 2rem;
             font-weight: bold;
             color: white;
+            cursor: pointer;
         }
 
         .header-controls {
@@ -66,6 +67,12 @@
             border-radius: 8px;
             cursor: pointer;
             transition: all 0.3s ease;
+        }
+
+        #adminToggle {
+            display: none;
+            background: rgba(255, 0, 0, 0.3);
+            border: 1px solid rgba(255, 0, 0, 0.5);
         }
 
         .main-container {
@@ -562,6 +569,21 @@
             color: #fff;
         }
 
+        #adminSection {
+            display: none;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border-left: 4px solid #F44336;
+        }
+
+        #adminSection.active {
+            display: block;
+        }
+
         @media (max-width: 1200px) {
             .charts-grid {
                 grid-template-columns: 1fr;
@@ -605,27 +627,28 @@
 <body>
     <header class="header">
         <div class="logo-section">
-            <div class="logo">?? CheckReel Control Room</div>
+            <div class="logo" id="logoClick">🎯 CheckReel Control Room</div>
             <div id="pwaStatus" style="color: rgba(255,255,255,0.7); font-size: 0.9rem;"></div>
         </div>
         <div class="header-controls">
             <select id="languageSelector" class="language-selector">
-                <option value="en">???? English</option>
-                <option value="ar">???? ???????</option>
+                <option value="en">🇺🇸 English</option>
+                <option value="ar">🇸🇦 العربية</option>
             </select>
-            <button id="controlToggle" class="control-toggle">?? Live Mode</button>
-            <button id="installPWA" class="pwa-install" style="display: none;">?? Install App</button>
+            <button id="controlToggle" class="control-toggle">⚡ Live Mode</button>
+            <button id="adminToggle" class="control-toggle">🔑 Admin</button>
+            <button id="installPWA" class="pwa-install" style="display: none;">📱 Install App</button>
         </div>
     </header>
 
     <div class="status-bar">
         <div class="status-item">
             <div class="status-indicator online"></div>
-            <span data-i18n="systemStatus">System Status: Online</span>
+            <span id="systemStatus" data-i18n="systemStatus">System Status: Online</span>
         </div>
         <div class="status-item">
             <div class="status-indicator online"></div>
-            <span data-i18n="apiStatus">API: Healthy</span>
+            <span id="apiStatus" data-i18n="apiStatus">API: Healthy</span>
         </div>
         <div class="status-item">
             <div class="status-indicator warning"></div>
@@ -639,65 +662,84 @@
 
     <div class="main-container">
         <div class="dashboard-content">
+            <div id="adminSection">
+                <h3 class="section-title">
+                    <span>🔑</span>
+                    <span>Admin Panel - Tier Management</span>
+                </h3>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+                    <div>
+                        <h4 style="color: white; margin-bottom: 1rem;">Plus Tier Management</h4>
+                        <input type="email" id="plusEmailInput" placeholder="user@example.com" style="width: 100%; padding: 0.5rem; margin-bottom: 0.5rem; border-radius: 4px; border: 1px solid rgba(255,255,255,0.3); background: rgba(255,255,255,0.1); color: white;">
+                        <button onclick="addTierUser('plus')" style="background: rgba(76, 175, 80, 0.3); border: 1px solid rgba(76, 175, 80, 0.5); color: white; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer;">Add Plus User</button>
+                    </div>
+                    <div>
+                        <h4 style="color: white; margin-bottom: 1rem;">Premium Tier Management</h4>
+                        <input type="email" id="premiumEmailInput" placeholder="user@example.com" style="width: 100%; padding: 0.5rem; margin-bottom: 0.5rem; border-radius: 4px; border: 1px solid rgba(255,255,255,0.3); background: rgba(255,255,255,0.1); color: white;">
+                        <button onclick="addTierUser('premium')" style="background: rgba(76, 175, 80, 0.3); border: 1px solid rgba(76, 175, 80, 0.5); color: white; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer;">Add Premium User</button>
+                    </div>
+                </div>
+            </div>
+
             <div class="kpi-grid">
                 <div class="kpi-card">
                     <div class="kpi-header">
-                        <h4 class="kpi-title" data-i18n="todayRevenue">Today's Revenue</h4>
-                        <div class="kpi-icon">??</div>
+                        <h4 class="kpi-title" id="kpiTitle1" data-i18n="todayRevenue">Today's Revenue</h4>
+                        <div class="kpi-icon">💰</div>
                     </div>
-                    <div class="kpi-value">$1,247</div>
-                    <div class="kpi-change positive">? +18.4% <span style="font-size: 0.7rem;">vs yesterday</span></div>
+                    <div class="kpi-value" id="kpiValue1">$1,247</div>
+                    <div class="kpi-change positive">↗ +18.4% <span style="font-size: 0.7rem;">vs yesterday</span></div>
                 </div>
 
                 <div class="kpi-card">
                     <div class="kpi-header">
-                        <h4 class="kpi-title" data-i18n="activeScans">Active Scans</h4>
-                        <div class="kpi-icon">??</div>
+                        <h4 class="kpi-title" id="kpiTitle2" data-i18n="activeScans">Active Scans</h4>
+                        <div class="kpi-icon">🔍</div>
                     </div>
-                    <div class="kpi-value">2,845</div>
-                    <div class="kpi-change positive">? +12.3% <span style="font-size: 0.7rem;">this hour</span></div>
+                    <div class="kpi-value" id="kpiValue2">2,845</div>
+                    <div class="kpi-change positive">↗ +12.3% <span style="font-size: 0.7rem;">this hour</span></div>
                 </div>
 
                 <div class="kpi-card">
                     <div class="kpi-header">
                         <h4 class="kpi-title" data-i18n="violationsDetected">Violations Detected</h4>
-                        <div class="kpi-icon">??</div>
+                        <div class="kpi-icon">⚠️</div>
                     </div>
                     <div class="kpi-value">89</div>
-                    <div class="kpi-change negative">? -5.2% <span style="font-size: 0.7rem;">vs last hour</span></div>
+                    <div class="kpi-change negative">↘ -5.2% <span style="font-size: 0.7rem;">vs last hour</span></div>
                 </div>
 
                 <div class="kpi-card">
                     <div class="kpi-header">
-                        <h4 class="kpi-title" data-i18n="activeUsers">Active Users</h4>
-                        <div class="kpi-icon">??</div>
+                        <h4 class="kpi-title" id="kpiTitle3" data-i18n="activeUsers">Active Users</h4>
+                        <div class="kpi-icon">👥</div>
                     </div>
-                    <div class="kpi-value">18,926</div>
-                    <div class="kpi-change positive">? +7.8% <span style="font-size: 0.7rem;">online now</span></div>
+                    <div class="kpi-value" id="kpiValue3">18,926</div>
+                    <div class="kpi-change positive">↗ +7.8% <span style="font-size: 0.7rem;">online now</span></div>
                 </div>
 
                 <div class="kpi-card">
                     <div class="kpi-header">
                         <h4 class="kpi-title" data-i18n="responseTime">Avg Response Time</h4>
-                        <div class="kpi-icon">?</div>
+                        <div class="kpi-icon">⚡</div>
                     </div>
                     <div class="kpi-value">143ms</div>
-                    <div class="kpi-change positive">? -12ms <span style="font-size: 0.7rem;">improved</span></div>
+                    <div class="kpi-change positive">↗ -12ms <span style="font-size: 0.7rem;">improved</span></div>
                 </div>
 
                 <div class="kpi-card">
                     <div class="kpi-header">
-                        <h4 class="kpi-title" data-i18n="accuracy">AI Accuracy</h4>
-                        <div class="kpi-icon">??</div>
+                        <h4 class="kpi-title" id="kpiTitle4" data-i18n="accuracy">AI Accuracy</h4>
+                        <div class="kpi-icon">🎯</div>
                     </div>
-                    <div class="kpi-value">97.2%</div>
-                    <div class="kpi-change positive">? +0.3% <span style="font-size: 0.7rem;">this week</span></div>
+                    <div class="kpi-value" id="kpiValue4">97.2%</div>
+                    <div class="kpi-change positive">↗ +0.3% <span style="font-size: 0.7rem;">this week</span></div>
                 </div>
             </div>
 
             <div class="user-tier-management">
                 <h3 class="section-title">
-                    <span>?</span>
+                    <span>⚡</span>
                     <span data-i18n="userTierManagement">User Tier Management</span>
                 </h3>
                 <form class="tier-upgrade-form" id="tierUpgradeForm">
@@ -714,7 +756,7 @@
                         </select>
                     </div>
                     <button type="submit" class="btn-upgrade" id="upgradeBtn">
-                        <span>??</span>
+                        <span>⚡</span>
                         <span data-i18n="upgradeTier">Upgrade Tier</span>
                     </button>
                 </form>
@@ -723,7 +765,7 @@
             <div class="charts-grid">
                 <div class="chart-container">
                     <div class="chart-header">
-                        <h3 class="chart-title">?? <span data-i18n="revenueChart">Revenue Analytics</span></h3>
+                        <h3 class="chart-title">📊 <span data-i18n="revenueChart">Revenue Analytics</span></h3>
                         <div class="chart-controls">
                             <button class="chart-btn active" onclick="updateChart('24h')">24H</button>
                             <button class="chart-btn" onclick="updateChart('7d')">7D</button>
@@ -740,37 +782,37 @@
 
                 <div class="chart-container">
                     <div class="chart-header">
-                        <h3 class="chart-title">?? <span data-i18n="platformChart">Platform Distribution</span></h3>
+                        <h3 class="chart-title">📱 <span data-i18n="platformChart">Platform Distribution</span></h3>
                     </div>
                     <div class="control-display">
                         <div class="platform-grid">
                             <div class="platform-box">
-                                <div class="platform-icon">??</div>
+                                <div class="platform-icon">🎵</div>
                                 <div class="platform-name">TikTok</div>
                                 <div class="platform-count" id="tiktokCount">1,247</div>
                             </div>
                             <div class="platform-box">
-                                <div class="platform-icon">??</div>
+                                <div class="platform-icon">📷</div>
                                 <div class="platform-name">Instagram</div>
                                 <div class="platform-count" id="instaCount">892</div>
                             </div>
                             <div class="platform-box">
-                                <div class="platform-icon">??</div>
+                                <div class="platform-icon">🎥</div>
                                 <div class="platform-name">YouTube</div>
                                 <div class="platform-count" id="youtubeCount">634</div>
                             </div>
                             <div class="platform-box">
-                                <div class="platform-icon">??</div>
+                                <div class="platform-icon">👍</div>
                                 <div class="platform-name">Facebook</div>
                                 <div class="platform-count" id="facebookCount">423</div>
                             </div>
                             <div class="platform-box">
-                                <div class="platform-icon">??</div>
+                                <div class="platform-icon">🐦</div>
                                 <div class="platform-name">Twitter</div>
                                 <div class="platform-count" id="twitterCount">287</div>
                             </div>
                             <div class="platform-box">
-                                <div class="platform-icon">??</div>
+                                <div class="platform-icon">💼</div>
                                 <div class="platform-name">LinkedIn</div>
                                 <div class="platform-count" id="linkedinCount">156</div>
                             </div>
@@ -781,7 +823,7 @@
 
             <div class="chart-container">
                 <div class="chart-header">
-                    <h3 class="chart-title">?? <span data-i18n="violationsChart">Real-time Violations Detection</span></h3>
+                    <h3 class="chart-title">⚡ <span data-i18n="violationsChart">Real-time Violations Detection</span></h3>
                     <div class="chart-controls">
                         <button class="chart-btn active" onclick="updateViolationsChart('live')">Live</button>
                         <button class="chart-btn" onclick="updateViolationsChart('hourly')">Hourly</button>
@@ -797,15 +839,31 @@
 
             <div class="analytics-grid">
                 <div class="analytics-card">
-                    <h3 class="analytics-title">? <span data-i18n="performanceMetrics">Performance Metrics</span></h3>
+                    <h3 class="analytics-title">⚡ <span data-i18n="performanceMetrics">Performance Metrics</span></h3>
                     <div class="metric-item">
                         <span class="metric-label" data-i18n="copyright">Copyright</span>
                         <span class="metric-value">24.0%</span>
                     </div>
+                    <div class="metric-item">
+                        <span class="metric-label" data-i18n="avgScanTime">Avg Scan Time</span>
+                        <span class="metric-value">2.3s</span>
+                    </div>
+                    <div class="metric-item">
+                        <span class="metric-label" data-i18n="successRate">Success Rate</span>
+                        <span class="metric-value">99.8%</span>
+                    </div>
+                    <div class="metric-item">
+                        <span class="metric-label" data-i18n="throughput">Throughput</span>
+                        <span class="metric-value">1,247/min</span>
+                    </div>
+                    <div class="metric-item">
+                        <span class="metric-label" data-i18n="errorRate">Error Rate</span>
+                        <span class="metric-value">0.2%</span>
+                    </div>
                 </div>
 
                 <div class="analytics-card">
-                    <h3 class="analytics-title">?? <span data-i18n="geographic">Geographic Distribution</span></h3>
+                    <h3 class="analytics-title">🌍 <span data-i18n="geographic">Geographic Distribution</span></h3>
                     <div class="metric-item">
                         <span class="metric-label" data-i18n="northAmerica">North America</span>
                         <span class="metric-value">42.3%</span>
@@ -823,52 +881,68 @@
                         <span class="metric-value">7.5%</span>
                     </div>
                 </div>
+
+                <div class="analytics-card">
+                    <h3 class="analytics-title">🛡️ <span data-i18n="contentCategories">Content Categories</span></h3>
+                    <div class="metric-item">
+                        <span class="metric-label" data-i18n="inappropriate">Inappropriate Language</span>
+                        <span class="metric-value">34.2%</span>
+                    </div>
+                    <div class="metric-item">
+                        <span class="metric-label" data-i18n="violence">Violence/Gore</span>
+                        <span class="metric-value">18.7%</span>
+                    </div>
+                    <div class="metric-item">
+                        <span class="metric-label" data-i18n="spam">Spam/Scam</span>
+                        <span class="metric-value">23.1%</span>
+                    </div>
+                </div>
             </div>
         </div>
 
         <div class="sidebar">
             <div class="sidebar-section">
-                <h3 class="sidebar-title">??? <span data-i18n="controlActions">Control Actions</span></h3>
+                <h3 class="sidebar-title">⚡ <span data-i18n="controlActions">Control Actions</span></h3>
                 <div class="quick-action">
-                    <div class="action-icon">??</div>
+                    <div class="action-icon">📊</div>
                     <div class="action-text" data-i18n="scanHistory">Scan History</div>
                 </div>
                 <div class="quick-action">
-                    <div class="action-icon">??</div>
+                    <div class="action-icon">📋</div>
                     <div class="action-text" data-i18n="platformGuidelines">Platform Rules</div>
                 </div>
                 <div class="quick-action">
-                    <div class="action-icon">??</div>
+                    <div class="action-icon">⚙️</div>
                     <div class="action-text" data-i18n="settings">System Settings</div>
                 </div>
                 <div class="quick-action">
-                    <div class="action-icon">??</div>
+                    <div class="action-icon">🆘</div>
                     <div class="action-text" data-i18n="support">Support Center</div>
                 </div>
                 <div class="quick-action">
-                    <div class="action-icon">??</div>
+                    <div class="action-icon">🚨</div>
                     <div class="action-text" data-i18n="emergency">Emergency Mode</div>
                 </div>
             </div>
 
             <div class="sidebar-section">
-                <h3 class="sidebar-title">?? <span data-i18n="criticalAlerts">Critical Alerts</span></h3>
+                <h3 class="sidebar-title">🚨 <span data-i18n="criticalAlerts">Critical Alerts</span></h3>
                 <div class="alert-item critical">
-                    <div class="alert-icon">??</div>
+                    <div class="alert-icon">🔴</div>
                     <div class="alert-details">
                         <div class="alert-text">High violation rate detected</div>
                         <div class="alert-time">2 minutes ago</div>
                     </div>
                 </div>
                 <div class="alert-item warning">
-                    <div class="alert-icon">??</div>
+                    <div class="alert-icon">🟡</div>
                     <div class="alert-details">
                         <div class="alert-text">API response time spike</div>
                         <div class="alert-time">5 minutes ago</div>
                     </div>
                 </div>
                 <div class="alert-item info">
-                    <div class="alert-icon">??</div>
+                    <div class="alert-icon">🔵</div>
                     <div class="alert-details">
                         <div class="alert-text">Traffic surge: +67% users</div>
                         <div class="alert-time">12 minutes ago</div>
@@ -877,30 +951,30 @@
             </div>
 
             <div class="sidebar-section">
-                <h3 class="sidebar-title">?? <span data-i18n="liveActivity">Live Activity</span></h3>
+                <h3 class="sidebar-title">📡 <span data-i18n="liveActivity">Live Activity</span></h3>
                 <div class="activity-item">
-                    <div class="activity-icon">??</div>
+                    <div class="activity-icon">🎵</div>
                     <div class="activity-details">
                         <div class="activity-text">TikTok: Music copyright claim</div>
                         <div class="activity-time">Just now</div>
                     </div>
                 </div>
                 <div class="activity-item">
-                    <div class="activity-icon">??</div>
+                    <div class="activity-icon">📷</div>
                     <div class="activity-details">
                         <div class="activity-text">Instagram: Story flagged</div>
                         <div class="activity-time">1 min ago</div>
                     </div>
                 </div>
                 <div class="activity-item">
-                    <div class="activity-icon">??</div>
+                    <div class="activity-icon">🎥</div>
                     <div class="activity-details">
                         <div class="activity-text">YouTube: Age-inappropriate content</div>
                         <div class="activity-time">3 min ago</div>
                     </div>
                 </div>
                 <div class="activity-item">
-                    <div class="activity-icon">??</div>
+                    <div class="activity-icon">⭐</div>
                     <div class="activity-details">
                         <div class="activity-text">New Premium user registered</div>
                         <div class="activity-time">5 min ago</div>
@@ -934,34 +1008,38 @@
                 tierManagement: "Tier Management"
             },
             ar: {
-                systemStatus: "???? ??????: ????",
-                apiStatus: "????? ???????: ?????",
-                lastUpdate: "??? ?????: ????",
-                activeUsers: "?????????? ???????",
-                contentChecks: "?????? ???????",
-                payingSubscribers: "????????? ?????????",
-                revenue: "?????????",
-                adminPanel: "???? ???????",
-                tierManagement: "????? ?????????"
+                systemStatus: "حالة النظام: متصل",
+                apiStatus: "واجهة البرمجة: سليمة",
+                lastUpdate: "آخر تحديث: الآن",
+                activeUsers: "المستخدمون النشطون",
+                contentChecks: "فحوص المحتوى",
+                payingSubscribers: "المشتركون الدافعون",
+                revenue: "الإيرادات",
+                adminPanel: "لوحة الإدارة",
+                tierManagement: "إدارة المستويات"
             }
         };
 
         function updateLanguage() {
             var lang = languages[currentLanguage];
-            document.getElementById("systemStatus").textContent = lang.systemStatus;
-            document.getElementById("apiStatus").textContent = lang.apiStatus;
-            document.getElementById("kpiTitle1").textContent = lang.activeUsers;
-            document.getElementById("kpiTitle2").textContent = lang.contentChecks;
-            document.getElementById("kpiTitle3").textContent = lang.payingSubscribers;
-            document.getElementById("kpiTitle4").textContent = lang.revenue;
+            var systemStatusEl = document.getElementById("systemStatus");
+            var apiStatusEl = document.getElementById("apiStatus");
+            
+            if (systemStatusEl) systemStatusEl.textContent = lang.systemStatus;
+            if (apiStatusEl) apiStatusEl.textContent = lang.apiStatus;
+            
             document.body.className = currentLanguage === "ar" ? "rtl" : "";
         }
 
         function loadKPIs() {
             setTimeout(function() {
-                document.getElementById("kpiValue1").textContent = "24,891";
-                document.getElementById("kpiValue2").textContent = "156,234";
-                document.getElementById("kpiValue4").textContent = "$89,420";
+                var kpiValue1 = document.getElementById("kpiValue1");
+                var kpiValue2 = document.getElementById("kpiValue2");
+                var kpiValue4 = document.getElementById("kpiValue4");
+                
+                if (kpiValue1) kpiValue1.textContent = "24,891";
+                if (kpiValue2) kpiValue2.textContent = "156,234";
+                if (kpiValue4) kpiValue4.textContent = "$89,420";
             }, 1000);
             loadPayingCount();
         }
@@ -974,9 +1052,13 @@
                 if (xhr.readyState === 4 && xhr.status === 200) {
                     try {
                         var response = JSON.parse(xhr.responseText);
-                        document.getElementById("kpiValue3").textContent = response.success ? response.count.toString() : "892";
+                        var kpiValue3 = document.getElementById("kpiValue3");
+                        if (kpiValue3) {
+                            kpiValue3.textContent = response.success ? response.count.toString() : "892";
+                        }
                     } catch (e) {
-                        document.getElementById("kpiValue3").textContent = "892";
+                        var kpiValue3 = document.getElementById("kpiValue3");
+                        if (kpiValue3) kpiValue3.textContent = "892";
                     }
                 }
             };
@@ -985,11 +1067,17 @@
 
         function addTierUser(tier) {
             var emailInput = document.getElementById(tier + "EmailInput");
+            if (!emailInput) {
+                alert("Email input not found");
+                return;
+            }
+            
             var email = emailInput.value.trim();
             if (!email) {
                 alert("Please enter an email address");
                 return;
             }
+            
             var xhr = new XMLHttpRequest();
             xhr.open("POST", "https://script.google.com/macros/s/AKfycbwKWcb5Tx2wHhyGn5Bwec4nwumlSibm9VPpJ2lR269M8e_xt-x7bUe2GmZX17FKJRk/exec", true);
             xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
@@ -997,6 +1085,7 @@
                 if (xhr.readyState === 4 && xhr.status === 200) {
                     emailInput.value = "";
                     alert("User added successfully!");
+                    loadPayingCount(); // Refresh the count
                 }
             };
             xhr.send("action=syncTier&email=" + encodeURIComponent(email) + "&tier=" + tier);
@@ -1007,35 +1096,110 @@
             if (password === "MM7286CR") {
                 isAdminMode = !isAdminMode;
                 var adminSection = document.getElementById("adminSection");
-                if (isAdminMode) {
-                    adminSection.classList.add("active");
-                } else {
-                    adminSection.classList.remove("active");
+                if (adminSection) {
+                    if (isAdminMode) {
+                        adminSection.classList.add("active");
+                    } else {
+                        adminSection.classList.remove("active");
+                    }
                 }
             }
         }
 
-        document.getElementById("logoClick").addEventListener("click", function() {
-            logoClickCount++;
-            if (logoClickCount >= 5) {
-                document.getElementById("adminToggle").style.display = "block";
-                logoClickCount = 0;
+        function updateChart(range) {
+            // Chart update functionality - placeholder
+            var buttons = document.querySelectorAll('.chart-btn');
+            buttons.forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            // Update revenue value based on range
+            var revenueValue = document.getElementById('revenueValue');
+            if (revenueValue) {
+                switch(range) {
+                    case '24h': revenueValue.textContent = '$24,847'; break;
+                    case '7d': revenueValue.textContent = '$172,943'; break;
+                    case '30d': revenueValue.textContent = '$687,234'; break;
+                    case '1y': revenueValue.textContent = '$8,234,567'; break;
+                }
+            }
+        }
+
+        function updateViolationsChart(type) {
+            // Violations chart update functionality - placeholder
+            var buttons = document.querySelectorAll('.chart-btn');
+            buttons.forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            // Update violations value based on type
+            var violationsValue = document.getElementById('violationsValue');
+            if (violationsValue) {
+                switch(type) {
+                    case 'live': violationsValue.textContent = '89'; break;
+                    case 'hourly': violationsValue.textContent = '247'; break;
+                    case 'daily': violationsValue.textContent = '1,432'; break;
+                }
+            }
+        }
+
+        // Form submission handler
+        document.addEventListener('DOMContentLoaded', function() {
+            var tierUpgradeForm = document.getElementById('tierUpgradeForm');
+            if (tierUpgradeForm) {
+                tierUpgradeForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    var userEmail = document.getElementById('userEmail');
+                    var tierSelect = document.getElementById('tierSelect');
+                    
+                    if (userEmail && tierSelect && userEmail.value && tierSelect.value) {
+                        addTierUser(tierSelect.value);
+                        userEmail.value = '';
+                        tierSelect.value = '';
+                    } else {
+                        alert('Please fill in all fields');
+                    }
+                });
             }
         });
 
-        document.getElementById("languageSelector").addEventListener("change", function() {
-            currentLanguage = this.value;
-            updateLanguage();
-            localStorage.setItem("checkreel_language", currentLanguage);
-        });
+        // Event listeners with safety checks
+        document.addEventListener('DOMContentLoaded', function() {
+            var logoClick = document.getElementById("logoClick");
+            if (logoClick) {
+                logoClick.addEventListener("click", function() {
+                    logoClickCount++;
+                    if (logoClickCount >= 5) {
+                        var adminToggle = document.getElementById("adminToggle");
+                        if (adminToggle) {
+                            adminToggle.style.display = "block";
+                        }
+                        logoClickCount = 0;
+                    }
+                });
+            }
 
-        document.getElementById("adminToggle").addEventListener("click", toggleAdmin);
+            var languageSelector = document.getElementById("languageSelector");
+            if (languageSelector) {
+                languageSelector.addEventListener("change", function() {
+                    currentLanguage = this.value;
+                    updateLanguage();
+                    localStorage.setItem("checkreel_language", currentLanguage);
+                });
+            }
+
+            var adminToggle = document.getElementById("adminToggle");
+            if (adminToggle) {
+                adminToggle.addEventListener("click", toggleAdmin);
+            }
+        });
 
         window.addEventListener("load", function() {
             var savedLanguage = localStorage.getItem("checkreel_language");
             if (savedLanguage && languages[savedLanguage]) {
                 currentLanguage = savedLanguage;
-                document.getElementById("languageSelector").value = currentLanguage;
+                var languageSelector = document.getElementById("languageSelector");
+                if (languageSelector) {
+                    languageSelector.value = currentLanguage;
+                }
             }
             updateLanguage();
             loadKPIs();
@@ -1043,36 +1207,3 @@
     </script>
 </body>
 </html>
-                        <span class="metric-label" data-i18n="avgScanTime">Avg Scan Time</span>
-                        <span class="metric-value">2.3s</span>
-                    </div>
-                    <div class="metric-item">
-                        <span class="metric-label" data-i18n="successRate">Success Rate</span>
-                        <span class="metric-value">99.8%</span>
-                    </div>
-                    <div class="metric-item">
-                        <span class="metric-label" data-i18n="throughput">Throughput</span>
-                        <span class="metric-value">1,247/min</span>
-                    </div>
-                    <div class="metric-item">
-                        <span class="metric-label" data-i18n="errorRate">Error Rate</span>
-                        <span class="metric-value">0.2%</span>
-                    </div>
-                </div>
-
-                <div class="analytics-card">
-                    <h3 class="analytics-title">?? <span data-i18n="contentCategories">Content Categories</span></h3>
-                    <div class="metric-item">
-                        <span class="metric-label" data-i18n="inappropriate">Inappropriate Language</span>
-                        <span class="metric-value">34.2%</span>
-                    </div>
-                    <div class="metric-item">
-                        <span class="metric-label" data-i18n="violence">Violence/Gore</span>
-                        <span class="metric-value">18.7%</span>
-                    </div>
-                    <div class="metric-item">
-                        <span class="metric-label" data-i18n="spam">Spam/Scam</span>
-                        <span class="metric-value">23.1%</span>
-                    </div>
-                    <div class="metric-item">
-
