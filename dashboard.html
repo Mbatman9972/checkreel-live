@@ -102,6 +102,22 @@ letter-spacing: 0.5px;
 .tier-free { background: #e3f2fd; color: #1976d2; }
 .tier-plus { background: #f3e5f5; color: #7b1fa2; }
 .tier-premium { background: #fff3e0; color: #f57c00; }
+/* Admin badge */
+.admin-badge {
+    background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+    color: white;
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: bold;
+    margin-left: 10px;
+    animation: adminGlow 2s infinite;
+}
+
+@keyframes adminGlow {
+    0%, 100% { box-shadow: 0 0 5px rgba(255, 107, 107, 0.5); }
+    50% { box-shadow: 0 0 15px rgba(255, 107, 107, 0.8); }
+}
 
 .dashboard-grid {
 display: grid;
@@ -1063,6 +1079,7 @@ gap: 20px;
 </div>
 <span id="scansLeft">3 scans left</span>
 <span id="tierBadge" class="tier-badge tier-free">Free Trial</span>
+<span id="adminBadge" class="admin-badge" style="display: none;">ADMIN</span>
 </div>
 </div>
 
@@ -1326,7 +1343,41 @@ if (!window.safeStorage) {
     removeItem: (k) => { try { localStorage.removeItem(k) } catch {} }
   };
 }
+// Admin Override System
+const ADMIN_PASSWORD = "checkreel2025"; // Change this to your secure password
 
+function checkAdminAccess() {
+    const isAdmin = sessionStorage.getItem('checkreel_admin') === 'true';
+    return isAdmin;
+}
+
+function promptAdminLogin() {
+    const password = prompt('Enter admin password to access tier override:');
+    if (password === ADMIN_PASSWORD) {
+        sessionStorage.setItem('checkreel_admin', 'true');
+        alert('Admin access granted! You can now switch tiers freely.');
+        
+        // Show admin badge
+        const adminBadge = document.getElementById('adminBadge');
+        if (adminBadge) adminBadge.style.display = 'inline-block';
+        
+        return true;
+    } else if (password !== null) {
+        alert('Invalid password!');
+    }
+    return false;
+}
+
+// Add admin login trigger (Ctrl+Shift+A)
+document.addEventListener('keydown', function(e) {
+    if (e.ctrlKey && e.shiftKey && e.key === 'A') {
+        if (!checkAdminAccess()) {
+            promptAdminLogin();
+        } else {
+            alert('Already logged in as admin!');
+        }
+    }
+});
 // Payment Configuration - UPDATE THESE URLs WHEN READY
 const PAYMENT_CONFIG = {
     // Stripe/PayPal URLs - replace with your actual payment processor URLs
@@ -1453,26 +1504,11 @@ function handlePaymentCancelled() {
 
 // Enhanced tier selection with payment verification
 function selectTier(tier) {
-    // Free tier - always allowed
-    if (tier === 'free') {
+    // Check if admin or selecting free tier
+    if (tier === 'free' || checkAdminAccess()) {
         currentTier = tier;
         safeStorage.setItem('checkreel_tier', tier);
         updateTierUI(tier);
-        return;
-    }
-    
-    // Paid tiers - check if user has valid subscription
-    const hasValidSubscription = checkSubscriptionStatus(tier);
-    
-    if (hasValidSubscription) {
-        currentTier = tier;
-        safeStorage.setItem('checkreel_tier', tier);
-        updateTierUI(tier);
-        
-        if (tier !== 'free') {
-            safeStorage.setItem('checkreel_scans_used', '0');
-        }
-        
         updateTierDisplay();
         updateScansCounter();
         updatePlatformCounter();
@@ -1483,8 +1519,12 @@ function selectTier(tier) {
         } else {
             historySection.classList.remove('visible');
         }
+        
+        if (tier !== 'free') {
+            safeStorage.setItem('checkreel_scans_used', '0');
+        }
     } else {
-        // No valid subscription - show payment modal
+        // Not admin - show payment modal
         showPaymentModal(tier);
     }
 }
