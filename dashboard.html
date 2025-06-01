@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -174,6 +174,12 @@ height: 35px;
 margin-bottom: 8px;
 border-radius: 6px;
 object-fit: cover;
+}
+
+/* FIX 3: Global icon visibility */
+.region-option[data-region="global"] .region-icon {
+    background: #f0f0f0;
+    padding: 5px;
 }
 
 .region-name {
@@ -652,17 +658,21 @@ height: 100%;
 background: rgba(0, 0, 0, 0.8);
 z-index: 2000;
 padding: 20px;
+overflow-y: auto;
 }
 
+/* FIX 1: Payment modal responsiveness */
 .payment-content {
 background: white;
 border-radius: 20px;
 padding: 40px;
 max-width: 500px;
-margin: 50px auto;
+margin: 20px auto;
 position: relative;
 text-align: center;
 box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+max-height: 90vh;
+overflow-y: auto;
 }
 
 .payment-header {
@@ -712,7 +722,7 @@ gap: 10px;
 }
 
 .payment-features li::before {
-content: "?";
+content: "✅";
 font-size: 16px;
 }
 
@@ -785,7 +795,7 @@ color: #666;
 }
 
 .payment-security::before {
-content: "??";
+content: "🔒";
 margin-right: 5px;
 }
 
@@ -859,19 +869,23 @@ font-weight: 600;
     background: rgba(0, 0, 0, 0.8);
     z-index: 3000;
     padding: 20px;
+    overflow-y: auto;
 }
 
+/* FIX 2: Country modal responsiveness */
 .country-modal-content {
     background: rgba(255, 255, 255, 0.95);
     backdrop-filter: blur(15px);
     border-radius: 20px;
     padding: 30px;
     max-width: 600px;
-    max-height: 80vh;
-    margin: 50px auto;
+    max-height: 85vh;
+    margin: 20px auto;
     position: relative;
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
     overflow: hidden;
+    display: flex;
+    flex-direction: column;
 }
 
 .country-modal-header {
@@ -932,6 +946,8 @@ font-weight: 600;
     max-height: 400px;
     overflow-y: auto;
     padding-right: 10px;
+    flex: 1;
+    min-height: 0;
 }
 
 .country-option {
@@ -1009,15 +1025,21 @@ flex-direction: column;
 gap: 20px;
 }
 
+.payment-content {
+    margin: 10px;
+    padding: 30px 20px;
+    max-height: calc(100vh - 20px);
+}
+
 .country-modal-content {
-    margin: 20px auto;
-    max-height: 90vh;
+    margin: 10px;
+    max-height: calc(100vh - 20px);
     padding: 20px;
 }
 
 .country-grid {
     grid-template-columns: 1fr;
-    max-height: 350px;
+    max-height: calc(100vh - 200px);
 }
 
 .country-modal-title {
@@ -1070,7 +1092,7 @@ gap: 20px;
 
 <div class="dashboard-grid">
 <div class="card">
-<h2 id="select-region"> Select Region</h2>
+<h2 id="select-region">🌍 Select Region</h2>
 <div class="region-grid">
 <div class="region-option" data-region="middle-east" onclick="selectRegion('middle-east')">
 <img src="images/region-icons/middle-east.png" alt="Middle East" class="region-icon">
@@ -1092,7 +1114,7 @@ gap: 20px;
 </div>
 
 <div class="card">
-<h2 id="select-platform">?? Select Target Platform <span id="platformCounter"></span></h2>
+<h2 id="select-platform">📱 Select Target Platform <span id="platformCounter"></span></h2>
 <div class="platforms-grid">
 <div class="platform-option" data-platform="tiktok" onclick="selectPlatform('tiktok')">
 <img src="images/tiktok.png" alt="TikTok" class="platform-icon">
@@ -1122,12 +1144,12 @@ gap: 20px;
 </div>
 
 <div class="card">
-<h2 id="upload-content"> Upload Content to Check</h2>
+<h2 id="upload-content">📁 Upload Content to Check</h2>
 <div id="selectionAlert" class="selection-alert">
 <span id="selection-alert">Please select a region and platform before uploading content for analysis</span>
 </div>
 <div class="upload-area" id="uploadArea">
-<div class="upload-icon"></div>
+<div class="upload-icon">📁</div>
 <p id="drop-here">Drop your content here</p>
 <p id="click-browse">or click to browse files</p>
 <small>Supports: MP4, MOV, AVI, MP3, WAV, JPG, PNG (Max: 100MB)</small>
@@ -1151,7 +1173,7 @@ gap: 20px;
 <div class="scan-history" id="scanHistory">
 <div class="history-header" onclick="toggleHistorySection()">
 <h3 id="scan-history-title">Scan History</h3>
-<span class="history-toggle" id="historyToggle">?</span>
+<span class="history-toggle" id="historyToggle">▼</span>
 </div>
 
 <div class="history-content" id="historyContent">
@@ -1183,7 +1205,7 @@ gap: 20px;
 <div class="score-value" id="scoreValue">55</div>
 </div>
 <div class="status-indicator">
-<span class="status-icon" id="statusIcon">?</span>
+<span class="status-icon" id="statusIcon">❌</span>
 <span id="statusText">Major Issues - Do Not Post</span>
 </div>
 </div>
@@ -1529,8 +1551,19 @@ function showUpgradePrompt(feature) {
 }
 
 // COUNTRY MODAL FUNCTIONS
-// Modified region selection function
+// FIX 4: Modified region selection function
 function selectRegion(region) {
+    // Clear all previous region selections first
+    document.querySelectorAll('.region-option').forEach(opt => {
+        opt.classList.remove('selected');
+        // Reset region name text to original
+        const regionName = opt.querySelector('.region-name');
+        if (regionName) {
+            const regionKey = opt.getAttribute('data-region');
+            regionName.textContent = getTranslation(regionKey);
+        }
+    });
+    
     // Show country modal instead of directly selecting region
     currentModalRegion = region;
     showCountryModal(region);
@@ -1588,10 +1621,20 @@ function populateCountries(region) {
     });
 }
 
-// Select country and close modal
+// FIX 4: Select country and ensure single selection
 function selectCountry(countryKey, countryName) {
     selectedCountry = countryKey;
     selectedRegion = currentModalRegion;
+    
+    // Clear all region selections first
+    document.querySelectorAll('.region-option').forEach(opt => {
+        opt.classList.remove('selected');
+        const regionName = opt.querySelector('.region-name');
+        if (regionName) {
+            const regionKey = opt.getAttribute('data-region');
+            regionName.textContent = getTranslation(regionKey);
+        }
+    });
     
     // Update UI to show region + country selection
     updateRegionSelection(currentModalRegion, countryName);
@@ -1909,13 +1952,13 @@ function generateDynamicResults() {
     // Generate multilingual status messages
     if (scenario.score >= 90) {
         status = getTranslation('noIssues');
-        statusIcon = '?';
+        statusIcon = '✅';
     } else if (scenario.score >= 70) {
         status = getTranslation('minorIssues');
-        statusIcon = '??';
+        statusIcon = '⚠️';
     } else {
         status = getTranslation('majorIssues');
-        statusIcon = '?';
+        statusIcon = '❌';
     }
     
     // Generate multilingual issues and recommendations with platform/region context
@@ -1925,65 +1968,65 @@ function generateDynamicResults() {
     if (userTier === 'free') {
         issues = scenario.issueCount > 0 ? [
             { 
-                icon: '??', 
+                icon: '⚠️', 
                 text: `${scenario.issueCount} compliance issues detected for ${platformText}`
             }
         ] : [];
         recommendations = [
             { 
-                icon: '??', 
+                icon: '💡', 
                 text: 'Upgrade to Plus or Premium for detailed analysis'
             }
         ];
     } else if (userTier === 'plus') {
         issues = scenario.issueCount > 0 ? [
             { 
-                icon: '??', 
+                icon: '🔊', 
                 text: getTranslation('audioLevelsExceed', { platform: platformText })
             },
             { 
-                icon: '??', 
+                icon: '📋', 
                 text: getTranslation('contentViolateGuidelines', { region: regionText })
             }
         ].slice(0, Math.min(scenario.issueCount, 2)) : [];
         
         recommendations = [
             { 
-                icon: '??', 
+                icon: '📈', 
                 text: getTranslation('useTrendingHashtags', { platform: platformText })
             },
             { 
-                icon: '?', 
+                icon: '⏰', 
                 text: getTranslation('bestPostingTime', { region: regionText })
             }
         ];
     } else { // premium
         issues = scenario.issueCount > 0 ? [
             { 
-                icon: '??', 
+                icon: '🎵', 
                 text: 'Audio enhancement needed - our AI recommends voice optimization'
             },
             { 
-                icon: '??', 
+                icon: '📹', 
                 text: 'Visual quality below platform standards'
             },
             { 
-                icon: '??', 
+                icon: '⏱️', 
                 text: `Video pacing needs adjustment for ${platformText}`
             }
         ].slice(0, Math.min(scenario.issueCount, 3)) : [];
         
         recommendations = [
             { 
-                icon: '??', 
+                icon: '🧠', 
                 text: 'AI Analysis: Adjust content pacing for better engagement'
             },
             { 
-                icon: '??', 
+                icon: '🎯', 
                 text: 'Optimization tip: Add stronger hooks in first 3 seconds'
             },
             { 
-                icon: '?', 
+                icon: '⭐', 
                 text: 'Our advanced AI suggests format tweaks for viral potential'
             }
         ];
@@ -2202,9 +2245,9 @@ const DASHBOARD_TRANSLATIONS = {
         'plus-features': 'Enhanced compliance check<br>Detailed insights<br>Scan history<br>Priority support',
         'premium-features': 'Full compliance suite<br>Advanced analytics<br>Team features<br>White-label reports<br>API access<br>Dedicated support',
         'selection-alert': 'Please select a region and platform before uploading content for analysis',
-        'select-region': '?? Select Region',
-        'select-platform': '?? Select Target Platform',
-        'upload-content': '?? Upload Content to Check',
+        'select-region': '🌍 Select Region',
+        'select-platform': '📱 Select Target Platform',
+        'upload-content': '📁 Upload Content to Check',
         'drop-here': 'Drop your content here',
         'click-browse': 'or click to browse files',
         'start-check': 'Start Content Check',
@@ -2353,31 +2396,31 @@ const DASHBOARD_TRANSLATIONS = {
         'free-scans': '3 analyses',
         'plus-scans': '20 analyses/mois',
         'premium-scans': '40 analyses/mois',
-        'free-features': 'V�rification de conformit� de base<br>R�sultats standards',
-        'plus-features': 'V�rification de conformit� am�lior�e<br>Informations d�taill�es<br>Historique des analyses<br>Support prioritaire',
-        'premium-features': 'Suite de conformit� compl�te<br>Analyses avanc�es<br>Fonctionnalit�s d\'�quipe<br>Rapports en marque blanche<br>Acc�s API<br>Support d�di�',
-        'selection-alert': 'Veuillez s�lectionner une r�gion et une plateforme avant de t�l�charger le contenu pour analyse',
-        'select-region': '?? S�lectionner la r�gion',
-        'select-platform': '?? S�lectionner la plateforme cible',
-        'upload-content': '?? T�l�charger le contenu � v�rifier',
-        'drop-here': 'D�posez votre contenu ici',
+        'free-features': 'Vérification de conformité de base<br>Résultats standards',
+        'plus-features': 'Vérification de conformité améliorée<br>Informations détaillées<br>Historique des analyses<br>Support prioritaire',
+        'premium-features': 'Suite de conformité complète<br>Analyses avancées<br>Fonctionnalités d\'équipe<br>Rapports en marque blanche<br>Accès API<br>Support dédié',
+        'selection-alert': 'Veuillez sélectionner une région et une plateforme avant de télécharger le contenu pour analyse',
+        'select-region': '🌍 Sélectionner la région',
+        'select-platform': '📱 Sélectionner la plateforme cible',
+        'upload-content': '📁 Télécharger le contenu à vérifier',
+        'drop-here': 'Déposez votre contenu ici',
         'click-browse': 'ou cliquez pour parcourir les fichiers',
-        'start-check': 'Commencer la v�rification du contenu',
+        'start-check': 'Commencer la vérification du contenu',
         'analyzing': 'Analyse en cours...',
         'scan-history-title': 'Historique des analyses',
         'all-scans': 'Toutes les analyses',
-        'by-region': 'Par r�gion',
+        'by-region': 'Par région',
         'by-platform': 'Par plateforme',
-        'compliance-report': 'Rapport de conformit�',
-        'issues-found': 'Probl�mes trouv�s',
+        'compliance-report': 'Rapport de conformité',
+        'issues-found': 'Problèmes trouvés',
         'recommendations': 'Recommandations',
         'active-users': 'Utilisateurs actifs',
-        'content-scanned': 'Contenu analys�',
-        'success-rate': 'Taux de r�ussite',
+        'content-scanned': 'Contenu analysé',
+        'success-rate': 'Taux de réussite',
         'platforms': 'Plateformes',
-        'scans-used': 'Analyses utilis�es (Test)',
+        'scans-used': 'Analyses utilisées (Test)',
         'scans-left': 'analyses restantes',
-        'recommended': 'RECOMMAND�',
+        'recommended': 'RECOMMANDÉ',
         'middle-east': 'Moyen-Orient',
         'global': 'Global',
         'europe': 'Europe',
@@ -2389,40 +2432,40 @@ const DASHBOARD_TRANSLATIONS = {
         'twitter': 'Twitter',
         'snapchat': 'Snapchat',
         'score': 'Score',
-        'majorIssues': 'Probl�mes majeurs - Ne pas publier',
-        'minorIssues': 'Probl�mes mineurs - R�vision recommand�e',
-        'noIssues': 'Parfait! Pr�t � publier',
+        'majorIssues': 'Problèmes majeurs - Ne pas publier',
+        'minorIssues': 'Problèmes mineurs - Révision recommandée',
+        'noIssues': 'Parfait! Prêt à publier',
         'useTrendingHashtags': 'Utilisez des hashtags tendance pour {platform}',
         'bestPostingTime': 'Meilleur moment pour publier au {region}: 19h-21h heure locale',
-        'audioLevelsExceed': 'Les niveaux audio d�passent les limites {platform}',
+        'audioLevelsExceed': 'Les niveaux audio dépassent les limites {platform}',
         'contentViolateGuidelines': 'Le contenu peut violer les directives communautaires du {region}',
-        'secure-payment': 'Paiement s�curis� par Stripe. Annulez � tout moment.',
+        'secure-payment': 'Paiement sécurisé par Stripe. Annulez à tout moment.',
         'whats-included': 'Ce qui est inclus',
-        'feature-enhanced': 'V�rification de conformit� am�lior�e',
-        'feature-insights': 'Insights de contenu d�taill�s',
+        'feature-enhanced': 'Vérification de conformité améliorée',
+        'feature-insights': 'Insights de contenu détaillés',
         'feature-history': 'Historique complet des analyses',
         'feature-support': 'Support client prioritaire',
-        'feature-compliance': 'Suite de conformit� compl�te',
-        'feature-analytics': 'Analyses avanc�es',
-        'feature-team': 'Fonctionnalit�s de collaboration',
+        'feature-compliance': 'Suite de conformité complète',
+        'feature-analytics': 'Analyses avancées',
+        'feature-team': 'Fonctionnalités de collaboration',
         'feature-reports': 'Rapports en marque blanche',
-        'feature-api': 'Acc�s API',
-        'feature-dedicated': 'Gestionnaire de compte d�di�',
-        'upgrade-to': 'Mettre � niveau vers',
-        'unlock-features': 'D�bloquez les fonctionnalit�s premium et boostez votre succ�s!',
-        'maybe-later': 'Peut-�tre plus tard',
+        'feature-api': 'Accès API',
+        'feature-dedicated': 'Gestionnaire de compte dédié',
+        'upgrade-to': 'Mettre à niveau vers',
+        'unlock-features': 'Débloquez les fonctionnalités premium et boostez votre succès!',
+        'maybe-later': 'Peut-être plus tard',
         'subscribe-now': 'S\'abonner maintenant',
         'remove-file': 'Supprimer le fichier',
         countries: {
             "middle-east": {
-                uae: "�mirats Arabes Unis",
+                uae: "Émirats Arabes Unis",
                 saudi: "Arabie Saoudite",
                 qatar: "Qatar",
-                kuwait: "Kowe�t",
-                bahrain: "Bahre�n",
+                kuwait: "Koweït",
+                bahrain: "Bahreïn",
                 oman: "Oman",
                 iraq: "Irak",
-                yemen: "Y�men",
+                yemen: "Yémen",
                 palestine: "Palestine",
                 lebanon: "Liban",
                 jordan: "Jordanie",
@@ -2431,22 +2474,22 @@ const DASHBOARD_TRANSLATIONS = {
                 iran: "Iran"
             },
             "global": {
-                usa: "�tats-Unis",
+                usa: "États-Unis",
                 uk: "Royaume-Uni",
                 canada: "Canada",
                 australia: "Australie",
-                newzealand: "Nouvelle-Z�lande",
+                newzealand: "Nouvelle-Zélande",
                 japan: "Japon",
-                southkorea: "Cor�e du Sud",
+                southkorea: "Corée du Sud",
                 singapore: "Singapour",
                 india: "Inde",
-                brazil: "Br�sil",
+                brazil: "Brésil",
                 mexico: "Mexique",
                 argentina: "Argentine",
                 china: "Chine",
                 russia: "Russie",
                 southafrica: "Afrique du Sud",
-                indonesia: "Indon�sie"
+                indonesia: "Indonésie"
             },
             "europe": {
                 france: "France",
@@ -2454,17 +2497,17 @@ const DASHBOARD_TRANSLATIONS = {
                 italy: "Italie",
                 spain: "Espagne",
                 netherlands: "Pays-Bas",
-                sweden: "Su�de",
-                norway: "Norv�ge",
+                sweden: "Suède",
+                norway: "Norvège",
                 denmark: "Danemark",
                 finland: "Finlande",
                 belgium: "Belgique",
                 switzerland: "Suisse",
                 austria: "Autriche",
                 portugal: "Portugal",
-                greece: "Gr�ce",
+                greece: "Grèce",
                 poland: "Pologne",
-                czech: "R�publique Tch�que",
+                czech: "République Tchèque",
                 ireland: "Irlande",
                 hungary: "Hongrie",
                 slovakia: "Slovaquie",
@@ -2475,10 +2518,10 @@ const DASHBOARD_TRANSLATIONS = {
                 lithuania: "Lituanie"
             },
             "mena": {
-                egypt: "�gypte",
+                egypt: "Égypte",
                 morocco: "Maroc",
                 tunisia: "Tunisie",
-                algeria: "Alg�rie",
+                algeria: "Algérie",
                 libya: "Libye",
                 sudan: "Soudan",
                 palestine: "Palestine",
@@ -2486,171 +2529,171 @@ const DASHBOARD_TRANSLATIONS = {
                 lebanon: "Liban",
                 syria: "Syrie",
                 iraq: "Irak",
-                yemen: "Y�men",
+                yemen: "Yémen",
                 mauritania: "Mauritanie",
                 djibouti: "Djibouti",
                 comoros: "Comores",
                 somalia: "Somalie",
                 saudi: "Arabie Saoudite",
-                uae: "�mirats Arabes Unis",
-                kuwait: "Kowe�t",
-                bahrain: "Bahre�n",
+                uae: "Émirats Arabes Unis",
+                kuwait: "Koweït",
+                bahrain: "Bahreïn",
                 oman: "Oman"
             }
         }
     },
     ar: {
-        'choose-plan': '???? ????',
-        'free-trial': '????? ??????',
-        'plus-tier': '???',
-        'premium-tier': '???????',
-        'per-month': '???',
-        'free-scans': '3 ??????',
-        'plus-scans': '20 ???/???',
-        'premium-scans': '40 ???/???',
-        'free-features': '??? ?????? ?????<br>????? ??????',
-        'plus-features': '??? ?????? ?????<br>??? ?????<br>??? ????????<br>??? ?? ??????',
-        'premium-features': '?????? ?????? ?????<br>??????? ??????<br>????? ??????<br>?????? ?????? ?????? ????<br>?????? ??? API<br>??? ????',
-        'selection-alert': '???? ?????? ????? ????? ??? ????? ??????? ???????',
-        'select-region': '?? ???? ???????',
-        'select-platform': '?? ???? ?????? ?????????',
-        'upload-content': '?? ???? ??????? ?????',
-        'drop-here': '???? ?????? ???',
-        'click-browse': '?? ???? ???????? ???????',
-        'start-check': '???? ??? ???????',
-        'analyzing': '???? ???????...',
-        'scan-history-title': '??? ????????',
-        'all-scans': '???? ????????',
-        'by-region': '??? ???????',
-        'by-platform': '??? ??????',
-        'compliance-report': '????? ????????',
-        'issues-found': '??????? ????????',
-        'recommendations': '????????',
-        'active-users': '?????????? ???????',
-        'content-scanned': '??????? ???????',
-        'success-rate': '???? ??????',
-        'platforms': '???????',
-        'scans-used': '???????? ????????? (??????)',
-        'scans-left': '?????? ??????',
-        'recommended': '???? ??',
-        'middle-east': '????? ??????',
-        'global': '?????',
-        'europe': '??????',
-        'mena': '????? ????? ?????? ????? ???????',
-        'tiktok': '??? ???',
-        'youtube': '??????',
-        'instagram': '????????',
-        'facebook': '??????',
-        'twitter': '?????',
-        'snapchat': '???? ???',
-        'score': '???????',
-        'majorIssues': '????? ????? - ?? ????',
-        'minorIssues': '????? ????? - ????? ?????????',
-        'noIssues': '?????! ???? ?????',
-        'useTrendingHashtags': '?????? ?????????? ??????? ?? {platform}',
-        'bestPostingTime': '???? ??? ????? ?? {region}: 7-9 ????? ???????? ??????',
-        'audioLevelsExceed': '??????? ????? ?????? ???? {platform}',
-        'contentViolateGuidelines': '?? ????? ??????? ??????? ????? {region}',
-        'secure-payment': '??? ??? ?????? Stripe. ????? ?? ?? ???.',
-        'whats-included': '?? ?? ?????',
-        'feature-enhanced': '??? ?????? ????',
-        'feature-insights': '??? ????? ???????',
-        'feature-history': '??? ???? ????????',
-        'feature-support': '??? ????? ?? ??????',
-        'feature-compliance': '?????? ?????? ?????',
-        'feature-analytics': '??????? ??????',
-        'feature-team': '????? ??????? ???????',
-        'feature-reports': '?????? ?????? ?????? ????',
-        'feature-api': '???? API',
-        'feature-dedicated': '???? ???? ????',
-        'upgrade-to': '??????? ???',
-        'unlock-features': '???? ??????? ??????? ???? ???? ??????!',
-        'maybe-later': '???? ??????',
-        'subscribe-now': '????? ????',
-        'remove-file': '????? ?????',
+        'choose-plan': 'اختر خطتك',
+        'free-trial': 'تجربة مجانية',
+        'plus-tier': 'بلس',
+        'premium-tier': 'بريميوم',
+        'per-month': 'شهر',
+        'free-scans': '3 فحوصات',
+        'plus-scans': '20 فحص/شهر',
+        'premium-scans': '40 فحص/شهر',
+        'free-features': 'فحص امتثال أساسي<br>نتائج قياسية',
+        'plus-features': 'فحص امتثال محسّن<br>رؤى مفصلة<br>سجل الفحوصات<br>دعم ذو أولوية',
+        'premium-features': 'مجموعة امتثال كاملة<br>تحليلات متقدمة<br>ميزات الفريق<br>تقارير بعلامة تجارية خاصة<br>الوصول إلى API<br>دعم مخصص',
+        'selection-alert': 'يرجى اختيار منطقة ومنصة قبل تحميل المحتوى للتحليل',
+        'select-region': '🌍 اختر المنطقة',
+        'select-platform': '📱 اختر المنصة المستهدفة',
+        'upload-content': '📁 ارفع المحتوى للفحص',
+        'drop-here': 'اسقط محتواك هنا',
+        'click-browse': 'أو انقر لاستعراض الملفات',
+        'start-check': 'ابدأ فحص المحتوى',
+        'analyzing': 'جاري التحليل...',
+        'scan-history-title': 'سجل الفحوصات',
+        'all-scans': 'جميع الفحوصات',
+        'by-region': 'حسب المنطقة',
+        'by-platform': 'حسب المنصة',
+        'compliance-report': 'تقرير الامتثال',
+        'issues-found': 'المشاكل المكتشفة',
+        'recommendations': 'التوصيات',
+        'active-users': 'المستخدمون النشطون',
+        'content-scanned': 'المحتوى المفحوص',
+        'success-rate': 'معدل النجاح',
+        'platforms': 'المنصات',
+        'scans-used': 'الفحوصات المستخدمة (اختبار)',
+        'scans-left': 'فحوصات متبقية',
+        'recommended': 'موصى به',
+        'middle-east': 'الشرق الأوسط',
+        'global': 'عالمي',
+        'europe': 'أوروبا',
+        'mena': 'منطقة الشرق الأوسط وشمال أفريقيا',
+        'tiktok': 'تيك توك',
+        'youtube': 'يوتيوب',
+        'instagram': 'إنستغرام',
+        'facebook': 'فيسبوك',
+        'twitter': 'تويتر',
+        'snapchat': 'سناب شات',
+        'score': 'النتيجة',
+        'majorIssues': 'مشاكل كبيرة - لا تنشر',
+        'minorIssues': 'مشاكل بسيطة - يُنصح بالمراجعة',
+        'noIssues': 'مثالي! جاهز للنشر',
+        'useTrendingHashtags': 'استخدم الهاشتاجات الرائجة لـ {platform}',
+        'bestPostingTime': 'أفضل وقت للنشر في {region}: 7-9 مساءً بالتوقيت المحلي',
+        'audioLevelsExceed': 'مستويات الصوت تتجاوز حدود {platform}',
+        'contentViolateGuidelines': 'قد يخالف المحتوى إرشادات مجتمع {region}',
+        'secure-payment': 'دفع آمن بواسطة Stripe. إلغاء في أي وقت.',
+        'whats-included': 'ما هو مشمول',
+        'feature-enhanced': 'فحص امتثال محسن',
+        'feature-insights': 'رؤى مفصلة للمحتوى',
+        'feature-history': 'سجل كامل للفحوصات',
+        'feature-support': 'دعم عملاء ذو أولوية',
+        'feature-compliance': 'مجموعة امتثال كاملة',
+        'feature-analytics': 'تحليلات متقدمة',
+        'feature-team': 'ميزات التعاون الجماعي',
+        'feature-reports': 'تقارير بعلامة تجارية خاصة',
+        'feature-api': 'وصول API',
+        'feature-dedicated': 'مدير حساب مخصص',
+        'upgrade-to': 'الترقية إلى',
+        'unlock-features': 'افتح الميزات المميزة وعزز نجاح محتواك!',
+        'maybe-later': 'ربما لاحقاً',
+        'subscribe-now': 'اشترك الآن',
+        'remove-file': 'إزالة الملف',
         countries: {
             "middle-east": {
-                uae: "???????? ??????? ???????",
-                saudi: "??????? ??????? ????????",
-                qatar: "???",
-                kuwait: "??????",
-                bahrain: "???????",
-                oman: "?????",
-                iraq: "??????",
-                yemen: "?????",
-                palestine: "??????",
-                lebanon: "?????",
-                jordan: "??????",
-                syria: "?????",
-                turkey: "?????",
-                iran: "?????"
+                uae: "الإمارات العربية المتحدة",
+                saudi: "المملكة العربية السعودية",
+                qatar: "قطر",
+                kuwait: "الكويت",
+                bahrain: "البحرين",
+                oman: "عُمان",
+                iraq: "العراق",
+                yemen: "اليمن",
+                palestine: "فلسطين",
+                lebanon: "لبنان",
+                jordan: "الأردن",
+                syria: "سوريا",
+                turkey: "تركيا",
+                iran: "إيران"
             },
             "global": {
-                usa: "???????? ???????",
-                uk: "??????? ???????",
-                canada: "????",
-                australia: "????????",
-                newzealand: "?????????",
-                japan: "???????",
-                southkorea: "????? ????????",
-                singapore: "????????",
-                india: "?????",
-                brazil: "????????",
-                mexico: "???????",
-                argentina: "?????????",
-                china: "?????",
-                russia: "?????",
-                southafrica: "???? ???????",
-                indonesia: "?????????"
+                usa: "الولايات المتحدة",
+                uk: "المملكة المتحدة",
+                canada: "كندا",
+                australia: "أستراليا",
+                newzealand: "نيوزيلندا",
+                japan: "اليابان",
+                southkorea: "كوريا الجنوبية",
+                singapore: "سنغافورة",
+                india: "الهند",
+                brazil: "البرازيل",
+                mexico: "المكسيك",
+                argentina: "الأرجنتين",
+                china: "الصين",
+                russia: "روسيا",
+                southafrica: "جنوب أفريقيا",
+                indonesia: "إندونيسيا"
             },
             "europe": {
-                france: "?????",
-                germany: "???????",
-                italy: "???????",
-                spain: "???????",
-                netherlands: "??????",
-                sweden: "??????",
-                norway: "???????",
-                denmark: "????????",
-                finland: "??????",
-                belgium: "??????",
-                switzerland: "??????",
-                austria: "??????",
-                portugal: "????????",
-                greece: "???????",
-                poland: "??????",
-                czech: "??????? ??????",
-                ireland: "???????",
-                hungary: "?????",
-                slovakia: "????????",
-                romania: "???????",
-                bulgaria: "???????",
-                estonia: "???????",
-                latvia: "??????",
-                lithuania: "????????"
+                france: "فرنسا",
+                germany: "ألمانيا",
+                italy: "إيطاليا",
+                spain: "إسبانيا",
+                netherlands: "هولندا",
+                sweden: "السويد",
+                norway: "النرويج",
+                denmark: "الدنمارك",
+                finland: "فنلندا",
+                belgium: "بلجيكا",
+                switzerland: "سويسرا",
+                austria: "النمسا",
+                portugal: "البرتغال",
+                greece: "اليونان",
+                poland: "بولندا",
+                czech: "جمهورية التشيك",
+                ireland: "أيرلندا",
+                hungary: "المجر",
+                slovakia: "سلوفاكيا",
+                romania: "رومانيا",
+                bulgaria: "بلغاريا",
+                estonia: "إستونيا",
+                latvia: "لاتفيا",
+                lithuania: "ليتوانيا"
             },
             "mena": {
-                egypt: "???",
-                morocco: "??????",
-                tunisia: "????",
-                algeria: "???????",
-                libya: "?????",
-                sudan: "???????",
-                palestine: "??????",
-                jordan: "??????",
-                lebanon: "?????",
-                syria: "?????",
-                iraq: "??????",
-                yemen: "?????",
-                mauritania: "?????????",
-                djibouti: "??????",
-                comoros: "??? ?????",
-                somalia: "???????",
-                saudi: "??????? ??????? ????????",
-                uae: "???????? ??????? ???????",
-                kuwait: "??????",
-                bahrain: "???????",
-                oman: "?????"
+                egypt: "مصر",
+                morocco: "المغرب",
+                tunisia: "تونس",
+                algeria: "الجزائر",
+                libya: "ليبيا",
+                sudan: "السودان",
+                palestine: "فلسطين",
+                jordan: "الأردن",
+                lebanon: "لبنان",
+                syria: "سوريا",
+                iraq: "العراق",
+                yemen: "اليمن",
+                mauritania: "موريتانيا",
+                djibouti: "جيبوتي",
+                comoros: "جزر القمر",
+                somalia: "الصومال",
+                saudi: "المملكة العربية السعودية",
+                uae: "الإمارات العربية المتحدة",
+                kuwait: "الكويت",
+                bahrain: "البحرين",
+                oman: "عُمان"
             }
         }
     }
@@ -2757,7 +2800,7 @@ function applyDashboardTranslations(lang) {
         const searchPlaceholders = {
             en: 'Search countries...',
             fr: 'Rechercher des pays...',
-            ar: '????? ?? ???????...'
+            ar: 'البحث عن البلدان...'
         };
         countrySearch.placeholder = searchPlaceholders[lang] || searchPlaceholders['en'];
     }
@@ -2842,7 +2885,7 @@ document.addEventListener('DOMContentLoaded', function() {
     updateSelectionAlert();
 });
 
-console.log('? Dashboard fully loaded with complete multilingual support');
+console.log('✅ Dashboard fully loaded with complete multilingual support');
 </script>
 </body>
 </html>
