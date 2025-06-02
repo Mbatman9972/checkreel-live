@@ -989,13 +989,13 @@
         <span class="toast-message" id="toastMessage"></span>
     </div>
 
+    <script src="supabase-config.js"></script>
     <script src="tier.js"></script>
     <script>
         // GLOBAL VARIABLES - PROPERLY DECLARED
         var currentLanguage = "en";
         var logoClickCount = 0;
         var isAdminMode = false;
-        var API_URL = "https://script.google.com/macros/s/AKfycbxIDL9OiqKP7nZQDc9eaEuhg8CvV3LVewuPfWYoRZKQuH9aRdjFjdjQ9kvBMp1m1d7z/exec";
 
         // LANGUAGE SYSTEM
         var languages = {
@@ -1070,72 +1070,51 @@
             }, 1000);
             
             loadPayingCount();
+            loadSupabaseAnalytics();
         }
 
-        function loadPayingCount() {
-            console.log('Loading paying subscriber count...');
+        // SUPABASE FUNCTIONS - REPLACING GOOGLE APPS SCRIPT
+        async function loadPayingCount() {
+            console.log('Loading paying subscriber count from Supabase...');
             
             var kpiValue3 = document.getElementById("kpiValue3");
             if (kpiValue3) {
                 kpiValue3.innerHTML = '<div class="spinner"></div>';
             }
             
-            var xhr = new XMLHttpRequest();
-            xhr.open("POST", API_URL, true);
-            xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-            xhr.timeout = 10000;
-            
-            xhr.onreadystatechange = function() {
-                if (xhr.readyState === 4) {
-                    console.log('API Response Status:', xhr.status);
-                    console.log('API Response Text:', xhr.responseText);
-                    
-                    if (xhr.status === 200) {
-                        try {
-                            var response = JSON.parse(xhr.responseText);
-                            console.log('Parsed Response:', response);
-                            
-                            if (kpiValue3) {
-                                if (response.success) {
-                                    kpiValue3.textContent = response.count.toString();
-                                    showToast('Paying subscriber count loaded: ' + response.count);
-                                } else {
-                                    kpiValue3.textContent = "Error";
-                                    console.error('API Error:', response.error);
-                                    showToast('Failed to load subscriber count', 'error');
-                                }
-                            }
-                        } catch (e) {
-                            console.error('JSON Parse Error:', e);
-                            if (kpiValue3) kpiValue3.textContent = "Parse Error";
-                            showToast('Data parsing error', 'error');
-                        }
-                    } else {
-                        console.error('HTTP Error:', xhr.status);
-                        if (kpiValue3) kpiValue3.textContent = "HTTP Error";
-                        showToast('Connection error', 'error');
+            try {
+                const response = await fetch(SUPABASE_URL + '/rest/v1/subscriptions?select=count&tier=in.(plus,premium)', {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + SUPABASE_KEY,
+                        'apikey': SUPABASE_KEY,
+                        'Prefer': 'count=exact'
                     }
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    const count = response.headers.get('Content-Range')?.split('/')[1] || data.length || 0;
+                    
+                    if (kpiValue3) {
+                        kpiValue3.textContent = count.toString();
+                        showToast('Paying subscriber count loaded: ' + count);
+                    }
+                    console.log('Supabase subscriber count:', count);
+                } else {
+                    throw new Error('Supabase query failed: ' + response.status);
                 }
-            };
-            
-            xhr.ontimeout = function() {
-                console.error('Request timeout');
-                if (kpiValue3) kpiValue3.textContent = "Timeout";
-                showToast('Request timeout', 'error');
-            };
-            
-            xhr.onerror = function() {
-                console.error('Network error');
-                if (kpiValue3) kpiValue3.textContent = "Network Error";
-                showToast('Network error', 'error');
-            };
-            
-            xhr.send("action=getPayingCount");
+            } catch (error) {
+                console.error('Supabase Error:', error);
+                if (kpiValue3) kpiValue3.textContent = "Error";
+                showToast('Failed to load subscriber count', 'error');
+            }
         }
 
-        // ADMIN TIER MANAGEMENT - FIXED VARIABLE SCOPING
-        function addTierUser(tier) {
-            console.log('Adding tier user:', tier);
+        // SUPABASE TIER MANAGEMENT
+        async function addTierUser(tier) {
+            console.log('Adding tier user to Supabase:', tier);
             
             var emailInput = document.getElementById(tier + "EmailInput");
             if (!emailInput) {
@@ -1143,7 +1122,7 @@
                 return;
             }
             
-            var email = emailInput.value.trim(); // PROPERLY DECLARED EMAIL VARIABLE
+            var email = emailInput.value.trim();
             if (!email) {
                 alert("Please enter an email address");
                 return;
@@ -1154,52 +1133,58 @@
                 return;
             }
             
-            console.log('Sending tier update request for:', email, 'to tier:', tier);
-            
-            var xhr = new XMLHttpRequest();
-            xhr.open("POST", API_URL, true);
-            xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-            xhr.timeout = 15000;
-            
-            xhr.onreadystatechange = function() {
-                if (xhr.readyState === 4) {
-                    console.log('Tier Update Response Status:', xhr.status);
-                    console.log('Tier Update Response Text:', xhr.responseText);
-                    
-                    if (xhr.status === 200) {
-                        try {
-                            var response = JSON.parse(xhr.responseText);
-                            console.log('Tier Update Parsed Response:', response);
-                            
-                            if (response.success) {
-                                emailInput.value = "";
-                                showToast('User ' + email + ' upgraded to ' + tier.toUpperCase() + ' successfully!');
-                                loadPayingCount();
-                            } else {
-                                showToast('Failed to upgrade ' + email + ': ' + response.message, 'error');
-                            }
-                        } catch (e) {
-                            console.error('Tier Update JSON Parse Error:', e);
-                            showToast('Server response error', 'error');
-                        }
-                    } else {
-                        console.error('Tier Update HTTP Error:', xhr.status);
-                        showToast('Connection error during tier update', 'error');
-                    }
+            try {
+                const subscription = await fetch(SUPABASE_URL + '/rest/v1/subscriptions', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + SUPABASE_KEY,
+                        'apikey': SUPABASE_KEY,
+                        'Prefer': 'resolution=merge-duplicates'
+                    },
+                    body: JSON.stringify({
+                        email: email,
+                        tier: tier,
+                        status: 'active',
+                        created_at: new Date().toISOString()
+                    })
+                });
+                
+                if (subscription.ok) {
+                    emailInput.value = "";
+                    showToast('User ' + email + ' upgraded to ' + tier.toUpperCase() + ' successfully!');
+                    loadPayingCount();
+                } else {
+                    throw new Error('Failed to create subscription');
                 }
-            };
-            
-            xhr.ontimeout = function() {
-                console.error('Tier update timeout');
-                showToast('Tier update timeout', 'error');
-            };
-            
-            xhr.onerror = function() {
-                console.error('Tier update network error');
-                showToast('Network error during tier update', 'error');
-            };
-            
-            xhr.send("action=syncTier&email=" + encodeURIComponent(email) + "&tier=" + encodeURIComponent(tier));
+                
+            } catch (error) {
+                console.error('Supabase tier update error:', error);
+                showToast('Failed to upgrade ' + email + ': ' + error.message, 'error');
+            }
+        }
+
+        // SUPABASE ANALYTICS
+        async function loadSupabaseAnalytics() {
+            try {
+                const scansResponse = await fetch(SUPABASE_URL + '/rest/v1/scans?select=count', {
+                    headers: {
+                        'Authorization': 'Bearer ' + SUPABASE_KEY,
+                        'apikey': SUPABASE_KEY,
+                        'Prefer': 'count=exact'
+                    }
+                });
+                
+                const scanCount = scansResponse.headers.get('Content-Range')?.split('/')[1] || 0;
+                
+                var kpiValue2 = document.getElementById("kpiValue2");
+                if (kpiValue2) kpiValue2.textContent = scanCount.toLocaleString();
+                
+                console.log('Real-time analytics loaded from Supabase');
+                
+            } catch (error) {
+                console.error('Analytics loading error:', error);
+            }
         }
 
         // ADMIN PANEL TOGGLE
@@ -1275,7 +1260,7 @@
             var tierSelect = document.getElementById('tierSelect');
             
             if (userEmail && tierSelect && userEmail.value && tierSelect.value) {
-                var selectedEmail = userEmail.value; // PROPERLY DECLARED EMAIL VARIABLE
+                var selectedEmail = userEmail.value;
                 var selectedTier = tierSelect.value;
                 
                 addTierUser(selectedTier);
@@ -1368,7 +1353,7 @@
             console.log('Dashboard initialization completed');
             
             setTimeout(function() {
-                showToast('CheckReel Admin Dashboard Ready!', 'success');
+                showToast('CheckReel Admin Dashboard Ready - Supabase Connected!', 'success');
             }, 2000);
         }
 
@@ -1390,7 +1375,7 @@
         });
 
         // CONSOLE STARTUP MESSAGE
-        console.log('CheckReel Admin Dashboard v4.0 - Production Ready - All Systems Operational');
+        console.log('CheckReel Admin Dashboard v4.0 - Supabase Production Ready - All Systems Operational');
     </script>
 </body>
 </html>
