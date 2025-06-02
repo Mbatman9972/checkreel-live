@@ -19,7 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
   function set(v) { localStorage.setItem(KEY, v); }
   function show() {
     if (!el) return;
-    el.innerText =   active users;
+    el.innerText = get();
   }
   show();
 
