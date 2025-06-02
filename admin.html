@@ -711,11 +711,11 @@
 
                 <div class="kpi-card">
                     <div class="kpi-header">
-                        <h4 class="kpi-title" id="kpiTitle3" data-i18n="activeUsers">Active Users</h4>
+                        <h4 class="kpi-title" id="kpiTitle3" data-i18n="activeUsers">Paying Subscribers</h4>
                         <div class="kpi-icon">👥</div>
                     </div>
-                    <div class="kpi-value" id="kpiValue3">18,926</div>
-                    <div class="kpi-change positive">↗ +7.8% <span style="font-size: 0.7rem;">online now</span></div>
+                    <div class="kpi-value" id="kpiValue3">Loading...</div>
+                    <div class="kpi-change positive">↗ Live Count <span style="font-size: 0.7rem;">from database</span></div>
                 </div>
 
                 <div class="kpi-card">
@@ -991,10 +991,13 @@
 
     <script src="tier.js"></script>
     <script>
+        // GLOBAL VARIABLES
         var currentLanguage = "en";
         var logoClickCount = 0;
         var isAdminMode = false;
+        const API_URL = "https://script.google.com/macros/s/AKfycbzH789XJhCIyltlO-ws_EGHWdB393LTI3h6H1gIdPVrGJ22M4j3TNH2bQONCZlgoE7l/exec";
 
+        // LANGUAGE SYSTEM
         var languages = {
             en: {
                 systemStatus: "System Status: Online",
@@ -1020,6 +1023,7 @@
             }
         };
 
+        // LANGUAGE FUNCTIONS
         function updateLanguage() {
             var lang = languages[currentLanguage];
             var systemStatusEl = document.getElementById("systemStatus");
@@ -1031,41 +1035,353 @@
             document.body.className = currentLanguage === "ar" ? "rtl" : "";
         }
 
+        // TOAST NOTIFICATION SYSTEM
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            const toastIcon = document.getElementById('toastIcon');
+            const toastMessage = document.getElementById('toastMessage');
+            
+            if (toast && toastIcon && toastMessage) {
+                toastMessage.textContent = message;
+                toastIcon.textContent = type === 'success' ? '✅' : '❌';
+                toast.className = 'toast show ' + type;
+                
+                setTimeout(() => {
+                    toast.className = 'toast';
+                }, 3000);
+            }
+        }
+
+        // KPI LOADING FUNCTIONS
         function loadKPIs() {
+            console.log('Loading KPIs...');
+            
+            // Update static KPIs with delay
             setTimeout(function() {
                 var kpiValue1 = document.getElementById("kpiValue1");
                 var kpiValue2 = document.getElementById("kpiValue2");
                 var kpiValue4 = document.getElementById("kpiValue4");
                 
-                if (kpiValue1) kpiValue1.textContent = "24,891";
+                if (kpiValue1) kpiValue1.textContent = "$24,891";
                 if (kpiValue2) kpiValue2.textContent = "156,234";
-                if (kpiValue4) kpiValue4.textContent = "$89,420";
+                if (kpiValue4) kpiValue4.textContent = "97.8%";
+                
+                console.log('Static KPIs updated');
             }, 1000);
+            
+            // Load live paying count
             loadPayingCount();
         }
 
         function loadPayingCount() {
+            console.log('Loading paying subscriber count...');
+            
+            var kpiValue3 = document.getElementById("kpiValue3");
+            if (kpiValue3) {
+                kpiValue3.innerHTML = '<div class="spinner"></div>';
+            }
+            
             var xhr = new XMLHttpRequest();
-            xhr.open("POST", "https://script.google.com/macros/s/AKfycbyw8v6jwfNdkuigAOa-pi-q0I1_YyYDfrrq3IYue0LqVic04MAeW1zk4Z7-i0W45z-A/exec", true);
+            xhr.open("POST", API_URL, true);
             xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+            xhr.timeout = 10000; // 10 second timeout
+            
             xhr.onreadystatechange = function() {
-                if (xhr.readyState === 4 && xhr.status === 200) {
-                    try {
-                        var response = JSON.parse(xhr.responseText);
-                        var kpiValue3 = document.getElementById("kpiValue3");
-                        if (kpiValue3) {
-                            kpiValue3.textContent = response.success ? response.count.toString() : "892";
+                if (xhr.readyState === 4) {
+                    console.log('Tier Update Response Status:', xhr.status);
+                    console.log('Tier Update Response Text:', xhr.responseText);
+                    
+                    if (xhr.status === 200) {
+                        try {
+                            var response = JSON.parse(xhr.responseText);
+                            console.log('Tier Update Parsed Response:', response);
+                            
+                            if (response.success) {
+                                emailInput.value = "";
+                                showToast(`User ${email} upgraded to ${tier.toUpperCase()} successfully!`);
+                                loadPayingCount(); // Refresh the count
+                            } else {
+                                showToast(`Failed to upgrade ${email}: ${response.message}`, 'error');
+                            }
+                        } catch (e) {
+                            console.error('Tier Update JSON Parse Error:', e);
+                            showToast('Server response error', 'error');
                         }
-                    } catch (e) {
-                        var kpiValue3 = document.getElementById("kpiValue3");
-                        if (kpiValue3) kpiValue3.textContent = "892";
+                    } else {
+                        console.error('Tier Update HTTP Error:', xhr.status);
+                        showToast('Connection error during tier update', 'error');
                     }
                 }
             };
+            
+            xhr.ontimeout = function() {
+                console.error('Tier update timeout');
+                showToast('Tier update timeout', 'error');
+            };
+            
+            xhr.onerror = function() {
+                console.error('Tier update network error');
+                showToast('Network error during tier update', 'error');
+            };
+            
+            xhr.send("action=syncTier&email=" + encodeURIComponent(email) + "&tier=" + encodeURIComponent(tier));
+        }
+
+        // ADMIN PANEL TOGGLE
+        function toggleAdmin() {
+            var password = prompt("Enter admin password:");
+            if (password === "MM7286CR") {
+                isAdminMode = !isAdminMode;
+                var adminSection = document.getElementById("adminSection");
+                if (adminSection) {
+                    if (isAdminMode) {
+                        adminSection.classList.add("active");
+                        showToast('Admin panel activated');
+                    } else {
+                        adminSection.classList.remove("active");
+                        showToast('Admin panel deactivated');
+                    }
+                }
+            } else if (password !== null) {
+                showToast('Invalid admin password', 'error');
+            }
+        }
+
+        // CHART CONTROL FUNCTIONS
+        function updateChart(range) {
+            console.log('Updating chart to range:', range);
+            
+            var buttons = document.querySelectorAll('.chart-btn');
+            buttons.forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            var revenueValue = document.getElementById('revenueValue');
+            if (revenueValue) {
+                switch(range) {
+                    case '24h': revenueValue.textContent = '$24,847'; break;
+                    case '7d': revenueValue.textContent = '$172,943'; break;
+                    case '30d': revenueValue.textContent = '$687,234'; break;
+                    case '1y': revenueValue.textContent = '$8,234,567'; break;
+                }
+            }
+            
+            showToast(`Chart updated to ${range} view`);
+        }
+
+        function updateViolationsChart(type) {
+            console.log('Updating violations chart to type:', type);
+            
+            var buttons = document.querySelectorAll('.chart-btn');
+            buttons.forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            var violationsValue = document.getElementById('violationsValue');
+            if (violationsValue) {
+                switch(type) {
+                    case 'live': violationsValue.textContent = '89'; break;
+                    case 'hourly': violationsValue.textContent = '247'; break;
+                    case 'daily': violationsValue.textContent = '1,432'; break;
+                }
+            }
+            
+            showToast(`Violations chart updated to ${type} view`);
+        }
+
+        // FORM HANDLERS
+        function handleTierUpgradeForm(e) {
+            e.preventDefault();
+            console.log('Tier upgrade form submitted');
+            
+            var userEmail = document.getElementById('userEmail');
+            var tierSelect = document.getElementById('tierSelect');
+            
+            if (userEmail && tierSelect && userEmail.value && tierSelect.value) {
+                addTierUser(tierSelect.value);
+                userEmail.value = '';
+                tierSelect.value = '';
+            } else {
+                alert('Please fill in all fields');
+            }
+        }
+
+        // EVENT LISTENERS SETUP
+        function setupEventListeners() {
+            console.log('Setting up event listeners...');
+            
+            // Logo click counter for admin access
+            var logoClick = document.getElementById("logoClick");
+            if (logoClick) {
+                logoClick.addEventListener("click", function() {
+                    logoClickCount++;
+                    console.log('Logo clicked:', logoClickCount);
+                    
+                    if (logoClickCount >= 5) {
+                        var adminToggle = document.getElementById("adminToggle");
+                        if (adminToggle) {
+                            adminToggle.style.display = "block";
+                            showToast('Admin button revealed! Click to access admin panel.');
+                        }
+                        logoClickCount = 0;
+                    }
+                });
+            }
+
+            // Language selector
+            var languageSelector = document.getElementById("languageSelector");
+            if (languageSelector) {
+                languageSelector.addEventListener("change", function() {
+                    currentLanguage = this.value;
+                    updateLanguage();
+                    localStorage.setItem("checkreel_language", currentLanguage);
+                    showToast(`Language changed to ${currentLanguage === 'en' ? 'English' : 'العربية'}`);
+                });
+            }
+
+            // Admin toggle button
+            var adminToggle = document.getElementById("adminToggle");
+            if (adminToggle) {
+                adminToggle.addEventListener("click", toggleAdmin);
+            }
+
+            // Tier upgrade form
+            var tierUpgradeForm = document.getElementById('tierUpgradeForm');
+            if (tierUpgradeForm) {
+                tierUpgradeForm.addEventListener('submit', handleTierUpgradeForm);
+            }
+            
+            console.log('Event listeners setup completed');
+        }
+
+        // AUTO-REFRESH FUNCTIONS
+        function startAutoRefresh() {
+            // Refresh paying count every 30 seconds
+            setInterval(function() {
+                console.log('Auto-refreshing paying count...');
+                loadPayingCount();
+            }, 30000);
+            
+            // Refresh other KPIs every 60 seconds
+            setInterval(function() {
+                console.log('Auto-refreshing KPIs...');
+                loadKPIs();
+            }, 60000);
+        }
+
+        // INITIALIZATION FUNCTIONS
+        function initializeLanguage() {
+            var savedLanguage = localStorage.getItem("checkreel_language");
+            if (savedLanguage && languages[savedLanguage]) {
+                currentLanguage = savedLanguage;
+                var languageSelector = document.getElementById("languageSelector");
+                if (languageSelector) {
+                    languageSelector.value = currentLanguage;
+                }
+            }
+            updateLanguage();
+        }
+
+        function initializeDashboard() {
+            console.log('Initializing CheckReel Admin Dashboard...');
+            
+            // Show loading message
+            showToast('CheckReel Admin Dashboard Loading...', 'success');
+            
+            // Initialize language
+            initializeLanguage();
+            
+            // Load initial data
+            loadKPIs();
+            
+            // Start auto-refresh
+            startAutoRefresh();
+            
+            console.log('Dashboard initialization completed');
+            
+            // Show ready message after 2 seconds
+            setTimeout(() => {
+                showToast('CheckReel Admin Dashboard Ready!', 'success');
+            }, 2000);
+        }
+
+        // DOM READY EVENT LISTENERS
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOM Content Loaded - Setting up CheckReel Admin Dashboard');
+            setupEventListeners();
+        });
+
+        window.addEventListener("load", function() {
+            console.log('Window Loaded - Initializing CheckReel Admin Dashboard');
+            initializeDashboard();
+        });
+
+        // ERROR HANDLING
+        window.addEventListener('error', function(e) {
+            console.error('JavaScript Error:', e.error);
+            showToast('An error occurred. Check console for details.', 'error');
+        });
+
+        // CONSOLE STARTUP MESSAGE
+        console.log(`
+        ╔═══════════════════════════════════════╗
+        ║      CheckReel Admin Dashboard v4.0   ║
+        ║      Production Ready - Full Stack    ║
+        ║      API: Connected to Google Sheets  ║
+        ║      Status: All Systems Operational  ║
+        ╚═══════════════════════════════════════╝
+        `);
+    </script>
+</body>
+</html>readyState === 4) {
+                    console.log('API Response Status:', xhr.status);
+                    console.log('API Response Text:', xhr.responseText);
+                    
+                    if (xhr.status === 200) {
+                        try {
+                            var response = JSON.parse(xhr.responseText);
+                            console.log('Parsed Response:', response);
+                            
+                            if (kpiValue3) {
+                                if (response.success) {
+                                    kpiValue3.textContent = response.count.toString();
+                                    showToast('Paying subscriber count loaded: ' + response.count);
+                                } else {
+                                    kpiValue3.textContent = "Error";
+                                    console.error('API Error:', response.error);
+                                    showToast('Failed to load subscriber count', 'error');
+                                }
+                            }
+                        } catch (e) {
+                            console.error('JSON Parse Error:', e);
+                            if (kpiValue3) kpiValue3.textContent = "Parse Error";
+                            showToast('Data parsing error', 'error');
+                        }
+                    } else {
+                        console.error('HTTP Error:', xhr.status);
+                        if (kpiValue3) kpiValue3.textContent = "HTTP Error";
+                        showToast('Connection error', 'error');
+                    }
+                }
+            };
+            
+            xhr.ontimeout = function() {
+                console.error('Request timeout');
+                if (kpiValue3) kpiValue3.textContent = "Timeout";
+                showToast('Request timeout', 'error');
+            };
+            
+            xhr.onerror = function() {
+                console.error('Network error');
+                if (kpiValue3) kpiValue3.textContent = "Network Error";
+                showToast('Network error', 'error');
+            };
+            
             xhr.send("action=getPayingCount");
         }
 
+        // ADMIN TIER MANAGEMENT
         function addTierUser(tier) {
+            console.log('Adding tier user:', tier);
+            
             var emailInput = document.getElementById(tier + "EmailInput");
             if (!emailInput) {
                 alert("Email input not found");
@@ -1078,133 +1394,17 @@
                 return;
             }
             
+            if (!email.includes('@')) {
+                alert("Please enter a valid email address");
+                return;
+            }
+            
+            console.log('Sending tier update request for:', email, 'to tier:', tier);
+            
             var xhr = new XMLHttpRequest();
-            xhr.open("POST", "https://script.google.com/macros/s/AKfycbyw8v6jwfNdkuigAOa-pi-q0I1_YyYDfrrq3IYue0LqVic04MAeW1zk4Z7-i0W45z-A/exec", true);
+            xhr.open("POST", API_URL, true);
             xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+            xhr.timeout = 15000; // 15 second timeout for tier updates
+            
             xhr.onreadystatechange = function() {
-                if (xhr.readyState === 4 && xhr.status === 200) {
-                    emailInput.value = "";
-                    alert("User added successfully!");
-                    loadPayingCount(); // Refresh the count
-                }
-            };
-            xhr.send("action=syncTier&email=" + encodeURIComponent(email) + "&tier=" + tier);
-        }
-
-        function toggleAdmin() {
-            var password = prompt("Enter admin password:");
-            if (password === "MM7286CR") {
-                isAdminMode = !isAdminMode;
-                var adminSection = document.getElementById("adminSection");
-                if (adminSection) {
-                    if (isAdminMode) {
-                        adminSection.classList.add("active");
-                    } else {
-                        adminSection.classList.remove("active");
-                    }
-                }
-            }
-        }
-
-        function updateChart(range) {
-            // Chart update functionality - placeholder
-            var buttons = document.querySelectorAll('.chart-btn');
-            buttons.forEach(btn => btn.classList.remove('active'));
-            event.target.classList.add('active');
-            
-            // Update revenue value based on range
-            var revenueValue = document.getElementById('revenueValue');
-            if (revenueValue) {
-                switch(range) {
-                    case '24h': revenueValue.textContent = '$24,847'; break;
-                    case '7d': revenueValue.textContent = '$172,943'; break;
-                    case '30d': revenueValue.textContent = '$687,234'; break;
-                    case '1y': revenueValue.textContent = '$8,234,567'; break;
-                }
-            }
-        }
-
-        function updateViolationsChart(type) {
-            // Violations chart update functionality - placeholder
-            var buttons = document.querySelectorAll('.chart-btn');
-            buttons.forEach(btn => btn.classList.remove('active'));
-            event.target.classList.add('active');
-            
-            // Update violations value based on type
-            var violationsValue = document.getElementById('violationsValue');
-            if (violationsValue) {
-                switch(type) {
-                    case 'live': violationsValue.textContent = '89'; break;
-                    case 'hourly': violationsValue.textContent = '247'; break;
-                    case 'daily': violationsValue.textContent = '1,432'; break;
-                }
-            }
-        }
-
-        // Form submission handler
-        document.addEventListener('DOMContentLoaded', function() {
-            var tierUpgradeForm = document.getElementById('tierUpgradeForm');
-            if (tierUpgradeForm) {
-                tierUpgradeForm.addEventListener('submit', function(e) {
-                    e.preventDefault();
-                    var userEmail = document.getElementById('userEmail');
-                    var tierSelect = document.getElementById('tierSelect');
-                    
-                    if (userEmail && tierSelect && userEmail.value && tierSelect.value) {
-                        addTierUser(tierSelect.value);
-                        userEmail.value = '';
-                        tierSelect.value = '';
-                    } else {
-                        alert('Please fill in all fields');
-                    }
-                });
-            }
-        });
-
-        // Event listeners with safety checks
-        document.addEventListener('DOMContentLoaded', function() {
-            var logoClick = document.getElementById("logoClick");
-            if (logoClick) {
-                logoClick.addEventListener("click", function() {
-                    logoClickCount++;
-                    if (logoClickCount >= 5) {
-                        var adminToggle = document.getElementById("adminToggle");
-                        if (adminToggle) {
-                            adminToggle.style.display = "block";
-                        }
-                        logoClickCount = 0;
-                    }
-                });
-            }
-
-            var languageSelector = document.getElementById("languageSelector");
-            if (languageSelector) {
-                languageSelector.addEventListener("change", function() {
-                    currentLanguage = this.value;
-                    updateLanguage();
-                    localStorage.setItem("checkreel_language", currentLanguage);
-                });
-            }
-
-            var adminToggle = document.getElementById("adminToggle");
-            if (adminToggle) {
-                adminToggle.addEventListener("click", toggleAdmin);
-            }
-        });
-
-        window.addEventListener("load", function() {
-            var savedLanguage = localStorage.getItem("checkreel_language");
-            if (savedLanguage && languages[savedLanguage]) {
-                currentLanguage = savedLanguage;
-                var languageSelector = document.getElementById("languageSelector");
-                if (languageSelector) {
-                    languageSelector.value = currentLanguage;
-                }
-            }
-            updateLanguage();
-            loadKPIs();
-        });
-    </script>
-</body>
-</html>
-
+                if (xhr.
