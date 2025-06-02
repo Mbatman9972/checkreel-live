@@ -607,7 +607,88 @@
                 grid-template-columns: 1fr;
             }
         }
+.control-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 2000;
+            display: none;
+            justify-content: center;
+            align-items: center;
+        }
 
+        .control-modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 16px;
+            padding: 2rem;
+            max-width: 800px;
+            width: 90%;
+            max-height: 80%;
+            overflow-y: auto;
+            color: white;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .close-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .scan-list, .setting-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .scan-item, .setting-item {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .status-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .status-clean {
+            background: rgba(76, 175, 80, 0.3);
+            color: #4CAF50;
+        }
+
+        .status-violation {
+            background: rgba(244, 67, 54, 0.3);
+            color: #F44336;
+        }
+
+        .rules-loading {
+            text-align: center;
+            padding: 2rem;
+            color: rgba(255, 255, 255, 0.7);
+        }
         @media (max-width: 768px) {
             .header {
                 padding: 1rem;
@@ -903,23 +984,23 @@
         <div class="sidebar">
             <div class="sidebar-section">
                 <h3 class="sidebar-title">⚡ <span data-i18n="controlActions">Control Actions</span></h3>
-                <div class="quick-action">
+                <div class="quick-action" onclick="showScanHistory()">
                     <div class="action-icon">📊</div>
                     <div class="action-text" data-i18n="scanHistory">Scan History</div>
                 </div>
-                <div class="quick-action">
+                <div class="quick-action" onclick="showPlatformRules()">
                     <div class="action-icon">📋</div>
                     <div class="action-text" data-i18n="platformGuidelines">Platform Rules</div>
                 </div>
-                <div class="quick-action">
+                <div class="quick-action" onclick="showSystemSettings()">
                     <div class="action-icon">⚙️</div>
                     <div class="action-text" data-i18n="settings">System Settings</div>
                 </div>
-                <div class="quick-action">
+                <div class="quick-action" onclick="showSupportCenter()">
                     <div class="action-icon">🆘</div>
                     <div class="action-text" data-i18n="support">Support Center</div>
                 </div>
-                <div class="quick-action">
+                <div class="quick-action" onclick="activateEmergencyMode()">
                     <div class="action-icon">🚨</div>
                     <div class="action-text" data-i18n="emergency">Emergency Mode</div>
                 </div>
@@ -1376,6 +1457,83 @@
         });
 
         // CONSOLE STARTUP MESSAGE
+        // CONTROL ACTIONS FUNCTIONS
+        function showScanHistory() {
+            console.log("Opening Scan History...");
+            document.getElementById("scanHistoryModal").classList.add("active");
+            showToast("Scan History opened");
+        }
+
+        async function showPlatformRules() {
+            console.log("Opening Platform Rules...");
+            document.getElementById("platformRulesModal").classList.add("active");
+            await loadPlatformRules();
+            showToast("Platform Rules opened - Live data loaded");
+        }
+
+        function showSystemSettings() {
+            console.log("Opening System Settings...");
+            document.getElementById("systemSettingsModal").classList.add("active");
+            showToast("System Settings opened");
+        }
+
+        function showSupportCenter() {
+            console.log("Opening Support Center...");
+            document.getElementById("supportCenterModal").classList.add("active");
+            showToast("Support Center opened");
+        }
+
+        function activateEmergencyMode() {
+            console.log("Activating Emergency Mode...");
+            document.getElementById("emergencyModal").classList.add("active");
+            showToast("Emergency Mode activated - Use with caution!", "error");
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove("active");
+        }
+
+        async function loadPlatformRules() {
+            const rulesContent = document.getElementById("platformRulesContent");
+            rulesContent.innerHTML = "<div class=\"rules-loading\">Loading latest platform rules...</div>";
+            
+            try {
+                const response = await fetch(SUPABASE_URL + "/rest/v1/platform_rules?select=*&is_active=eq.true&order=platform,id", {
+                    headers: {
+                        "Authorization": "Bearer " + SUPABASE_KEY,
+                        "apikey": SUPABASE_KEY
+                    }
+                });
+                
+                if (response.ok) {
+                    const rules = await response.json();
+                    displayPlatformRules(rules);
+                } else {
+                    rulesContent.innerHTML = "<div class=\"rules-loading\">No rules found in database.</div>";
+                }
+            } catch (error) {
+                console.error("Platform rules loading error:", error);
+                rulesContent.innerHTML = "<div class=\"rules-loading\">Error loading rules.</div>";
+            }
+        }
+
+        function displayPlatformRules(rules) {
+            const rulesContent = document.getElementById("platformRulesContent");
+            let html = "<h3>Live Platform Rules:</h3>";
+            
+            rules.forEach(rule => {
+                html += `<div class="scan-item"><div><strong>${rule.platform}</strong>: ${rule.rule_text}</div></div>`;
+            });
+            
+            rulesContent.innerHTML = html;
+        }
+
+        // Close modals when clicking outside
+        window.addEventListener("click", function(event) {
+            if (event.target.classList.contains("control-modal")) {
+                event.target.classList.remove("active");
+            }
+        });
         console.log('CheckReel Admin Dashboard v4.0 - Supabase Production Ready - All Systems Operational');
     </script>
 <script>
@@ -1413,5 +1571,81 @@ async function initRevenueChart() {
 }
 document.addEventListener("DOMContentLoaded", initRevenueChart);
 </script>
+<!-- Control Action Modals -->
+    <div class="control-modal" id="scanHistoryModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>📊 Scan History</h2>
+                <button class="close-btn" onclick="closeModal('scanHistoryModal')">Close</button>
+            </div>
+            <div class="scan-list" id="scanHistoryList">
+                <div class="scan-item">
+                    <div>
+                        <strong>TikTok</strong> - @username_example<br>
+                        <small>Music copyright scan</small>
+                    </div>
+                    <div class="status-badge status-violation">Violation</div>
+                    <div>2 min ago</div>
+                </div>
+                <div class="scan-item">
+                    <div>
+                        <strong>Instagram</strong> - @fashion_blogger<br>
+                        <small>Story content review</small>
+                    </div>
+                    <div class="status-badge status-clean">Clean</div>
+                    <div>5 min ago</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="control-modal" id="platformRulesModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>📋 Platform Rules - Live System</h2>
+                <button class="close-btn" onclick="closeModal('platformRulesModal')">Close</button>
+            </div>
+            <div id="platformRulesContent">
+                <div class="rules-loading">Loading latest platform rules...</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="control-modal" id="systemSettingsModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>⚙️ System Settings</h2>
+                <button class="close-btn" onclick="closeModal('systemSettingsModal')">Close</button>
+            </div>
+            <div class="setting-list">
+                <div class="setting-item">
+                    <div>
+                        <strong>🔍 Auto-Scan Enabled</strong><br>
+                        <small>Automatically scan new content</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="control-modal" id="supportCenterModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>🆘 Support Center</h2>
+                <button class="close-btn" onclick="closeModal('supportCenterModal')">Close</button>
+            </div>
+            <div>Support content here...</div>
+        </div>
+    </div>
+
+    <div class="control-modal" id="emergencyModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>🚨 Emergency Mode</h2>
+                <button class="close-btn" onclick="closeModal('emergencyModal')">Close</button>
+            </div>
+            <div>Emergency controls here...</div>
+        </div>
+    </div>
 </body>
 </html>
