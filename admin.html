@@ -989,7 +989,8 @@
         <span class="toast-message" id="toastMessage"></span>
     </div>
 
-    <script src="supabase-config.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+<script src="supabase-config.js"></script>
     <script src="tier.js"></script>
     <script>
         // GLOBAL VARIABLES - PROPERLY DECLARED
@@ -1377,5 +1378,40 @@
         // CONSOLE STARTUP MESSAGE
         console.log('CheckReel Admin Dashboard v4.0 - Supabase Production Ready - All Systems Operational');
     </script>
+<script>
+async function initRevenueChart() {
+    try {
+        const response = await fetch(`${SUPABASE_URL}/subscriptions?select=tier,created_at`, {
+            headers: { Authorization: `Bearer ${SUPABASE_SERVICE_KEY}` }
+        });
+        const data = await response.json();
+        
+        const monthlyRevenue = {};
+        data.forEach(sub => {
+            const month = new Date(sub.created_at).toLocaleString("default", {month: "short"});
+            const revenue = sub.tier === "premium" ? 9.99 : 4.99;
+            monthlyRevenue[month] = (monthlyRevenue[month] || 0) + revenue;
+        });
+        
+        new Chart(document.getElementById("revenueChart"), {
+            type: "line",
+            data: {
+                labels: Object.keys(monthlyRevenue),
+                datasets: [{
+                    label: "Revenue ($)",
+                    data: Object.values(monthlyRevenue),
+                    borderColor: "#667eea",
+                    backgroundColor: "rgba(102, 126, 234, 0.1)",
+                    tension: 0.4
+                }]
+            },
+            options: { responsive: true, maintainAspectRatio: false }
+        });
+    } catch (error) {
+        console.error("Revenue chart error:", error);
+    }
+}
+document.addEventListener("DOMContentLoaded", initRevenueChart);
+</script>
 </body>
 </html>
