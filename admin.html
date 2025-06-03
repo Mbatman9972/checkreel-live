@@ -1165,7 +1165,7 @@
             }
             
             try {
-                const response = await fetch(SUPABASE_URL + '/rest/v1/subscriptions?select=count&tier=in.(plus,premium)', {
+                const response = await fetch(ADMIN_SUPABASE_URL + '/rest/v1/subscriptions?select=count&tier=in.(plus,premium)', {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
@@ -1218,7 +1218,7 @@
             }
             
             try {
-                const subscription = await fetch(SUPABASE_URL + '/rest/v1/subscriptions', {
+                const subscription = await fetch(ADMIN_SUPABASE_URL + '/rest/v1/subscriptions', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -1251,7 +1251,7 @@
         // SUPABASE ANALYTICS
         async function loadSupabaseAnalytics() {
             try {
-                const scansResponse = await fetch(SUPABASE_URL + '/rest/v1/scans?select=count', {
+                const scansResponse = await fetch(ADMIN_SUPABASE_URL + '/rest/v1/scans?select=count', {
                     headers: {
                         'Authorization': 'Bearer ' + SUPABASE_KEY,
                         'apikey': SUPABASE_KEY,
@@ -1472,7 +1472,7 @@ async function loadAdminScanHistory() {
     scansList.innerHTML = "<div class=\"rules-loading\">Loading scan history from database...</div>";
     
     try {
-        const response = await fetch(SUPABASE_URL + "/rest/v1/scans?select=*&order=created_at.desc.limit(50)", {
+        const response = await fetch(ADMIN_SUPABASE_URL + "/rest/v1/scans?select=*&order=created_at.desc.limit(50)", {
             headers: {
                 "Authorization": "Bearer " + SUPABASE_KEY,
                 "apikey": SUPABASE_KEY
@@ -1546,7 +1546,7 @@ function displayAdminScanHistory(scans) {
             rulesContent.innerHTML = "<div class=\"rules-loading\">Loading latest platform rules...</div>";
             
             try {
-                const response = await fetch(SUPABASE_URL + "/rest/v1/platform_rules?select=*&is_active=eq.true&order=platform,id", {
+                const response = await fetch(ADMIN_SUPABASE_URL + "/rest/v1/platform_rules?select=*&is_active=eq.true&order=platform,id", {
                     headers: {
                         "Authorization": "Bearer " + SUPABASE_KEY,
                         "apikey": SUPABASE_KEY
