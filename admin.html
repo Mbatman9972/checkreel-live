@@ -1383,7 +1383,7 @@
                 <div class="analytics-card">
                     <h3 class="analytics-title">📊 <span data-i18n="scanHistory">Recent Scan History</span></h3>
                     <div class="scan-list" id="dashboardScanHistory">
-                        <div class="rules-loading">Loading recent scans...</div>
+                        <div class="rules-loading" data-i18n="loadingScans">Loading recent scans...</div>
                     </div>
                 </div>
             </div>
@@ -1498,42 +1498,231 @@
         var logoClickCount = 0;
         var isAdminMode = false;
 
-        // LANGUAGE SYSTEM
+        // LANGUAGE SYSTEM - COMPREHENSIVE ARABIC SUPPORT
         var languages = {
             en: {
                 systemStatus: "System Status: Online",
                 apiStatus: "API: Healthy",
-                lastUpdate: "Last Update: Just now",
-                activeUsers: "Active Users",
-                contentChecks: "Content Checks",
-                payingSubscribers: "Paying Subscribers",
-                revenue: "Revenue",
-                adminPanel: "Admin Panel",
-                tierManagement: "Tier Management"
+                queueStatus: "Queue: 847 pending",
+                dbStatus: "Database: Connected",
+                todayRevenue: "Today's Revenue",
+                activeScans: "Active Scans",
+                violationsDetected: "Violations Detected",
+                activeUsers: "Paying Subscribers",
+                responseTime: "Avg Response Time",
+                accuracy: "AI Accuracy",
+                userTierManagement: "User Tier Management",
+                userEmail: "User Email",
+                selectTier: "Select Tier",
+                chooseTier: "Choose tier...",
+                upgradeTier: "Upgrade Tier",
+                revenueChart: "Revenue Analytics",
+                platformChart: "Platform Distribution",
+                violationsChart: "Real-time Violations Detection",
+                performanceMetrics: "Performance Metrics",
+                copyright: "Copyright",
+                avgScanTime: "Avg Scan Time",
+                successRate: "Success Rate",
+                throughput: "Throughput",
+                errorRate: "Error Rate",
+                geographic: "Geographic Distribution",
+                northAmerica: "North America",
+                europe: "Europe",
+                asia: "Asia",
+                other: "Other",
+                contentCategories: "Content Categories",
+                inappropriate: "Inappropriate Language",
+                violence: "Violence/Gore",
+                spam: "Spam/Scam",
+                scanHistory: "Recent Scan History",
+                loadingScans: "Loading recent scans...",
+                controlActions: "Control Actions",
+                scanHistoryAction: "Scan History",
+                platformGuidelines: "Platform Rules",
+                settings: "System Settings",
+                support: "Support Center",
+                emergency: "Emergency Mode",
+                criticalAlerts: "Critical Alerts",
+                liveActivity: "Live Activity",
+                closeBtn: "Close",
+                loadingData: "Loading data...",
+                errorLoading: "Error loading data",
+                adminPanel: "Admin Panel - Tier Management",
+                plusTier: "Plus Tier Management",
+                premiumTier: "Premium Tier Management",
+                addUser: "Add User",
+                liveMode: "Live Mode",
+                admin: "Admin"
             },
             ar: {
                 systemStatus: "حالة النظام: متصل",
                 apiStatus: "واجهة البرمجة: سليمة",
-                lastUpdate: "آخر تحديث: الآن",
-                activeUsers: "المستخدمون النشطون",
-                contentChecks: "فحوص المحتوى",
-                payingSubscribers: "المشتركون الدافعون",
-                revenue: "الإيرادات",
-                adminPanel: "لوحة الإدارة",
-                tierManagement: "إدارة المستويات"
+                queueStatus: "الطابور: ٨٤٧ معلق",
+                dbStatus: "قاعدة البيانات: متصلة",
+                todayRevenue: "إيرادات اليوم",
+                activeScans: "الفحوصات النشطة",
+                violationsDetected: "الانتهاكات المكتشفة",
+                activeUsers: "المشتركون الدافعون",
+                responseTime: "متوسط وقت الاستجابة",
+                accuracy: "دقة الذكاء الاصطناعي",
+                userTierManagement: "إدارة مستويات المستخدمين",
+                userEmail: "بريد المستخدم الإلكتروني",
+                selectTier: "اختر المستوى",
+                chooseTier: "اختر مستوى...",
+                upgradeTier: "ترقية المستوى",
+                revenueChart: "تحليلات الإيرادات",
+                platformChart: "توزيع المنصات",
+                violationsChart: "اكتشاف الانتهاكات في الوقت الفعلي",
+                performanceMetrics: "مقاييس الأداء",
+                copyright: "حقوق التأليف والنشر",
+                avgScanTime: "متوسط وقت الفحص",
+                successRate: "معدل النجاح",
+                throughput: "الإنتاجية",
+                errorRate: "معدل الخطأ",
+                geographic: "التوزيع الجغرافي",
+                northAmerica: "أمريكا الشمالية",
+                europe: "أوروبا",
+                asia: "آسيا",
+                other: "أخرى",
+                contentCategories: "فئات المحتوى",
+                inappropriate: "لغة غير مناسبة",
+                violence: "عنف/دماء",
+                spam: "رسائل مزعجة/احتيال",
+                scanHistory: "سجل الفحص الحديث",
+                loadingScans: "جاري تحميل الفحوصات الحديثة...",
+                controlActions: "إجراءات التحكم",
+                scanHistoryAction: "سجل الفحص",
+                platformGuidelines: "قواعد المنصة",
+                settings: "إعدادات النظام",
+                support: "مركز الدعم",
+                emergency: "وضع الطوارئ",
+                criticalAlerts: "تنبيهات حرجة",
+                liveActivity: "النشاط المباشر",
+                closeBtn: "إغلاق",
+                loadingData: "جاري تحميل البيانات...",
+                errorLoading: "خطأ في تحميل البيانات",
+                adminPanel: "لوحة الإدارة - إدارة المستويات",
+                plusTier: "إدارة المستوى الإضافي",
+                premiumTier: "إدارة المستوى المميز",
+                addUser: "إضافة مستخدم",
+                liveMode: "الوضع المباشر",
+                admin: "إدارة"
             }
         };
 
-        // LANGUAGE FUNCTIONS
+        // COMPREHENSIVE LANGUAGE UPDATE FUNCTION
         function updateLanguage() {
             var lang = languages[currentLanguage];
+            var isRTL = currentLanguage === "ar";
+            
+            // Update body direction
+            document.body.dir = isRTL ? "rtl" : "ltr";
+            document.body.className = isRTL ? "rtl" : "";
+            
+            // Update all elements with data-i18n attributes
+            document.querySelectorAll('[data-i18n]').forEach(function(element) {
+                var key = element.getAttribute('data-i18n');
+                if (lang[key]) {
+                    element.textContent = lang[key];
+                }
+            });
+            
+            // Update status bar items
             var systemStatusEl = document.getElementById("systemStatus");
             var apiStatusEl = document.getElementById("apiStatus");
-            
             if (systemStatusEl) systemStatusEl.textContent = lang.systemStatus;
             if (apiStatusEl) apiStatusEl.textContent = lang.apiStatus;
             
-            document.body.className = currentLanguage === "ar" ? "rtl" : "";
+            // Update control toggle buttons
+            var controlToggle = document.getElementById("controlToggle");
+            var adminToggle = document.getElementById("adminToggle");
+            if (controlToggle) controlToggle.textContent = (isRTL ? "⚡ " : "⚡ ") + lang.liveMode;
+            if (adminToggle) adminToggle.textContent = (isRTL ? "🔑 " : "🔑 ") + lang.admin;
+            
+            // Update KPI values (convert numbers to Arabic if needed)
+            if (isRTL) {
+                convertNumbersToArabic();
+            } else {
+                convertNumbersToEnglish();
+            }
+            
+            // Update admin section if visible
+            var adminSection = document.getElementById("adminSection");
+            if (adminSection && adminSection.classList.contains("active")) {
+                updateAdminSectionLanguage(lang, isRTL);
+            }
+            
+            // Update modal content
+            updateModalLanguage(lang, isRTL);
+        }
+        
+        function convertNumbersToArabic() {
+            var arabicNumbers = ['٠', '١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩'];
+            var elements = document.querySelectorAll('.kpi-value, .metric-value, .platform-count');
+            
+            elements.forEach(function(element) {
+                if (element.textContent) {
+                    var text = element.textContent;
+                    for (var i = 0; i < 10; i++) {
+                        text = text.replace(new RegExp(i, 'g'), arabicNumbers[i]);
+                    }
+                    element.textContent = text;
+                }
+            });
+        }
+        
+        function convertNumbersToEnglish() {
+            var arabicNumbers = ['٠', '١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩'];
+            var elements = document.querySelectorAll('.kpi-value, .metric-value, .platform-count');
+            
+            elements.forEach(function(element) {
+                if (element.textContent) {
+                    var text = element.textContent;
+                    for (var i = 0; i < 10; i++) {
+                        text = text.replace(new RegExp(arabicNumbers[i], 'g'), i);
+                    }
+                    element.textContent = text;
+                }
+            });
+        }
+        
+        function updateAdminSectionLanguage(lang, isRTL) {
+            var plusHeader = document.querySelector('#adminSection h4:first-of-type');
+            var premiumHeader = document.querySelector('#adminSection h4:last-of-type');
+            var plusBtn = document.querySelector('#adminSection button:first-of-type');
+            var premiumBtn = document.querySelector('#adminSection button:last-of-type');
+            
+            if (plusHeader) plusHeader.textContent = lang.plusTier;
+            if (premiumHeader) premiumHeader.textContent = lang.premiumTier;
+            if (plusBtn) plusBtn.textContent = lang.addUser + " Plus";
+            if (premiumBtn) premiumBtn.textContent = lang.addUser + " Premium";
+        }
+        
+        function updateModalLanguage(lang, isRTL) {
+            // Update modal headers
+            var scanModalHeader = document.querySelector('#scanHistoryModal h2');
+            var rulesModalHeader = document.querySelector('#platformRulesModal h2');
+            var settingsModalHeader = document.querySelector('#systemSettingsModal h2');
+            var supportModalHeader = document.querySelector('#supportCenterModal h2');
+            var emergencyModalHeader = document.querySelector('#emergencyModal h2');
+            
+            if (scanModalHeader) scanModalHeader.textContent = "📊 " + lang.scanHistoryAction;
+            if (rulesModalHeader) rulesModalHeader.textContent = "📋 " + lang.platformGuidelines;
+            if (settingsModalHeader) settingsModalHeader.textContent = "⚙️ " + lang.settings;
+            if (supportModalHeader) supportModalHeader.textContent = "🆘 " + lang.support;
+            if (emergencyModalHeader) emergencyModalHeader.textContent = "🚨 " + lang.emergency;
+            
+            // Update close buttons
+            document.querySelectorAll('.close-btn').forEach(function(btn) {
+                btn.textContent = lang.closeBtn;
+            });
+            
+            // Update loading messages
+            document.querySelectorAll('.rules-loading').forEach(function(element) {
+                if (element.textContent.includes('Loading')) {
+                    element.textContent = lang.loadingData;
+                }
+            });
         }
 
         // TOAST NOTIFICATION SYSTEM
