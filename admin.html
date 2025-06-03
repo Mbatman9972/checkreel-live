@@ -1460,11 +1460,57 @@
 
         // CONSOLE STARTUP MESSAGE
         // CONTROL ACTIONS FUNCTIONS
-        function showScanHistory() {
-            console.log("Opening Scan History...");
-            document.getElementById("scanHistoryModal").classList.add("active");
-            showToast("Scan History opened");
+       async function showScanHistory() {
+    console.log("Opening Scan History...");
+    document.getElementById("scanHistoryModal").classList.add("active");
+    await loadAdminScanHistory();
+    showToast("Scan History opened - Live data loaded");
+}
+
+async function loadAdminScanHistory() {
+    const scansList = document.getElementById("scanHistoryList");
+    scansList.innerHTML = "<div class=\"rules-loading\">Loading scan history from database...</div>";
+    
+    try {
+        const response = await fetch(SUPABASE_URL + "/rest/v1/scans?select=*&order=created_at.desc.limit(50)", {
+            headers: {
+                "Authorization": "Bearer " + SUPABASE_KEY,
+                "apikey": SUPABASE_KEY
+            }
+        });
+        
+        if (response.ok) {
+            const scans = await response.json();
+            displayAdminScanHistory(scans);
+        } else {
+            scansList.innerHTML = "<div class=\"rules-loading\">Error loading scan history.</div>";
         }
+    } catch (error) {
+        console.error("Scan history loading error:", error);
+        scansList.innerHTML = "<div class=\"rules-loading\">Database connection failed.</div>";
+    }
+}
+
+function displayAdminScanHistory(scans) {
+    const scansList = document.getElementById("scanHistoryList");
+    let html = "<h3>Live Scan History - " + scans.length + " Recent Records:</h3>";
+    
+    scans.forEach(scan => {
+        const results = JSON.parse(scan.results || "{}");
+        const statusBadge = scan.status === 'violation' ? 'status-violation' : 'status-clean';
+        html += `<div class="scan-item">
+            <div>
+                <strong>${scan.platform}</strong> - ${scan.region}<br>
+                <small>Risk Level: ${scan.risk_level} | Score: ${scan.compliance_score}</small><br>
+                <small>${results.violation_type || 'No violation'}: ${results.description || 'Clean scan'}</small>
+            </div>
+            <div class="status-badge ${statusBadge}">${scan.status}</div>
+            <div>${new Date(scan.created_at).toLocaleDateString()}</div>
+        </div>`;
+    });
+    
+    scansList.innerHTML = html;
+}
 
         async function showPlatformRules() {
             console.log("Opening Platform Rules...");
@@ -1579,26 +1625,8 @@ document.addEventListener("DOMContentLoaded", initRevenueChart);
                 <button class="close-btn" onclick="closeModal('scanHistoryModal')">Close</button>
             </div>
             <div class="scan-list" id="scanHistoryList">
-                <div class="scan-item">
-                    <div>
-                        <strong>TikTok</strong> - @username_example<br>
-                        <small>Music copyright scan</small>
-                    </div>
-                    <div class="status-badge status-violation">Violation</div>
-                    <div>2 min ago</div>
-                </div>
-                <div class="scan-item">
-                    <div>
-                        <strong>Instagram</strong> - @fashion_blogger<br>
-                        <small>Story content review</small>
-                    </div>
-                    <div class="status-badge status-clean">Clean</div>
-                    <div>5 min ago</div>
-                </div>
-            </div>
-        </div>
-    </div>
-
+    <div class="rules-loading">Loading scan history from database...</div>
+</div>
     <div class="control-modal" id="platformRulesModal">
         <div class="modal-content">
             <div class="modal-header">
