@@ -7,19 +7,54 @@
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#667eea">
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+        
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
 
+        :root {
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            --secondary-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            --accent-gradient: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+            --danger-gradient: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+            --glass-bg: rgba(255, 255, 255, 0.08);
+            --glass-border: rgba(255, 255, 255, 0.18);
+            --text-primary: rgba(255, 255, 255, 0.95);
+            --text-secondary: rgba(255, 255, 255, 0.7);
+            --text-muted: rgba(255, 255, 255, 0.5);
+            --shadow-lg: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            --shadow-xl: 0 35px 60px -12px rgba(0, 0, 0, 0.3);
+            --blur-lg: blur(16px);
+            --blur-xl: blur(24px);
+        }
+
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--primary-gradient);
+            background-attachment: fixed;
             min-height: 100vh;
-            color: #333;
+            color: var(--text-primary);
             line-height: 1.6;
-            transition: all 0.3s ease;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 20% 20%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(255, 118, 117, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(56, 249, 215, 0.2) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: -1;
         }
 
         [dir="rtl"] {
@@ -28,28 +63,42 @@
         }
 
         .header {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-            padding: 1rem 2rem;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: var(--blur-lg);
+            border-bottom: 1px solid var(--glass-border);
+            padding: 1.5rem 2rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
             flex-wrap: wrap;
-            gap: 1rem;
+            gap: 1.5rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: var(--shadow-lg);
         }
 
         .logo-section {
             display: flex;
             align-items: center;
-            gap: 1rem;
+            gap: 1.5rem;
         }
 
         .logo {
-            font-size: 2rem;
-            font-weight: bold;
-            color: white;
+            font-size: 2.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #fff 0%, #f0f0f0 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
             cursor: pointer;
+            transition: all 0.3s ease;
+            letter-spacing: -0.02em;
+        }
+
+        .logo:hover {
+            transform: scale(1.05);
+            filter: drop-shadow(0 0 20px rgba(255, 255, 255, 0.3));
         }
 
         .header-controls {
@@ -60,93 +109,121 @@
         }
 
         .language-selector, .pwa-install, .control-toggle {
-            background: rgba(255, 255, 255, 0.2);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            color: white;
-            padding: 0.5rem 1rem;
-            border-radius: 8px;
+            background: var(--glass-bg);
+            backdrop-filter: var(--blur-lg);
+            border: 1px solid var(--glass-border);
+            color: var(--text-primary);
+            padding: 0.75rem 1.5rem;
+            border-radius: 16px;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            font-weight: 500;
+            font-size: 0.9rem;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .language-selector:hover, .pwa-install:hover, .control-toggle:hover {
+            transform: translateY(-2px);
+            background: rgba(255, 255, 255, 0.12);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
         }
 
         #adminToggle {
             display: none;
-            background: rgba(255, 0, 0, 0.3);
-            border: 1px solid rgba(255, 0, 0, 0.5);
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+            border: 1px solid rgba(255, 107, 107, 0.3);
+            box-shadow: 0 8px 32px rgba(255, 107, 107, 0.2);
         }
 
         .main-container {
             display: grid;
-            grid-template-columns: 1fr 320px;
-            gap: 2rem;
-            padding: 2rem;
-            max-width: 1600px;
+            grid-template-columns: 1fr 380px;
+            gap: 2.5rem;
+            padding: 2.5rem;
+            max-width: 1800px;
             margin: 0 auto;
         }
 
         .dashboard-content {
             display: flex;
             flex-direction: column;
-            gap: 2rem;
+            gap: 2.5rem;
         }
 
         .status-bar {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 16px;
-            padding: 1rem 2rem;
+            background: var(--glass-bg);
+            backdrop-filter: var(--blur-xl);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 1.5rem 2.5rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
             flex-wrap: wrap;
-            gap: 1rem;
+            gap: 1.5rem;
+            box-shadow: var(--shadow-lg);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .status-bar::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--accent-gradient);
         }
 
         .status-item {
             display: flex;
             align-items: center;
-            gap: 0.5rem;
-            color: white;
+            gap: 0.75rem;
+            color: var(--text-primary);
+            font-weight: 500;
         }
 
         .status-indicator {
-            width: 12px;
-            height: 12px;
+            width: 14px;
+            height: 14px;
             border-radius: 50%;
             animation: pulse 2s infinite;
+            box-shadow: 0 0 20px currentColor;
         }
 
         .status-indicator.online { 
-            background: #4CAF50; 
+            background: #10b981;
+            box-shadow: 0 0 20px #10b981;
         }
         
         .status-indicator.warning { 
-            background: #FF9800; 
+            background: #f59e0b;
+            box-shadow: 0 0 20px #f59e0b;
         }
 
         @keyframes pulse {
-            0% { opacity: 1; }
-            50% { opacity: 0.5; }
-            100% { opacity: 1; }
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.7; transform: scale(1.1); }
         }
 
         .kpi-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 1.5rem;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2rem;
         }
 
         .kpi-card {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 16px;
-            padding: 1.5rem;
-            transition: all 0.3s ease;
+            background: var(--glass-bg);
+            backdrop-filter: var(--blur-xl);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 2rem;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             cursor: pointer;
             position: relative;
             overflow: hidden;
+            box-shadow: var(--shadow-lg);
         }
 
         .kpi-card::before {
@@ -156,213 +233,304 @@
             left: 0;
             right: 0;
             height: 4px;
-            background: linear-gradient(90deg, #4CAF50, #2196F3, #FF9800, #F44336);
+            background: var(--secondary-gradient);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .kpi-card:hover::before {
+            transform: scaleX(1);
         }
 
         .kpi-card:hover {
-            transform: translateY(-5px);
-            background: rgba(255, 255, 255, 0.15);
+            transform: translateY(-8px) scale(1.02);
+            background: rgba(255, 255, 255, 0.12);
+            box-shadow: var(--shadow-xl);
         }
+
+        .kpi-card:nth-child(1)::before { background: var(--accent-gradient); }
+        .kpi-card:nth-child(2)::before { background: var(--secondary-gradient); }
+        .kpi-card:nth-child(3)::before { background: var(--danger-gradient); }
+        .kpi-card:nth-child(4)::before { background: linear-gradient(135deg, #a78bfa 0%, #ec4899 100%); }
+        .kpi-card:nth-child(5)::before { background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%); }
+        .kpi-card:nth-child(6)::before { background: linear-gradient(135deg, #34d399 0%, #059669 100%); }
 
         .kpi-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 1rem;
+            margin-bottom: 1.5rem;
         }
 
         .kpi-title {
-            color: rgba(255, 255, 255, 0.8);
-            font-size: 0.9rem;
-            font-weight: 500;
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
         }
 
         .kpi-icon {
-            font-size: 1.5rem;
+            font-size: 2rem;
+            opacity: 0.8;
+            filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.2));
         }
 
         .kpi-value {
-            font-size: 2rem;
-            font-weight: bold;
-            color: white;
-            margin-bottom: 0.5rem;
+            font-size: 3rem;
+            font-weight: 800;
+            color: var(--text-primary);
+            margin-bottom: 0.75rem;
+            line-height: 1;
+            letter-spacing: -0.02em;
         }
 
         .kpi-change {
-            font-size: 0.85rem;
-            font-weight: 500;
-            display: flex;
-            align-items: center;
-            gap: 0.25rem;
-        }
-
-        .kpi-change.positive { 
-            color: #4ade80; 
-        }
-        
-        .kpi-change.negative { 
-            color: #f87171; 
-        }
-
-        .user-tier-management {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 16px;
-            padding: 2rem;
-            margin-bottom: 2rem;
-        }
-
-        .section-title {
-            font-size: 1.3rem;
+            font-size: 0.9rem;
             font-weight: 600;
-            color: white;
-            margin-bottom: 1.5rem;
             display: flex;
             align-items: center;
             gap: 0.5rem;
         }
 
+        .kpi-change.positive { 
+            color: #10b981;
+            text-shadow: 0 0 10px rgba(16, 185, 129, 0.3);
+        }
+        
+        .kpi-change.negative { 
+            color: #ef4444;
+            text-shadow: 0 0 10px rgba(239, 68, 68, 0.3);
+        }
+
+        .user-tier-management {
+            background: var(--glass-bg);
+            backdrop-filter: var(--blur-xl);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 2.5rem;
+            margin-bottom: 2.5rem;
+            box-shadow: var(--shadow-lg);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .user-tier-management::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--accent-gradient);
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            letter-spacing: -0.01em;
+        }
+
         .tier-upgrade-form {
             display: grid;
             grid-template-columns: 2fr 1fr auto;
-            gap: 1rem;
+            gap: 1.5rem;
             align-items: end;
         }
 
         .form-group {
             display: flex;
             flex-direction: column;
-            gap: 0.5rem;
+            gap: 0.75rem;
         }
 
         .form-label {
-            color: rgba(255, 255, 255, 0.9);
-            font-size: 0.9rem;
-            font-weight: 500;
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
         }
 
         .form-input, .form-select {
-            padding: 0.75rem;
-            border-radius: 8px;
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            background: rgba(255, 255, 255, 0.1);
-            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 16px;
+            border: 1px solid var(--glass-border);
+            background: var(--glass-bg);
+            backdrop-filter: var(--blur-lg);
+            color: var(--text-primary);
             font-size: 1rem;
-            transition: all 0.3s ease;
+            font-weight: 500;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-input:focus, .form-select:focus {
+            outline: none;
+            border-color: rgba(102, 126, 234, 0.5);
+            background: rgba(255, 255, 255, 0.12);
+            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1), 0 8px 24px rgba(0, 0, 0, 0.15);
         }
 
         .form-input::placeholder {
-            color: rgba(255, 255, 255, 0.5);
+            color: var(--text-muted);
         }
 
         .form-select option {
-            background: #667eea;
+            background: #1f2937;
             color: white;
         }
 
         .btn-upgrade {
-            background: rgba(76, 175, 80, 0.3);
-            border: 1px solid rgba(76, 175, 80, 0.5);
+            background: var(--accent-gradient);
+            border: none;
             color: white;
-            padding: 0.75rem 1.5rem;
-            border-radius: 8px;
+            padding: 1rem 2rem;
+            border-radius: 16px;
             cursor: pointer;
             font-size: 1rem;
-            font-weight: 500;
-            transition: all 0.3s ease;
+            font-weight: 600;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             display: flex;
             align-items: center;
-            gap: 0.5rem;
+            gap: 0.75rem;
+            box-shadow: 0 8px 32px rgba(67, 233, 123, 0.2);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
         }
 
         .btn-upgrade:hover {
-            background: rgba(76, 175, 80, 0.4);
-            transform: translateY(-2px);
+            transform: translateY(-3px);
+            box-shadow: 0 12px 40px rgba(67, 233, 123, 0.3);
+        }
+
+        .btn-upgrade:active {
+            transform: translateY(-1px);
         }
 
         .charts-grid {
             display: grid;
             grid-template-columns: 2fr 1fr;
-            gap: 2rem;
+            gap: 2.5rem;
         }
 
         .chart-container {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 16px;
-            padding: 2rem;
+            background: var(--glass-bg);
+            backdrop-filter: var(--blur-xl);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 2.5rem;
+            box-shadow: var(--shadow-lg);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .chart-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--secondary-gradient);
         }
 
         .chart-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 1.5rem;
+            margin-bottom: 2rem;
         }
 
         .chart-title {
-            font-size: 1.2rem;
-            font-weight: 600;
-            color: white;
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--text-primary);
             display: flex;
             align-items: center;
-            gap: 0.5rem;
+            gap: 0.75rem;
+            letter-spacing: -0.01em;
         }
 
         .chart-controls {
             display: flex;
-            gap: 0.5rem;
+            gap: 0.75rem;
         }
 
         .chart-btn {
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            color: rgba(255, 255, 255, 0.8);
-            padding: 0.25rem 0.75rem;
-            border-radius: 6px;
+            background: var(--glass-bg);
+            backdrop-filter: var(--blur-lg);
+            border: 1px solid var(--glass-border);
+            color: var(--text-secondary);
+            padding: 0.5rem 1rem;
+            border-radius: 12px;
             cursor: pointer;
-            transition: all 0.3s ease;
-            font-size: 0.8rem;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
         }
 
         .chart-btn.active, .chart-btn:hover {
-            background: rgba(255, 255, 255, 0.2);
-            color: white;
+            background: rgba(255, 255, 255, 0.15);
+            color: var(--text-primary);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
         }
 
         .analytics-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-            margin-top: 2rem;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2.5rem;
+            margin-top: 2.5rem;
         }
 
         .analytics-card {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 16px;
-            padding: 1.5rem;
+            background: var(--glass-bg);
+            backdrop-filter: var(--blur-xl);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 2rem;
+            box-shadow: var(--shadow-lg);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .analytics-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-xl);
         }
 
         .analytics-title {
-            font-size: 1.1rem;
-            font-weight: 600;
-            color: white;
-            margin-bottom: 1rem;
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 1.5rem;
             display: flex;
             align-items: center;
-            gap: 0.5rem;
+            gap: 0.75rem;
+            letter-spacing: -0.01em;
         }
 
         .metric-item {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 0.75rem 0;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 1rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            transition: all 0.3s ease;
+        }
+
+        .metric-item:hover {
+            background: rgba(255, 255, 255, 0.03);
+            margin: 0 -1rem;
+            padding: 1rem;
+            border-radius: 12px;
         }
 
         .metric-item:last-child {
@@ -370,75 +538,88 @@
         }
 
         .metric-label {
-            color: rgba(255, 255, 255, 0.8);
-            font-size: 0.9rem;
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            font-weight: 500;
         }
 
         .metric-value {
-            color: white;
-            font-weight: 600;
+            color: var(--text-primary);
+            font-weight: 700;
+            font-size: 1.1rem;
         }
 
         .sidebar {
             display: flex;
             flex-direction: column;
-            gap: 2rem;
+            gap: 2.5rem;
         }
 
         .sidebar-section {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 16px;
-            padding: 1.5rem;
+            background: var(--glass-bg);
+            backdrop-filter: var(--blur-xl);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 2rem;
+            box-shadow: var(--shadow-lg);
+            position: relative;
+            overflow: hidden;
         }
 
         .sidebar-title {
-            font-size: 1.1rem;
-            font-weight: 600;
-            color: white;
-            margin-bottom: 1rem;
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 1.5rem;
             display: flex;
             align-items: center;
-            gap: 0.5rem;
+            gap: 0.75rem;
+            letter-spacing: -0.01em;
         }
 
         .quick-action, .activity-item, .alert-item {
             display: flex;
             align-items: center;
             gap: 1rem;
-            padding: 0.75rem;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 8px;
-            margin-bottom: 0.5rem;
+            padding: 1rem;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            margin-bottom: 0.75rem;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            backdrop-filter: var(--blur-lg);
         }
 
         .quick-action:hover, .activity-item:hover {
-            background: rgba(255, 255, 255, 0.1);
-            transform: translateX(5px);
+            background: rgba(255, 255, 255, 0.12);
+            transform: translateX(8px) translateY(-2px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
         }
 
         .alert-item.critical {
-            border-left: 4px solid #F44336;
+            border-left: 4px solid #ef4444;
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.1) 0%, var(--glass-bg) 100%);
         }
 
         .alert-item.warning {
-            border-left: 4px solid #FF9800;
+            border-left: 4px solid #f59e0b;
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.1) 0%, var(--glass-bg) 100%);
         }
 
         .alert-item.info {
-            border-left: 4px solid #2196F3;
+            border-left: 4px solid #3b82f6;
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, var(--glass-bg) 100%);
         }
 
         .action-icon, .activity-icon, .alert-icon {
-            font-size: 1.2rem;
+            font-size: 1.5rem;
+            filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.2));
         }
 
         .action-text, .activity-text, .alert-text {
-            color: white;
-            font-weight: 500;
+            color: var(--text-primary);
+            font-weight: 600;
             flex: 1;
         }
 
@@ -449,8 +630,9 @@
         }
 
         .activity-time, .alert-time {
-            color: rgba(255, 255, 255, 0.6);
+            color: var(--text-muted);
             font-size: 0.8rem;
+            font-weight: 500;
         }
 
         .toast {
@@ -458,17 +640,18 @@
             bottom: 2rem;
             right: 2rem;
             background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border-radius: 8px;
-            padding: 1rem 1.5rem;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            backdrop-filter: var(--blur-xl);
+            border-radius: 16px;
+            padding: 1.5rem 2rem;
+            box-shadow: var(--shadow-xl);
             display: flex;
             align-items: center;
-            gap: 0.75rem;
+            gap: 1rem;
             transform: translateY(100px);
             opacity: 0;
-            transition: all 0.3s ease;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             z-index: 1000;
+            border: 1px solid rgba(255, 255, 255, 0.2);
         }
 
         .toast.show {
@@ -477,11 +660,11 @@
         }
 
         .toast.success {
-            border-left: 4px solid #4CAF50;
+            border-left: 4px solid #10b981;
         }
 
         .toast.error {
-            border-left: 4px solid #F44336;
+            border-left: 4px solid #ef4444;
         }
 
         .toast-icon {
@@ -489,16 +672,16 @@
         }
 
         .toast-message {
-            color: #333;
-            font-weight: 500;
+            color: #1f2937;
+            font-weight: 600;
         }
 
         .spinner {
-            border: 2px solid rgba(255, 255, 255, 0.3);
+            border: 3px solid rgba(255, 255, 255, 0.2);
             border-top-color: white;
             border-radius: 50%;
-            width: 16px;
-            height: 16px;
+            width: 20px;
+            height: 20px;
             animation: spin 0.8s linear infinite;
             display: inline-block;
         }
@@ -508,132 +691,175 @@
         }
 
         .control-display {
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 12px;
-            padding: 20px;
+            background: var(--glass-bg);
+            backdrop-filter: var(--blur-lg);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 2rem;
             text-align: center;
-            height: 200px;
+            height: 240px;
             display: flex;
             flex-direction: column;
             justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .control-display:hover {
+            background: rgba(255, 255, 255, 0.12);
+            transform: scale(1.02);
         }
 
         .platform-stats {
             display: flex;
             flex-direction: column;
-            gap: 15px;
+            gap: 1rem;
         }
 
         .platform-item {
-            font-size: 18px;
-            color: #fff;
-            padding: 8px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 6px;
+            font-size: 1.2rem;
+            color: var(--text-primary);
+            padding: 0.75rem;
+            background: var(--glass-bg);
+            border-radius: 12px;
+            font-weight: 600;
         }
 
         .platform-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 6px;
-            height: 180px;
-            max-height: 180px;
+            gap: 0.75rem;
+            height: 200px;
         }
 
         .platform-box {
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 8px;
-            padding: 4px;
+            background: var(--glass-bg);
+            backdrop-filter: var(--blur-lg);
+            border-radius: 16px;
+            padding: 0.75rem;
             text-align: center;
             display: flex;
             flex-direction: column;
-            justify-content: min-height 80px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            justify-content: center;
+            min-height: 90px;
+            border: 1px solid var(--glass-border);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .platform-box:hover {
+            transform: translateY(-4px);
+            background: rgba(255, 255, 255, 0.12);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
         }
 
         .platform-icon {
-            font-size: 20px;
-            margin-bottom: 5px;
+            font-size: 24px;
+            margin-bottom: 0.5rem;
+            filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.2));
         }
 
         .platform-name {
-            font-size: 12px;
-            color: rgba(255, 255, 255, 0.8);
-            margin-bottom: 3px;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.25rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
         }
 
         .platform-count {
-            font-size: 16px;
-            font-weight: bold;
-            color: #fff;
+            font-size: 1.2rem;
+            font-weight: 800;
+            color: var(--text-primary);
         }
 
         #adminSection {
             display: none;
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 16px;
-            padding: 2rem;
-            margin-bottom: 2rem;
-            border-left: 4px solid #F44336;
+            background: var(--glass-bg);
+            backdrop-filter: var(--blur-xl);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 2.5rem;
+            margin-bottom: 2.5rem;
+            border-left: 4px solid #ef4444;
+            box-shadow: var(--shadow-lg);
+            position: relative;
+            overflow: hidden;
+        }
+
+        #adminSection::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--danger-gradient);
         }
 
         #adminSection.active {
             display: block;
+            animation: slideInUp 0.5s ease;
         }
 
-        @media (max-width: 1200px) {
-            .charts-grid {
-                grid-template-columns: 1fr;
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
             }
-            
-            .tier-upgrade-form {
-                grid-template-columns: 1fr;
+            to {
+                opacity: 1;
+                transform: translateY(0);
             }
         }
 
-        @media (max-width: 1024px) {
-            .main-container {
-                grid-template-columns: 1fr;
-            }
-            
-            .sidebar {
-                order: -1;
-            }
-            
-            .analytics-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-.control-modal {
+        .control-modal {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
             background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: var(--blur-lg);
             z-index: 2000;
             display: none;
             justify-content: center;
             align-items: center;
+            animation: fadeIn 0.3s ease;
         }
 
         .control-modal.active {
             display: flex;
         }
 
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
         .modal-content {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 16px;
-            padding: 2rem;
-            max-width: 800px;
+            background: var(--glass-bg);
+            backdrop-filter: var(--blur-xl);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 2.5rem;
+            max-width: 900px;
             width: 90%;
             max-height: 80%;
             overflow-y: auto;
-            color: white;
+            color: var(--text-primary);
+            box-shadow: var(--shadow-xl);
+            animation: scaleIn 0.3s ease;
+        }
+
+        @keyframes scaleIn {
+            from { 
+                opacity: 0; 
+                transform: scale(0.9);
+            }
+            to { 
+                opacity: 1; 
+                transform: scale(1);
+            }
         }
 
         .modal-header {
@@ -641,15 +867,25 @@
             justify-content: space-between;
             align-items: center;
             margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--glass-border);
         }
 
         .close-btn {
-            background: rgba(255, 255, 255, 0.2);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            color: white;
-            padding: 0.5rem 1rem;
-            border-radius: 8px;
+            background: var(--glass-bg);
+            backdrop-filter: var(--blur-lg);
+            border: 1px solid var(--glass-border);
+            color: var(--text-primary);
+            padding: 0.75rem 1.5rem;
+            border-radius: 12px;
             cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .close-btn:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateY(-2px);
         }
 
         .scan-list, .setting-list {
@@ -659,49 +895,218 @@
         }
 
         .scan-item, .setting-item {
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 8px;
-            padding: 1rem;
+            background: var(--glass-bg);
+            backdrop-filter: var(--blur-lg);
+            border-radius: 16px;
+            padding: 1.5rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            border: 1px solid var(--glass-border);
+            transition: all 0.3s ease;
+        }
+
+        .scan-item:hover, .setting-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
         }
 
         .status-badge {
-            padding: 0.25rem 0.75rem;
-            border-radius: 4px;
+            padding: 0.5rem 1rem;
+            border-radius: 12px;
             font-size: 0.8rem;
-            font-weight: 500;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
         }
 
         .status-clean {
-            background: rgba(76, 175, 80, 0.3);
-            color: #4CAF50;
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.2) 0%, rgba(16, 185, 129, 0.1) 100%);
+            color: #10b981;
+            border: 1px solid rgba(16, 185, 129, 0.3);
         }
 
         .status-violation {
-            background: rgba(244, 67, 54, 0.3);
-            color: #F44336;
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.2) 0%, rgba(239, 68, 68, 0.1) 100%);
+            color: #ef4444;
+            border: 1px solid rgba(239, 68, 68, 0.3);
         }
 
         .rules-loading {
             text-align: center;
-            padding: 2rem;
-            color: rgba(255, 255, 255, 0.7);
+            padding: 3rem;
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            font-weight: 500;
         }
+
+        /* Responsive Design */
+        @media (max-width: 1200px) {
+            .charts-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .tier-upgrade-form {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .main-container {
+                grid-template-columns: 1fr;
+                padding: 2rem;
+            }
+        }
+
+        @media (max-width: 1024px) {
+            .sidebar {
+                order: -1;
+            }
+            
+            .analytics-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .kpi-grid {
+                grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            }
+        }
+
         @media (max-width: 768px) {
             .header {
                 padding: 1rem;
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .header-controls {
+                justify-content: center;
+                width: 100%;
             }
             
             .main-container {
                 padding: 1rem;
-                gap: 1rem;
+                gap: 1.5rem;
             }
             
             .kpi-grid {
                 grid-template-columns: 1fr;
+                gap: 1rem;
             }
+
+            .kpi-value {
+                font-size: 2.5rem;
+            }
+
+            .logo {
+                font-size: 2rem;
+            }
+
+            .sidebar-section, .chart-container, .analytics-card {
+                padding: 1.5rem;
+            }
+
+            .modal-content {
+                padding: 2rem;
+                margin: 1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .platform-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .status-bar {
+                padding: 1rem;
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .tier-upgrade-form {
+                gap: 0.75rem;
+            }
+
+            .form-input, .form-select, .btn-upgrade {
+                padding: 0.75rem 1rem;
+            }
+        }
+
+        /* Advanced Animations */
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .kpi-card:nth-child(1) { animation: fadeInUp 0.6s ease 0.1s both; }
+        .kpi-card:nth-child(2) { animation: fadeInUp 0.6s ease 0.2s both; }
+        .kpi-card:nth-child(3) { animation: fadeInUp 0.6s ease 0.3s both; }
+        .kpi-card:nth-child(4) { animation: fadeInUp 0.6s ease 0.4s both; }
+        .kpi-card:nth-child(5) { animation: fadeInUp 0.6s ease 0.5s both; }
+        .kpi-card:nth-child(6) { animation: fadeInUp 0.6s ease 0.6s both; }
+
+        .dashboard-content { animation: slideInLeft 0.8s ease 0.2s both; }
+        .sidebar { animation: slideInRight 0.8s ease 0.4s both; }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0.1) 100%);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.3) 0%, rgba(255, 255, 255, 0.2) 100%);
+        }
+
+        /* Loading States */
+        .loading-shimmer {
+            background: linear-gradient(90deg, 
+                rgba(255, 255, 255, 0.1) 25%, 
+                rgba(255, 255, 255, 0.2) 50%, 
+                rgba(255, 255, 255, 0.1) 75%);
+            background-size: 200% 100%;
+            animation: shimmer 2s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
         }
     </style>
 </head>
@@ -750,22 +1155,112 @@
                 </h3>
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
                     <div>
-                        <h4 style="color: white; margin-bottom: 1rem;">Plus Tier Management</h4>
-                        <input type="email" id="plusEmailInput" placeholder="user@example.com" style="width: 100%; padding: 0.5rem; margin-bottom: 0.5rem; border-radius: 4px; border: 1px solid rgba(255,255,255,0.3); background: rgba(255,255,255,0.1); color: white;">
-                        <button onclick="addTierUser('plus')" style="background: rgba(76, 175, 80, 0.3); border: 1px solid rgba(76, 175, 80, 0.5); color: white; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer;">Add Plus User</button>
+                        <h4 style="color: var(--text-primary); margin-bottom: 1rem; font-weight: 700;">Plus Tier Management</h4>
+                        <input type="email" id="plusEmailInput" placeholder="user@example.com" style="width: 100%; padding: 1rem; margin-bottom: 0.75rem; border-radius: 16px; border: 1px solid var(--glass-border); background: var(--glass-bg); color: var(--text-primary); backdrop-filter: var(--blur-lg);">
+                        <button onclick="addTierUser('plus')" style="background: var(--accent-gradient); border: none; color: white; padding: 0.75rem 1.5rem; border-radius: 12px; cursor: pointer; font-weight: 600; transition: all 0.3s ease;">Add Plus User</button>
                     </div>
                     <div>
-                        <h4 style="color: white; margin-bottom: 1rem;">Premium Tier Management</h4>
-                        <input type="email" id="premiumEmailInput" placeholder="user@example.com" style="width: 100%; padding: 0.5rem; margin-bottom: 0.5rem; border-radius: 4px; border: 1px solid rgba(255,255,255,0.3); background: rgba(255,255,255,0.1); color: white;">
-                        <button onclick="addTierUser('premium')" style="background: rgba(76, 175, 80, 0.3); border: 1px solid rgba(76, 175, 80, 0.5); color: white; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer;">Add Premium User</button>
+                        <h4 style="color: var(--text-primary); margin-bottom: 1rem; font-weight: 700;">Premium Tier Management</h4>
+                        <input type="email" id="premiumEmailInput" placeholder="user@example.com" style="width: 100%; padding: 1rem; margin-bottom: 0.75rem; border-radius: 16px; border: 1px solid var(--glass-border); background: var(--glass-bg); color: var(--text-primary); backdrop-filter: var(--blur-lg);">
+                        <button onclick="addTierUser('premium')" style="background: var(--accent-gradient); border: none; color: white; padding: 0.75rem 1.5rem; border-radius: 12px; cursor: pointer; font-weight: 600; transition: all 0.3s ease;">Add Premium User</button>
                     </div>
                 </div>
             </div>
 
             <div class="kpi-grid">
                 <div class="kpi-card">
+                    <div class="kpi-header">
+                        <h4 class="kpi-title" id="kpiTitle1" data-i18n="todayRevenue">Today's Revenue</h4>
+                        <div class="kpi-icon">💰</div>
+                    </div>
+                    <div class="kpi-value" id="kpiValue1">$1,247</div>
+                    <div class="kpi-change positive">↗ +18.4% <span style="font-size: 0.7rem;">vs yesterday</span></div>
+                </div>
+
+                <div class="kpi-card">
+                    <div class="kpi-header">
+                        <h4 class="kpi-title" id="kpiTitle2" data-i18n="activeScans">Active Scans</h4>
+                        <div class="kpi-icon">🔍</div>
+                    </div>
+                    <div class="kpi-value" id="kpiValue2">2,845</div>
+                    <div class="kpi-change positive">↗ +12.3% <span style="font-size: 0.7rem;">this hour</span></div>
+                </div>
+
+                <div class="kpi-card">
+                    <div class="kpi-header">
+                        <h4 class="kpi-title" data-i18n="violationsDetected">Violations Detected</h4>
+                        <div class="kpi-icon">⚠️</div>
+                    </div>
+                    <div class="kpi-value">89</div>
+                    <div class="kpi-change negative">↘ -5.2% <span style="font-size: 0.7rem;">vs last hour</span></div>
+                </div>
+
+                <div class="kpi-card">
+                    <div class="kpi-header">
+                        <h4 class="kpi-title" id="kpiTitle3" data-i18n="activeUsers">Paying Subscribers</h4>
+                        <div class="kpi-icon">👥</div>
+                    </div>
+                    <div class="kpi-value" id="kpiValue3">Loading...</div>
+                    <div class="kpi-change positive">↗ Live Count <span style="font-size: 0.7rem;">from database</span></div>
+                </div>
+
+                <div class="kpi-card">
+                    <div class="kpi-header">
+                        <h4 class="kpi-title" data-i18n="responseTime">Avg Response Time</h4>
+                        <div class="kpi-icon">⚡</div>
+                    </div>
+                    <div class="kpi-value">143ms</div>
+                    <div class="kpi-change positive">↗ -12ms <span style="font-size: 0.7rem;">improved</span></div>
+                </div>
+
+                <div class="kpi-card">
+                    <div class="kpi-header">
+                        <h4 class="kpi-title" id="kpiTitle4" data-i18n="accuracy">AI Accuracy</h4>
+                        <div class="kpi-icon">🎯</div>
+                    </div>
+                    <div class="kpi-value" id="kpiValue4">97.2%</div>
+                    <div class="kpi-change positive">↗ +0.3% <span style="font-size: 0.7rem;">this week</span></div>
+                </div>
+            </div>
+
+            <div class="user-tier-management">
+                <h3 class="section-title">
+                    <span>⚡</span>
+                    <span data-i18n="userTierManagement">User Tier Management</span>
+                </h3>
+                <form class="tier-upgrade-form" id="tierUpgradeForm">
+                    <div class="form-group">
+                        <label class="form-label" for="userEmail" data-i18n="userEmail">User Email</label>
+                        <input type="email" class="form-input" id="userEmail" placeholder="user@example.com" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="tierSelect" data-i18n="selectTier">Select Tier</label>
+                        <select class="form-select" id="tierSelect" required>
+                            <option value="" data-i18n="chooseTier">Choose tier...</option>
+                            <option value="plus">Plus - $4.99/mo (20 scans)</option>
+                            <option value="premium">Premium - $9.99/mo (40 scans)</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn-upgrade" id="upgradeBtn">
+                        <span>⚡</span>
+                        <span data-i18n="upgradeTier">Upgrade Tier</span>
+                    </button>
+                </form>
+            </div>
+
+            <div class="charts-grid">
+                <div class="chart-container">
+                    <div class="chart-header">
+                        <h3 class="chart-title">📊 <span data-i18n="revenueChart">Revenue Analytics</span></h3>
+                        <div class="chart-controls">
+                            <button class="chart-btn active" onclick="updateChart('24h')">24H</button>
+                            <button class="chart-btn" onclick="updateChart('7d')">7D</button>
+                            <button class="chart-btn" onclick="updateChart('30d')">30D</button>
+                            <button class="chart-btn" onclick="updateChart('1y')">1Y</button>
+                        </div>
+                    </div>
                     <div class="control-display">
-                        <div class="metric-value" id="revenueValue">$24,847</div>
+                        <div class="kpi-value" id="revenueValue">$24,847</div>
                         <div class="metric-label">Total Revenue</div>
                         <div class="metric-trend">+12.5%</div>
                     </div>
@@ -783,7 +1278,7 @@
                                 <div class="platform-count" id="tiktokCount">1,247</div>
                             </div>
                             <div class="platform-box">
-                            <div class="platform-icon"><img src="instagram.png" alt="Instagram" style="width: 24px; height: 24px;"></div>
+                                <div class="platform-icon"><img src="instagram.png" alt="Instagram" style="width: 24px; height: 24px;"></div>
                                 <div class="platform-name">Instagram</div>
                                 <div class="platform-count" id="instaCount">892</div>
                             </div>
@@ -822,7 +1317,7 @@
                     </div>
                 </div>
                 <div class="control-display">
-                    <div class="metric-value" id="violationsValue">89</div>
+                    <div class="kpi-value" id="violationsValue">89</div>
                     <div class="metric-label">Active Violations</div>
                     <div class="metric-trend">Live Monitoring</div>
                 </div>
@@ -980,8 +1475,19 @@
         <span class="toast-message" id="toastMessage"></span>
     </div>
 
+    <!-- Control Action Modals -->
+    <div class="control-modal" id="emergencyModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>🚨 Emergency Mode</h2>
+                <button class="close-btn" onclick="closeModal('emergencyModal')">Close</button>
+            </div>
+            <div>Emergency controls here...</div>
+        </div>
+    </div>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
-<script src="admin-config.js"></script>
+    <script src="admin-config.js"></script>
     <script src="tier.js"></script>
     <script>
         // GLOBAL VARIABLES - PROPERLY DECLARED
@@ -1367,58 +1873,58 @@
         });
 
         // CONTROL ACTIONS FUNCTIONS
-       async function showScanHistory() {
-    console.log("Opening Scan History...");
-    document.getElementById("scanHistoryModal").classList.add("active");
-    await loadAdminScanHistory();
-    showToast("Scan History opened - Live data loaded");
-}
-
-async function loadAdminScanHistory() {
-    const scansList = document.getElementById("scanHistoryList");
-    scansList.innerHTML = "<div class=\"rules-loading\">Loading scan history from database...</div>";
-    
-    try {
-        const response = await fetch(ADMIN_SUPABASE_URL + "/rest/v1/scans?select=*&order=created_at.desc.limit(50)", {
-            headers: {
-                "Authorization": "Bearer " + SUPABASE_KEY,
-                "apikey": SUPABASE_KEY,
-                "Content-Type": "application/json"
-            }
-        });
-        
-        if (response.ok) {
-            const scans = await response.json();
-            displayAdminScanHistory(scans);
-        } else {
-            scansList.innerHTML = "<div class=\"rules-loading\">Error loading scan history.</div>";
+        async function showScanHistory() {
+            console.log("Opening Scan History...");
+            document.getElementById("scanHistoryModal").classList.add("active");
+            await loadAdminScanHistory();
+            showToast("Scan History opened - Live data loaded");
         }
-    } catch (error) {
-        console.error("Scan history loading error:", error);
-        scansList.innerHTML = "<div class=\"rules-loading\">Database connection failed.</div>";
-    }
-}
 
-function displayAdminScanHistory(scans) {
-    const scansList = document.getElementById("scanHistoryList");
-    let html = "<h3>Live Scan History - " + scans.length + " Recent Records:</h3>";
-    
-    scans.forEach(scan => {
-        const results = JSON.parse(scan.results || "{}");
-        const statusBadge = scan.status === 'violation' ? 'status-violation' : 'status-clean';
-        html += `<div class="scan-item">
-            <div>
-                <strong>${scan.platform}</strong> - ${scan.region}<br>
-                <small>Risk Level: ${scan.risk_level} | Score: ${scan.compliance_score}</small><br>
-                <small>${results.violation_type || 'No violation'}: ${results.description || 'Clean scan'}</small>
-            </div>
-            <div class="status-badge ${statusBadge}">${scan.status}</div>
-            <div>${new Date(scan.created_at).toLocaleDateString()}</div>
-        </div>`;
-    });
-    
-    scansList.innerHTML = html;
-}
+        async function loadAdminScanHistory() {
+            const scansList = document.getElementById("scanHistoryList");
+            scansList.innerHTML = "<div class=\"rules-loading\">Loading scan history from database...</div>";
+            
+            try {
+                const response = await fetch(ADMIN_SUPABASE_URL + "/rest/v1/scans?select=*&order=created_at.desc.limit(50)", {
+                    headers: {
+                        "Authorization": "Bearer " + SUPABASE_KEY,
+                        "apikey": SUPABASE_KEY,
+                        "Content-Type": "application/json"
+                    }
+                });
+                
+                if (response.ok) {
+                    const scans = await response.json();
+                    displayAdminScanHistory(scans);
+                } else {
+                    scansList.innerHTML = "<div class=\"rules-loading\">Error loading scan history.</div>";
+                }
+            } catch (error) {
+                console.error("Scan history loading error:", error);
+                scansList.innerHTML = "<div class=\"rules-loading\">Database connection failed.</div>";
+            }
+        }
+
+        function displayAdminScanHistory(scans) {
+            const scansList = document.getElementById("scanHistoryList");
+            let html = "<h3>Live Scan History - " + scans.length + " Recent Records:</h3>";
+            
+            scans.forEach(scan => {
+                const results = JSON.parse(scan.results || "{}");
+                const statusBadge = scan.status === 'violation' ? 'status-violation' : 'status-clean';
+                html += `<div class="scan-item">
+                    <div>
+                        <strong>${scan.platform}</strong> - ${scan.region}<br>
+                        <small>Risk Level: ${scan.risk_level} | Score: ${scan.compliance_score}</small><br>
+                        <small>${results.violation_type || 'No violation'}: ${results.description || 'Clean scan'}</small>
+                    </div>
+                    <div class="status-badge ${statusBadge}">${scan.status}</div>
+                    <div>${new Date(scan.created_at).toLocaleDateString()}</div>
+                </div>`;
+            });
+            
+            scansList.innerHTML = html;
+        }
 
         async function showPlatformRules() {
             console.log("Opening Platform Rules...");
@@ -1491,53 +1997,56 @@ function displayAdminScanHistory(scans) {
                 event.target.classList.remove("active");
             }
         });
-        console.log('CheckReel Admin Dashboard v4.0 - Supabase Production Ready - All Systems Operational');
+
+        console.log('CheckReel Premium Admin Dashboard v5.0 - Million Dollar Design - All Systems Operational');
     </script>
-<script>
-async function initRevenueChart() {
-    try {
-        console.log("Revenue chart disabled - no subscriptions table");
-        return;
-        
-        const monthlyRevenue = {};
-        data.forEach(sub => {
-            const month = new Date(sub.created_at).toLocaleString("default", {month: "short"});
-            const revenue = sub.tier === "premium" ? 9.99 : 4.99;
-            monthlyRevenue[month] = (monthlyRevenue[month] || 0) + revenue;
-        });
-        
-        new Chart(document.getElementById("revenueChart"), {
-            type: "line",
-            data: {
-                labels: Object.keys(monthlyRevenue),
-                datasets: [{
-                    label: "Revenue ($)",
-                    data: Object.values(monthlyRevenue),
-                    borderColor: "#667eea",
-                    backgroundColor: "rgba(102, 126, 234, 0.1)",
-                    tension: 0.4
-                }]
-            },
-            options: { responsive: true, maintainAspectRatio: false }
-        });
-    } catch (error) {
-        console.error("Revenue chart error:", error);
-    }
-}
-document.addEventListener("DOMContentLoaded", initRevenueChart);
-</script>
-<!-- Control Action Modals -->
-    <div class="control-modal" id="scanHistoryModal">
+
+    <script>
+        async function initRevenueChart() {
+            try {
+                console.log("Revenue chart disabled - no subscriptions table");
+                return;
+                
+                const monthlyRevenue = {};
+                data.forEach(sub => {
+                    const month = new Date(sub.created_at).toLocaleString("default", {month: "short"});
+                    const revenue = sub.tier === "premium" ? 9.99 : 4.99;
+                    monthlyRevenue[month] = (monthlyRevenue[month] || 0) + revenue;
+                });
+                
+                new Chart(document.getElementById("revenueChart"), {
+                    type: "line",
+                    data: {
+                        labels: Object.keys(monthlyRevenue),
+                        datasets: [{
+                            label: "Revenue ($)",
+                            data: Object.values(monthlyRevenue),
+                            borderColor: "#667eea",
+                            backgroundColor: "rgba(102, 126, 234, 0.1)",
+                            tension: 0.4
+                        }]
+                    },
+                    options: { responsive: true, maintainAspectRatio: false }
+                });
+            } catch (error) {
+                console.error("Revenue chart error:", error);
+            }
+        }
+        document.addEventListener("DOMContentLoaded", initRevenueChart);
+    </script>
+</body>
+</html>scanHistoryModal">
         <div class="modal-content">
             <div class="modal-header">
                 <h2>📊 Scan History</h2>
                 <button class="close-btn" onclick="closeModal('scanHistoryModal')">Close</button>
             </div>
             <div class="scan-list" id="scanHistoryList">
-    <div class="rules-loading">Loading scan history from database...</div>
-</div>
+                <div class="rules-loading">Loading scan history from database...</div>
+            </div>
         </div>
     </div>
+
     <div class="control-modal" id="platformRulesModal">
         <div class="modal-content">
             <div class="modal-header">
@@ -1577,104 +2086,4 @@ document.addEventListener("DOMContentLoaded", initRevenueChart);
         </div>
     </div>
 
-    <div class="control-modal" id="emergencyModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2>🚨 Emergency Mode</h2>
-                <button class="close-btn" onclick="closeModal('emergencyModal')">Close</button>
-            </div>
-            <div>Emergency controls here...</div>
-        </div>
-    </div>
-</body>
-</html>="kpi-header">
-                        <h4 class="kpi-title" id="kpiTitle1" data-i18n="todayRevenue">Today's Revenue</h4>
-                        <div class="kpi-icon">💰</div>
-                    </div>
-                    <div class="kpi-value" id="kpiValue1">$1,247</div>
-                    <div class="kpi-change positive">↗ +18.4% <span style="font-size: 0.7rem;">vs yesterday</span></div>
-                </div>
-
-                <div class="kpi-card">
-                    <div class="kpi-header">
-                        <h4 class="kpi-title" id="kpiTitle2" data-i18n="activeScans">Active Scans</h4>
-                        <div class="kpi-icon">🔍</div>
-                    </div>
-                    <div class="kpi-value" id="kpiValue2">2,845</div>
-                    <div class="kpi-change positive">↗ +12.3% <span style="font-size: 0.7rem;">this hour</span></div>
-                </div>
-
-                <div class="kpi-card">
-                    <div class="kpi-header">
-                        <h4 class="kpi-title" data-i18n="violationsDetected">Violations Detected</h4>
-                        <div class="kpi-icon">⚠️</div>
-                    </div>
-                    <div class="kpi-value">89</div>
-                    <div class="kpi-change negative">↘ -5.2% <span style="font-size: 0.7rem;">vs last hour</span></div>
-                </div>
-
-                <div class="kpi-card">
-                    <div class="kpi-header">
-                        <h4 class="kpi-title" id="kpiTitle3" data-i18n="activeUsers">Paying Subscribers</h4>
-                        <div class="kpi-icon">👥</div>
-                    </div>
-                    <div class="kpi-value" id="kpiValue3">Loading...</div>
-                    <div class="kpi-change positive">↗ Live Count <span style="font-size: 0.7rem;">from database</span></div>
-                </div>
-
-                <div class="kpi-card">
-                    <div class="kpi-header">
-                        <h4 class="kpi-title" data-i18n="responseTime">Avg Response Time</h4>
-                        <div class="kpi-icon">⚡</div>
-                    </div>
-                    <div class="kpi-value">143ms</div>
-                    <div class="kpi-change positive">↗ -12ms <span style="font-size: 0.7rem;">improved</span></div>
-                </div>
-
-                <div class="kpi-card">
-                    <div class="kpi-header">
-                        <h4 class="kpi-title" id="kpiTitle4" data-i18n="accuracy">AI Accuracy</h4>
-                        <div class="kpi-icon">🎯</div>
-                    </div>
-                    <div class="kpi-value" id="kpiValue4">97.2%</div>
-                    <div class="kpi-change positive">↗ +0.3% <span style="font-size: 0.7rem;">this week</span></div>
-                </div>
-            </div>
-
-            <div class="user-tier-management">
-                <h3 class="section-title">
-                    <span>⚡</span>
-                    <span data-i18n="userTierManagement">User Tier Management</span>
-                </h3>
-                <form class="tier-upgrade-form" id="tierUpgradeForm">
-                    <div class="form-group">
-                        <label class="form-label" for="userEmail" data-i18n="userEmail">User Email</label>
-                        <input type="email" class="form-input" id="userEmail" placeholder="user@example.com" required>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label" for="tierSelect" data-i18n="selectTier">Select Tier</label>
-                        <select class="form-select" id="tierSelect" required>
-                            <option value="" data-i18n="chooseTier">Choose tier...</option>
-                            <option value="plus">Plus - $4.99/mo (20 scans)</option>
-                            <option value="premium">Premium - $9.99/mo (40 scans)</option>
-                        </select>
-                    </div>
-                    <button type="submit" class="btn-upgrade" id="upgradeBtn">
-                        <span>⚡</span>
-                        <span data-i18n="upgradeTier">Upgrade Tier</span>
-                    </button>
-                </form>
-            </div>
-
-            <div class="charts-grid">
-                <div class="chart-container">
-                    <div class="chart-header">
-                        <h3 class="chart-title">📊 <span data-i18n="revenueChart">Revenue Analytics</span></h3>
-                        <div class="chart-controls">
-                            <button class="chart-btn active" onclick="updateChart('24h')">24H</button>
-                            <button class="chart-btn" onclick="updateChart('7d')">7D</button>
-                            <button class="chart-btn" onclick="updateChart('30d')">30D</button>
-                            <button class="chart-btn" onclick="updateChart('1y')">1Y</button>
-                        </div>
-                    </div>
-                    <div class
+    <div class="control-modal" id="
