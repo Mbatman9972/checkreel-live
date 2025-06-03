@@ -1076,7 +1076,7 @@
             
             try {
                 const response = await fetch(ADMIN_SUPABASE_URL + '/rest/v1/subscriptions?select=count&tier=in.(plus,premium)', {
-                    method: 'HEAD',
+                    method: 'GET',
                     headers: {
                         'Authorization': 'Bearer ' + SUPABASE_KEY,
                         'apikey': SUPABASE_KEY,
@@ -1159,7 +1159,7 @@
         async function loadSupabaseAnalytics() {
             try {
                 const scansResponse = await fetch(ADMIN_SUPABASE_URL + '/rest/v1/scans?select=count', {
-                    method: 'HEAD',
+                    method: 'GET',
                     headers: {
                         'Authorization': 'Bearer ' + SUPABASE_KEY,
                         'apikey': SUPABASE_KEY,
