@@ -764,96 +764,6 @@
 
             <div class="kpi-grid">
                 <div class="kpi-card">
-                    <div class="kpi-header">
-                        <h4 class="kpi-title" id="kpiTitle1" data-i18n="todayRevenue">Today's Revenue</h4>
-                        <div class="kpi-icon">💰</div>
-                    </div>
-                    <div class="kpi-value" id="kpiValue1">$1,247</div>
-                    <div class="kpi-change positive">↗ +18.4% <span style="font-size: 0.7rem;">vs yesterday</span></div>
-                </div>
-
-                <div class="kpi-card">
-                    <div class="kpi-header">
-                        <h4 class="kpi-title" id="kpiTitle2" data-i18n="activeScans">Active Scans</h4>
-                        <div class="kpi-icon">🔍</div>
-                    </div>
-                    <div class="kpi-value" id="kpiValue2">2,845</div>
-                    <div class="kpi-change positive">↗ +12.3% <span style="font-size: 0.7rem;">this hour</span></div>
-                </div>
-
-                <div class="kpi-card">
-                    <div class="kpi-header">
-                        <h4 class="kpi-title" data-i18n="violationsDetected">Violations Detected</h4>
-                        <div class="kpi-icon">⚠️</div>
-                    </div>
-                    <div class="kpi-value">89</div>
-                    <div class="kpi-change negative">↘ -5.2% <span style="font-size: 0.7rem;">vs last hour</span></div>
-                </div>
-
-                <div class="kpi-card">
-                    <div class="kpi-header">
-                        <h4 class="kpi-title" id="kpiTitle3" data-i18n="activeUsers">Paying Subscribers</h4>
-                        <div class="kpi-icon">👥</div>
-                    </div>
-                    <div class="kpi-value" id="kpiValue3">Loading...</div>
-                    <div class="kpi-change positive">↗ Live Count <span style="font-size: 0.7rem;">from database</span></div>
-                </div>
-
-                <div class="kpi-card">
-                    <div class="kpi-header">
-                        <h4 class="kpi-title" data-i18n="responseTime">Avg Response Time</h4>
-                        <div class="kpi-icon">⚡</div>
-                    </div>
-                    <div class="kpi-value">143ms</div>
-                    <div class="kpi-change positive">↗ -12ms <span style="font-size: 0.7rem;">improved</span></div>
-                </div>
-
-                <div class="kpi-card">
-                    <div class="kpi-header">
-                        <h4 class="kpi-title" id="kpiTitle4" data-i18n="accuracy">AI Accuracy</h4>
-                        <div class="kpi-icon">🎯</div>
-                    </div>
-                    <div class="kpi-value" id="kpiValue4">97.2%</div>
-                    <div class="kpi-change positive">↗ +0.3% <span style="font-size: 0.7rem;">this week</span></div>
-                </div>
-            </div>
-
-            <div class="user-tier-management">
-                <h3 class="section-title">
-                    <span>⚡</span>
-                    <span data-i18n="userTierManagement">User Tier Management</span>
-                </h3>
-                <form class="tier-upgrade-form" id="tierUpgradeForm">
-                    <div class="form-group">
-                        <label class="form-label" for="userEmail" data-i18n="userEmail">User Email</label>
-                        <input type="email" class="form-input" id="userEmail" placeholder="user@example.com" required>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label" for="tierSelect" data-i18n="selectTier">Select Tier</label>
-                        <select class="form-select" id="tierSelect" required>
-                            <option value="" data-i18n="chooseTier">Choose tier...</option>
-                            <option value="plus">Plus - $4.99/mo (20 scans)</option>
-                            <option value="premium">Premium - $9.99/mo (40 scans)</option>
-                        </select>
-                    </div>
-                    <button type="submit" class="btn-upgrade" id="upgradeBtn">
-                        <span>⚡</span>
-                        <span data-i18n="upgradeTier">Upgrade Tier</span>
-                    </button>
-                </form>
-            </div>
-
-            <div class="charts-grid">
-                <div class="chart-container">
-                    <div class="chart-header">
-                        <h3 class="chart-title">📊 <span data-i18n="revenueChart">Revenue Analytics</span></h3>
-                        <div class="chart-controls">
-                            <button class="chart-btn active" onclick="updateChart('24h')">24H</button>
-                            <button class="chart-btn" onclick="updateChart('7d')">7D</button>
-                            <button class="chart-btn" onclick="updateChart('30d')">30D</button>
-                            <button class="chart-btn" onclick="updateChart('1y')">1Y</button>
-                        </div>
-                    </div>
                     <div class="control-display">
                         <div class="metric-value" id="revenueValue">$24,847</div>
                         <div class="metric-label">Total Revenue</div>
@@ -1155,7 +1065,7 @@
             loadSupabaseAnalytics();
         }
 
-        // SUPABASE FUNCTIONS - REPLACING GOOGLE APPS SCRIPT
+        // FIXED SUPABASE FUNCTION - SINGLE IMPLEMENTATION
         async function loadPayingCount() {
             console.log('Loading paying subscriber count from Supabase...');
             
@@ -1166,9 +1076,8 @@
             
             try {
                 const response = await fetch(ADMIN_SUPABASE_URL + '/rest/v1/subscriptions?select=count&tier=in.(plus,premium)', {
-                    method: 'GET',
+                    method: 'HEAD',
                     headers: {
-                        'Content-Type': 'application/json',
                         'Authorization': 'Bearer ' + SUPABASE_KEY,
                         'apikey': SUPABASE_KEY,
                         'Prefer': 'count=exact'
@@ -1176,10 +1085,8 @@
                 });
                 
                 if (response.ok) {
-                    const data = await response.json();
-        if (!response.ok) throw new Error("Supabase error: " + response.status);
-        if (!Array.isArray(data)) throw new Error("Invalid data format");
-                    const count = response.headers.get('Content-Range')?.split('/')[1] || data.length || 0;
+                    const contentRange = response.headers.get('Content-Range');
+                    const count = contentRange ? contentRange.split('/')[1] : '0';
                     
                     if (kpiValue3) {
                         kpiValue3.textContent = count.toString();
@@ -1252,6 +1159,7 @@
         async function loadSupabaseAnalytics() {
             try {
                 const scansResponse = await fetch(ADMIN_SUPABASE_URL + '/rest/v1/scans?select=count', {
+                    method: 'HEAD',
                     headers: {
                         'Authorization': 'Bearer ' + SUPABASE_KEY,
                         'apikey': SUPABASE_KEY,
@@ -1458,7 +1366,6 @@
             showToast('An error occurred. Check console for details.', 'error');
         });
 
-        // CONSOLE STARTUP MESSAGE
         // CONTROL ACTIONS FUNCTIONS
        async function showScanHistory() {
     console.log("Opening Scan History...");
@@ -1475,7 +1382,8 @@ async function loadAdminScanHistory() {
         const response = await fetch(ADMIN_SUPABASE_URL + "/rest/v1/scans?select=*&order=created_at.desc.limit(50)", {
             headers: {
                 "Authorization": "Bearer " + SUPABASE_KEY,
-                "apikey": SUPABASE_KEY
+                "apikey": SUPABASE_KEY,
+                "Content-Type": "application/json"
             }
         });
         
@@ -1549,7 +1457,8 @@ function displayAdminScanHistory(scans) {
                 const response = await fetch(ADMIN_SUPABASE_URL + "/rest/v1/platform_rules?select=*&is_active=eq.true&order=platform,id", {
                     headers: {
                         "Authorization": "Bearer " + SUPABASE_KEY,
-                        "apikey": SUPABASE_KEY
+                        "apikey": SUPABASE_KEY,
+                        "Content-Type": "application/json"
                     }
                 });
                 
@@ -1627,6 +1536,8 @@ document.addEventListener("DOMContentLoaded", initRevenueChart);
             <div class="scan-list" id="scanHistoryList">
     <div class="rules-loading">Loading scan history from database...</div>
 </div>
+        </div>
+    </div>
     <div class="control-modal" id="platformRulesModal">
         <div class="modal-content">
             <div class="modal-header">
@@ -1676,4 +1587,94 @@ document.addEventListener("DOMContentLoaded", initRevenueChart);
         </div>
     </div>
 </body>
-</html>
+</html>="kpi-header">
+                        <h4 class="kpi-title" id="kpiTitle1" data-i18n="todayRevenue">Today's Revenue</h4>
+                        <div class="kpi-icon">💰</div>
+                    </div>
+                    <div class="kpi-value" id="kpiValue1">$1,247</div>
+                    <div class="kpi-change positive">↗ +18.4% <span style="font-size: 0.7rem;">vs yesterday</span></div>
+                </div>
+
+                <div class="kpi-card">
+                    <div class="kpi-header">
+                        <h4 class="kpi-title" id="kpiTitle2" data-i18n="activeScans">Active Scans</h4>
+                        <div class="kpi-icon">🔍</div>
+                    </div>
+                    <div class="kpi-value" id="kpiValue2">2,845</div>
+                    <div class="kpi-change positive">↗ +12.3% <span style="font-size: 0.7rem;">this hour</span></div>
+                </div>
+
+                <div class="kpi-card">
+                    <div class="kpi-header">
+                        <h4 class="kpi-title" data-i18n="violationsDetected">Violations Detected</h4>
+                        <div class="kpi-icon">⚠️</div>
+                    </div>
+                    <div class="kpi-value">89</div>
+                    <div class="kpi-change negative">↘ -5.2% <span style="font-size: 0.7rem;">vs last hour</span></div>
+                </div>
+
+                <div class="kpi-card">
+                    <div class="kpi-header">
+                        <h4 class="kpi-title" id="kpiTitle3" data-i18n="activeUsers">Paying Subscribers</h4>
+                        <div class="kpi-icon">👥</div>
+                    </div>
+                    <div class="kpi-value" id="kpiValue3">Loading...</div>
+                    <div class="kpi-change positive">↗ Live Count <span style="font-size: 0.7rem;">from database</span></div>
+                </div>
+
+                <div class="kpi-card">
+                    <div class="kpi-header">
+                        <h4 class="kpi-title" data-i18n="responseTime">Avg Response Time</h4>
+                        <div class="kpi-icon">⚡</div>
+                    </div>
+                    <div class="kpi-value">143ms</div>
+                    <div class="kpi-change positive">↗ -12ms <span style="font-size: 0.7rem;">improved</span></div>
+                </div>
+
+                <div class="kpi-card">
+                    <div class="kpi-header">
+                        <h4 class="kpi-title" id="kpiTitle4" data-i18n="accuracy">AI Accuracy</h4>
+                        <div class="kpi-icon">🎯</div>
+                    </div>
+                    <div class="kpi-value" id="kpiValue4">97.2%</div>
+                    <div class="kpi-change positive">↗ +0.3% <span style="font-size: 0.7rem;">this week</span></div>
+                </div>
+            </div>
+
+            <div class="user-tier-management">
+                <h3 class="section-title">
+                    <span>⚡</span>
+                    <span data-i18n="userTierManagement">User Tier Management</span>
+                </h3>
+                <form class="tier-upgrade-form" id="tierUpgradeForm">
+                    <div class="form-group">
+                        <label class="form-label" for="userEmail" data-i18n="userEmail">User Email</label>
+                        <input type="email" class="form-input" id="userEmail" placeholder="user@example.com" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="tierSelect" data-i18n="selectTier">Select Tier</label>
+                        <select class="form-select" id="tierSelect" required>
+                            <option value="" data-i18n="chooseTier">Choose tier...</option>
+                            <option value="plus">Plus - $4.99/mo (20 scans)</option>
+                            <option value="premium">Premium - $9.99/mo (40 scans)</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn-upgrade" id="upgradeBtn">
+                        <span>⚡</span>
+                        <span data-i18n="upgradeTier">Upgrade Tier</span>
+                    </button>
+                </form>
+            </div>
+
+            <div class="charts-grid">
+                <div class="chart-container">
+                    <div class="chart-header">
+                        <h3 class="chart-title">📊 <span data-i18n="revenueChart">Revenue Analytics</span></h3>
+                        <div class="chart-controls">
+                            <button class="chart-btn active" onclick="updateChart('24h')">24H</button>
+                            <button class="chart-btn" onclick="updateChart('7d')">7D</button>
+                            <button class="chart-btn" onclick="updateChart('30d')">30D</button>
+                            <button class="chart-btn" onclick="updateChart('1y')">1Y</button>
+                        </div>
+                    </div>
+                    <div class
