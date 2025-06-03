@@ -735,12 +735,13 @@
             background: var(--glass-bg);
             backdrop-filter: var(--blur-lg);
             border-radius: 16px;
-            padding: 0.75rem;
+            padding: 0.5rem;
             text-align: center;
             display: flex;
             flex-direction: column;
             justify-content: center;
-            min-height: 90px;
+            align-items: center;
+            min-height: 70px;
             border: 1px solid var(--glass-border);
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
@@ -752,18 +753,13 @@
         }
 
         .platform-icon {
-            font-size: 24px;
-            margin-bottom: 0.5rem;
+            font-size: 20px;
+            margin-bottom: 0.25rem;
             filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.2));
         }
 
         .platform-name {
-            font-size: 0.8rem;
-            color: var(--text-secondary);
-            margin-bottom: 0.25rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
+            display: none;
         }
 
         .platform-count {
@@ -1383,6 +1379,13 @@
                         <span class="metric-value">23.1%</span>
                     </div>
                 </div>
+
+                <div class="analytics-card">
+                    <h3 class="analytics-title">📊 <span data-i18n="scanHistory">Recent Scan History</span></h3>
+                    <div class="scan-list" id="dashboardScanHistory">
+                        <div class="rules-loading">Loading recent scans...</div>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -1846,6 +1849,7 @@
             
             initializeLanguage();
             loadKPIs();
+            loadDashboardScanHistory();
             startAutoRefresh();
             
             console.log('Dashboard initialization completed');
@@ -1853,6 +1857,51 @@
             setTimeout(function() {
                 showToast('CheckReel Admin Dashboard Ready - Supabase Connected!', 'success');
             }, 2000);
+        }
+
+        // DASHBOARD SCAN HISTORY FUNCTION
+        async function loadDashboardScanHistory() {
+            const dashboardScans = document.getElementById("dashboardScanHistory");
+            if (!dashboardScans) return;
+            
+            try {
+                const response = await fetch(ADMIN_SUPABASE_URL + "/rest/v1/scans?select=*&order=created_at.desc&limit=5", {
+                    headers: {
+                        "Authorization": "Bearer " + SUPABASE_KEY,
+                        "apikey": SUPABASE_KEY,
+                        "Content-Type": "application/json"
+                    }
+                });
+                
+                if (response.ok) {
+                    const scans = await response.json();
+                    displayDashboardScanHistory(scans);
+                } else {
+                    dashboardScans.innerHTML = "<div class=\"rules-loading\">No recent scans found.</div>";
+                }
+            } catch (error) {
+                console.error("Dashboard scan history error:", error);
+                dashboardScans.innerHTML = "<div class=\"rules-loading\">Loading failed.</div>";
+            }
+        }
+
+        function displayDashboardScanHistory(scans) {
+            const dashboardScans = document.getElementById("dashboardScanHistory");
+            if (!scans.length) {
+                dashboardScans.innerHTML = "<div class=\"rules-loading\">No recent scans available.</div>";
+                return;
+            }
+            
+            let html = "";
+            scans.forEach(scan => {
+                const statusBadge = scan.status === 'violation' ? 'status-violation' : 'status-clean';
+                html += `<div class="metric-item">
+                    <span class="metric-label">${scan.platform}</span>
+                    <span class="status-badge ${statusBadge}">${scan.status}</span>
+                </div>`;
+            });
+            
+            dashboardScans.innerHTML = html;
         }
 
         // DOM READY EVENT LISTENERS
