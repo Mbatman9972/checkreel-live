@@ -2122,7 +2122,7 @@
             scansList.innerHTML = "<div class=\"rules-loading\">Loading scan history from database...</div>";
             
             try {
-                const response = await fetch(ADMIN_SUPABASE_URL + "/rest/v1/scans?select=*&order=created_at.desc.limit(50)", {
+                const response = await fetch(ADMIN_SUPABASE_URL + "/rest/v1/scans?select=*&order=created_at.desc&limit=50", {
                     headers: {
                         "Authorization": "Bearer " + SUPABASE_KEY,
                         "apikey": SUPABASE_KEY,
