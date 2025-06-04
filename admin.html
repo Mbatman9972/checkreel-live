@@ -246,604 +246,6 @@
             transform: translateY(-8px) scale(1.02);
             background: rgba(255, 255, 255, 0.12);
             box-shadow: var(--shadow-xl);
-        }
-
-        .kpi-card:nth-child(1)::before { background: var(--accent-gradient); }
-        .kpi-card:nth-child(2)::before { background: var(--secondary-gradient); }
-        .kpi-card:nth-child(3)::before { background: var(--danger-gradient); }
-        .kpi-card:nth-child(4)::before { background: linear-gradient(135deg, #a78bfa 0%, #ec4899 100%); }
-        .kpi-card:nth-child(5)::before { background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%); }
-        .kpi-card:nth-child(6)::before { background: linear-gradient(135deg, #34d399 0%, #059669 100%); }
-
-        .kpi-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1.5rem;
-        }
-
-        .kpi-title {
-            color: var(--text-secondary);
-            font-size: 0.95rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-
-        .kpi-icon {
-            font-size: 2rem;
-            opacity: 0.8;
-            filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.2));
-        }
-
-        .kpi-value {
-            font-size: 3rem;
-            font-weight: 800;
-            color: var(--text-primary);
-            margin-bottom: 0.75rem;
-            line-height: 1;
-            letter-spacing: -0.02em;
-        }
-
-        .kpi-change {
-            font-size: 0.9rem;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .kpi-change.positive { 
-            color: #10b981;
-            text-shadow: 0 0 10px rgba(16, 185, 129, 0.3);
-        }
-        
-        .kpi-change.negative { 
-            color: #ef4444;
-            text-shadow: 0 0 10px rgba(239, 68, 68, 0.3);
-        }
-
-        .user-tier-management {
-            background: var(--glass-bg);
-            backdrop-filter: var(--blur-xl);
-            border: 1px solid var(--glass-border);
-            border-radius: 24px;
-            padding: 2.5rem;
-            margin-bottom: 2.5rem;
-            box-shadow: var(--shadow-lg);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .user-tier-management::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 4px;
-            background: var(--accent-gradient);
-        }
-
-        .section-title {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: var(--text-primary);
-            margin-bottom: 2rem;
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            letter-spacing: -0.01em;
-        }
-
-        .tier-upgrade-form {
-            display: grid;
-            grid-template-columns: 2fr 1fr auto;
-            gap: 1.5rem;
-            align-items: end;
-        }
-
-        .form-group {
-            display: flex;
-            flex-direction: column;
-            gap: 0.75rem;
-        }
-
-        .form-label {
-            color: var(--text-secondary);
-            font-size: 0.95rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-
-        .form-input, .form-select {
-            padding: 1rem 1.5rem;
-            border-radius: 16px;
-            border: 1px solid var(--glass-border);
-            background: var(--glass-bg);
-            backdrop-filter: var(--blur-lg);
-            color: var(--text-primary);
-            font-size: 1rem;
-            font-weight: 500;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
-        }
-
-        .form-input:focus, .form-select:focus {
-            outline: none;
-            border-color: rgba(102, 126, 234, 0.5);
-            background: rgba(255, 255, 255, 0.12);
-            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1), 0 8px 24px rgba(0, 0, 0, 0.15);
-        }
-
-        .form-input::placeholder {
-            color: var(--text-muted);
-        }
-
-        .form-select option {
-            background: #1f2937;
-            color: white;
-        }
-
-        .btn-upgrade {
-            background: var(--accent-gradient);
-            border: none;
-            color: white;
-            padding: 1rem 2rem;
-            border-radius: 16px;
-            cursor: pointer;
-            font-size: 1rem;
-            font-weight: 600;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            box-shadow: 0 8px 32px rgba(67, 233, 123, 0.2);
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-
-        .btn-upgrade:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 12px 40px rgba(67, 233, 123, 0.3);
-        }
-
-        .btn-upgrade:active {
-            transform: translateY(-1px);
-        }
-
-        .charts-grid {
-            display: grid;
-            grid-template-columns: 2fr 1fr;
-            gap: 2.5rem;
-        }
-
-        .chart-container {
-            background: var(--glass-bg);
-            backdrop-filter: var(--blur-xl);
-            border: 1px solid var(--glass-border);
-            border-radius: 24px;
-            padding: 2.5rem;
-            box-shadow: var(--shadow-lg);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .chart-container::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 4px;
-            background: var(--secondary-gradient);
-        }
-
-        .chart-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 2rem;
-        }
-
-        .chart-title {
-            font-size: 1.4rem;
-            font-weight: 700;
-            color: var(--text-primary);
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            letter-spacing: -0.01em;
-        }
-
-        .chart-controls {
-            display: flex;
-            gap: 0.75rem;
-        }
-
-        .chart-btn {
-            background: var(--glass-bg);
-            backdrop-filter: var(--blur-lg);
-            border: 1px solid var(--glass-border);
-            color: var(--text-secondary);
-            padding: 0.5rem 1rem;
-            border-radius: 12px;
-            cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            font-size: 0.85rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-
-        .chart-btn.active, .chart-btn:hover {
-            background: rgba(255, 255, 255, 0.15);
-            color: var(--text-primary);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
-        }
-
-        .analytics-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 2.5rem;
-            margin-top: 2.5rem;
-        }
-
-        .analytics-card {
-            background: var(--glass-bg);
-            backdrop-filter: var(--blur-xl);
-            border: 1px solid var(--glass-border);
-            border-radius: 24px;
-            padding: 2rem;
-            box-shadow: var(--shadow-lg);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .analytics-card:hover {
-            transform: translateY(-4px);
-            box-shadow: var(--shadow-xl);
-        }
-
-        .analytics-title {
-            font-size: 1.2rem;
-            font-weight: 700;
-            color: var(--text-primary);
-            margin-bottom: 1.5rem;
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            letter-spacing: -0.01em;
-        }
-
-        .metric-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 1rem 0;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-            transition: all 0.3s ease;
-        }
-
-        .metric-item:hover {
-            background: rgba(255, 255, 255, 0.03);
-            margin: 0 -1rem;
-            padding: 1rem;
-            border-radius: 12px;
-        }
-
-        .metric-item:last-child {
-            border-bottom: none;
-        }
-
-        .metric-label {
-            color: var(--text-secondary);
-            font-size: 0.95rem;
-            font-weight: 500;
-        }
-
-        .metric-value {
-            color: var(--text-primary);
-            font-weight: 700;
-            font-size: 1.1rem;
-        }
-
-        .sidebar {
-            display: flex;
-            flex-direction: column;
-            gap: 2.5rem;
-        }
-
-        .sidebar-section {
-            background: var(--glass-bg);
-            backdrop-filter: var(--blur-xl);
-            border: 1px solid var(--glass-border);
-            border-radius: 24px;
-            padding: 2rem;
-            box-shadow: var(--shadow-lg);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .sidebar-title {
-            font-size: 1.2rem;
-            font-weight: 700;
-            color: var(--text-primary);
-            margin-bottom: 1.5rem;
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            letter-spacing: -0.01em;
-        }
-
-        .quick-action, .activity-item, .alert-item {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            padding: 1rem;
-            background: var(--glass-bg);
-            border: 1px solid var(--glass-border);
-            border-radius: 16px;
-            margin-bottom: 0.75rem;
-            cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            backdrop-filter: var(--blur-lg);
-        }
-
-        .quick-action:hover, .activity-item:hover {
-            background: rgba(255, 255, 255, 0.12);
-            transform: translateX(8px) translateY(-2px);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
-        }
-
-        .alert-item.critical {
-            border-left: 4px solid #ef4444;
-            background: linear-gradient(135deg, rgba(239, 68, 68, 0.1) 0%, var(--glass-bg) 100%);
-        }
-
-        .alert-item.warning {
-            border-left: 4px solid #f59e0b;
-            background: linear-gradient(135deg, rgba(245, 158, 11, 0.1) 0%, var(--glass-bg) 100%);
-        }
-
-        .alert-item.info {
-            border-left: 4px solid #3b82f6;
-            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, var(--glass-bg) 100%);
-        }
-
-        .action-icon, .activity-icon, .alert-icon {
-            font-size: 1.5rem;
-            filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.2));
-        }
-
-        .action-text, .activity-text, .alert-text {
-            color: var(--text-primary);
-            font-weight: 600;
-            flex: 1;
-        }
-
-        .activity-details, .alert-details {
-            display: flex;
-            flex-direction: column;
-            flex: 1;
-        }
-
-        .activity-time, .alert-time {
-            color: var(--text-muted);
-            font-size: 0.8rem;
-            font-weight: 500;
-        }
-
-        .toast {
-            position: fixed;
-            bottom: 2rem;
-            right: 2rem;
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: var(--blur-xl);
-            border-radius: 16px;
-            padding: 1.5rem 2rem;
-            box-shadow: var(--shadow-xl);
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            transform: translateY(100px);
-            opacity: 0;
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            z-index: 1000;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-        }
-
-        .toast.show {
-            transform: translateY(0);
-            opacity: 1;
-        }
-
-        .toast.success {
-            border-left: 4px solid #10b981;
-        }
-
-        .toast.error {
-            border-left: 4px solid #ef4444;
-        }
-
-        .toast-icon {
-            font-size: 1.5rem;
-        }
-
-        .toast-message {
-            color: #1f2937;
-            font-weight: 600;
-        }
-
-        .spinner {
-            border: 3px solid rgba(255, 255, 255, 0.2);
-            border-top-color: white;
-            border-radius: 50%;
-            width: 20px;
-            height: 20px;
-            animation: spin 0.8s linear infinite;
-            display: inline-block;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        .control-display {
-            background: var(--glass-bg);
-            backdrop-filter: var(--blur-lg);
-            border: 1px solid var(--glass-border);
-            border-radius: 20px;
-            padding: 2rem;
-            text-align: center;
-            height: 240px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            transition: all 0.3s ease;
-        }
-
-        .control-display:hover {
-            background: rgba(255, 255, 255, 0.12);
-            transform: scale(1.02);
-        }
-
-        .platform-stats {
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-        }
-
-        .platform-item {
-            font-size: 1.2rem;
-            color: var(--text-primary);
-            padding: 0.75rem;
-            background: var(--glass-bg);
-            border-radius: 12px;
-            font-weight: 600;
-        }
-
-        .platform-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 0.75rem;
-            height: 200px;
-        }
-
-        .platform-box {
-            background: var(--glass-bg);
-            backdrop-filter: var(--blur-lg);
-            border-radius: 16px;
-            padding: 0.5rem;
-            text-align: center;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            min-height: 70px;
-            border: 1px solid var(--glass-border);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .platform-box:hover {
-            transform: translateY(-4px);
-            background: rgba(255, 255, 255, 0.12);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
-        }
-
-        .platform-icon {
-            font-size: 20px;
-            margin-bottom: 0.25rem;
-            filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.2));
-        }
-
-        .platform-name {
-            display: none;
-        }
-
-        .platform-count {
-            font-size: 1.2rem;
-            font-weight: 800;
-            color: var(--text-primary);
-        }
-
-        #adminSection {
-            display: none;
-            background: var(--glass-bg);
-            backdrop-filter: var(--blur-xl);
-            border: 1px solid var(--glass-border);
-            border-radius: 24px;
-            padding: 2.5rem;
-            margin-bottom: 2.5rem;
-            border-left: 4px solid #ef4444;
-            box-shadow: var(--shadow-lg);
-            position: relative;
-            overflow: hidden;
-        }
-
-        #adminSection::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 4px;
-            background: var(--danger-gradient);
-        }
-
-        #adminSection.active {
-            display: block;
-            animation: slideInUp 0.5s ease;
-        }
-
-        @keyframes slideInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .control-modal {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.8);
-            backdrop-filter: var(--blur-lg);
-            z-index: 2000;
-            display: none;
-            justify-content: center;
-            align-items: center;
-            animation: fadeIn 0.3s ease;
-        }
-
-        .control-modal.active {
-            display: flex;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        .modal-content {
-            background: var(--glass-bg);
-            backdrop-filter: var(--blur-xl);
-            border: 1px solid var(--glass-border);
-            border-radius: 24px;
-            padding: 2.5rem;
-            max-width: 900px;
-            width: 90%;
-            max-height: 80%;
-            overflow-y: auto;
-            color: var(--text-primary);
-            box-shadow: var(--shadow-xl);
             animation: scaleIn 0.3s ease;
         }
 
@@ -1269,32 +671,32 @@
                     <div class="control-display">
                         <div class="platform-grid">
                             <div class="platform-box">
-                                <div class="platform-icon"><img src="tiktok.png" alt="TikTok" style="width: 24px; height: 24px;"></div>
+                                <div class="platform-icon"><img src="tiktok.png" alt="TikTok" style="width: 20px; height: 20px;"></div>
                                 <div class="platform-name">TikTok</div>
                                 <div class="platform-count" id="tiktokCount">1,247</div>
                             </div>
                             <div class="platform-box">
-                                <div class="platform-icon"><img src="instagram.png" alt="Instagram" style="width: 24px; height: 24px;"></div>
+                                <div class="platform-icon"><img src="instagram.png" alt="Instagram" style="width: 20px; height: 20px;"></div>
                                 <div class="platform-name">Instagram</div>
                                 <div class="platform-count" id="instaCount">892</div>
                             </div>
                             <div class="platform-box">
-                                <div class="platform-icon"><img src="youtube.png" alt="YouTube" style="width: 24px; height: 24px;"></div>
+                                <div class="platform-icon"><img src="youtube.png" alt="YouTube" style="width: 20px; height: 20px;"></div>
                                 <div class="platform-name">YouTube</div>
                                 <div class="platform-count" id="youtubeCount">634</div>
                             </div>
                             <div class="platform-box">
-                                <div class="platform-icon"><img src="facebook.png" alt="Facebook" style="width: 24px; height: 24px;"></div>
+                                <div class="platform-icon"><img src="facebook.png" alt="Facebook" style="width: 20px; height: 20px;"></div>
                                 <div class="platform-name">Facebook</div>
                                 <div class="platform-count" id="facebookCount">423</div>
                             </div>
                             <div class="platform-box">
-                                <div class="platform-icon"><img src="twitter.png" alt="Twitter" style="width: 24px; height: 24px;"></div>
+                                <div class="platform-icon"><img src="twitter.png" alt="Twitter" style="width: 20px; height: 20px;"></div>
                                 <div class="platform-name">Twitter</div>
                                 <div class="platform-count" id="twitterCount">287</div>
                             </div>
                             <div class="platform-box">
-                                <div class="platform-icon"><img src="snapchat.png" alt="Snapchat" style="width: 24px; height: 24px;"></div>
+                                <div class="platform-icon"><img src="snapchat.png" alt="Snapchat" style="width: 20px; height: 20px;"></div>
                                 <div class="platform-name">Snapchat</div>
                                 <div class="platform-count" id="snapchatCount">156</div>
                             </div>
@@ -1478,7 +880,149 @@
         <span class="toast-message" id="toastMessage"></span>
     </div>
 
-    <!-- Control Action Modals -->
+    <!-- ENHANCED SCAN HISTORY MODAL -->
+    <div class="control-modal" id="scanHistoryModal">
+        <div class="modal-content" style="max-width: 1200px; max-height: 90vh;">
+            <div class="modal-header">
+                <h2>📊 <span data-i18n="scanHistory">Advanced Scan History</span></h2>
+                <div style="display: flex; gap: 1rem; align-items: center;">
+                    <button class="chart-btn" onclick="refreshScanHistory()">🔄 Refresh</button>
+                    <button class="chart-btn" onclick="exportScanHistory()">📁 Export CSV</button>
+                    <button class="close-btn" onclick="closeModal('scanHistoryModal')">Close</button>
+                </div>
+            </div>
+            
+            <!-- Advanced Filters Section -->
+            <div style="background: var(--glass-bg); border-radius: 16px; padding: 1.5rem; margin-bottom: 2rem; border: 1px solid var(--glass-border);">
+                <h3 style="color: var(--text-primary); margin-bottom: 1rem; font-weight: 600;">🔍 Advanced Filters</h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+                    <div>
+                        <label style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 0.5rem; display: block;">Platform</label>
+                        <select id="platformFilter" class="form-select" style="width: 100%;">
+                            <option value="">All Platforms</option>
+                            <option value="tiktok">TikTok</option>
+                            <option value="instagram">Instagram</option>
+                            <option value="youtube">YouTube</option>
+                            <option value="facebook">Facebook</option>
+                            <option value="twitter">Twitter</option>
+                            <option value="snapchat">Snapchat</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 0.5rem; display: block;">Status</label>
+                        <select id="statusFilter" class="form-select" style="width: 100%;">
+                            <option value="">All Status</option>
+                            <option value="clean">Clean</option>
+                            <option value="violation">Violation</option>
+                            <option value="pending">Pending</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 0.5rem; display: block;">Risk Level</label>
+                        <select id="riskFilter" class="form-select" style="width: 100%;">
+                            <option value="">All Levels</option>
+                            <option value="low">Low</option>
+                            <option value="medium">Medium</option>
+                            <option value="high">High</option>
+                            <option value="critical">Critical</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 0.5rem; display: block;">From Date</label>
+                        <input type="date" id="fromDate" class="form-input" style="width: 100%;">
+                    </div>
+                    <div>
+                        <label style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 0.5rem; display: block;">To Date</label>
+                        <input type="date" id="toDate" class="form-input" style="width: 100%;">
+                    </div>
+                    <div style="display: flex; align-items: end;">
+                        <button onclick="applyScanFilters()" class="btn-upgrade" style="width: 100%; margin: 0;">
+                            🔍 Apply Filters
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stats Dashboard -->
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem; margin-bottom: 2rem;">
+                <div class="analytics-card" style="padding: 1rem; margin: 0;">
+                    <div class="kpi-value" id="totalScans" style="font-size: 1.8rem;">0</div>
+                    <div class="metric-label">Total Scans</div>
+                </div>
+                <div class="analytics-card" style="padding: 1rem; margin: 0;">
+                    <div class="kpi-value" id="violationCount" style="font-size: 1.8rem; color: #ef4444;">0</div>
+                    <div class="metric-label">Violations</div>
+                </div>
+                <div class="analytics-card" style="padding: 1rem; margin: 0;">
+                    <div class="kpi-value" id="cleanCount" style="font-size: 1.8rem; color: #10b981;">0</div>
+                    <div class="metric-label">Clean Scans</div>
+                </div>
+                <div class="analytics-card" style="padding: 1rem; margin: 0;">
+                    <div class="kpi-value" id="avgComplianceScore" style="font-size: 1.8rem;">0%</div>
+                    <div class="metric-label">Avg Compliance</div>
+                </div>
+            </div>
+
+            <!-- Scan History Table -->
+            <div style="background: var(--glass-bg); border-radius: 16px; overflow: hidden; border: 1px solid var(--glass-border);">
+                <div style="padding: 1rem; border-bottom: 1px solid var(--glass-border); display: flex; justify-content: space-between; align-items: center;">
+                    <h3 style="color: var(--text-primary); margin: 0;">📋 Scan Results</h3>
+                    <div style="display: flex; gap: 1rem; align-items: center;">
+                        <span id="recordsInfo" style="color: var(--text-secondary); font-size: 0.9rem;">Loading...</span>
+                        <div style="display: flex; gap: 0.5rem;">
+                            <button class="chart-btn" onclick="prevPage()" id="prevBtn" disabled>← Prev</button>
+                            <span id="pageInfo" style="color: var(--text-secondary); font-size: 0.9rem; padding: 0.5rem;">Page 1</span>
+                            <button class="chart-btn" onclick="nextPage()" id="nextBtn">Next →</button>
+                        </div>
+                    </div>
+                </div>
+                <div id="scanHistoryTable" style="max-height: 400px; overflow-y: auto;">
+                    <div class="rules-loading">Loading advanced scan history...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Other Control Action Modals -->
+    <div class="control-modal" id="platformRulesModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>📋 Platform Rules - Live System</h2>
+                <button class="close-btn" onclick="closeModal('platformRulesModal')">Close</button>
+            </div>
+            <div id="platformRulesContent">
+                <div class="rules-loading">Loading latest platform rules...</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="control-modal" id="systemSettingsModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>⚙️ System Settings</h2>
+                <button class="close-btn" onclick="closeModal('systemSettingsModal')">Close</button>
+            </div>
+            <div class="setting-list">
+                <div class="setting-item">
+                    <div>
+                        <strong>🔍 Auto-Scan Enabled</strong><br>
+                        <small>Automatically scan new content</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="control-modal" id="supportCenterModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>🆘 Support Center</h2>
+                <button class="close-btn" onclick="closeModal('supportCenterModal')">Close</button>
+            </div>
+            <div>Support content here...</div>
+        </div>
+    </div>
+
     <div class="control-modal" id="emergencyModal">
         <div class="modal-content">
             <div class="modal-header">
@@ -1497,6 +1041,373 @@
         var currentLanguage = "en";
         var logoClickCount = 0;
         var isAdminMode = false;
+
+        // ENHANCED SCAN HISTORY - PRODUCTION IMPLEMENTATION
+        let currentPage = 1;
+        let pageSize = 20;
+        let totalRecords = 0;
+        let currentFilters = {};
+        let allScansData = [];
+        let isLoading = false;
+        let scanHistoryRefreshInterval;
+
+        async function loadEnhancedScanHistory() {
+            if (isLoading) return;
+            isLoading = true;
+            
+            const tableContainer = document.getElementById("scanHistoryTable");
+            const recordsInfo = document.getElementById("recordsInfo");
+            
+            if (tableContainer) {
+                tableContainer.innerHTML = "<div class=\"rules-loading\">Loading scan history from database...</div>";
+            }
+            
+            try {
+                let query = ADMIN_SUPABASE_URL + "/rest/v1/scans?select=*";
+                
+                const filters = [];
+                if (currentFilters.platform) filters.push(`platform=eq.${currentFilters.platform}`);
+                if (currentFilters.status) filters.push(`status=eq.${currentFilters.status}`);
+                if (currentFilters.riskLevel) filters.push(`risk_level=eq.${currentFilters.riskLevel}`);
+                if (currentFilters.fromDate) filters.push(`created_at=gte.${currentFilters.fromDate}T00:00:00`);
+                if (currentFilters.toDate) filters.push(`created_at=lte.${currentFilters.toDate}T23:59:59`);
+                
+                if (filters.length > 0) {
+                    query += "&" + filters.join("&");
+                }
+                
+                query += `&order=created_at.desc`;
+                const startRange = (currentPage - 1) * pageSize;
+                const endRange = startRange + pageSize - 1;
+                
+                const response = await fetch(query, {
+                    headers: {
+                        "Authorization": "Bearer " + SUPABASE_KEY,
+                        "apikey": SUPABASE_KEY,
+                        "Content-Type": "application/json",
+                        "Range": `${startRange}-${endRange}`,
+                        "Prefer": "count=exact"
+                    }
+                });
+                
+                if (response.ok) {
+                    const scans = await response.json();
+                    const contentRange = response.headers.get('Content-Range');
+                    if (contentRange) {
+                        totalRecords = parseInt(contentRange.split('/')[1]) || 0;
+                    }
+                    
+                    allScansData = scans;
+                    displayEnhancedScanHistory(scans);
+                    updateScanStats(scans);
+                    updatePaginationControls();
+                    
+                    if (recordsInfo) {
+                        recordsInfo.textContent = `Showing ${scans.length} of ${totalRecords} records`;
+                    }
+                } else {
+                    throw new Error(`Supabase Error: ${response.status}`);
+                }
+                
+            } catch (error) {
+                console.error("Enhanced scan history loading error:", error);
+                if (tableContainer) {
+                    tableContainer.innerHTML = "<div class=\"rules-loading\">Error loading scan history. Please try again.</div>";
+                }
+                showToast("Failed to load scan history", "error");
+            } finally {
+                isLoading = false;
+            }
+        }
+
+        function displayEnhancedScanHistory(scans) {
+            const tableContainer = document.getElementById("scanHistoryTable");
+            if (!tableContainer) return;
+            
+            if (scans.length === 0) {
+                tableContainer.innerHTML = "<div class=\"rules-loading\">No scans found with current filters.</div>";
+                return;
+            }
+            
+            let html = `
+            <table style="width: 100%; border-collapse: collapse;">
+                <thead style="background: rgba(255,255,255,0.05); position: sticky; top: 0; z-index: 10;">
+                    <tr>
+                        <th style="padding: 1rem; text-align: left; color: var(--text-secondary); font-weight: 600; border-bottom: 1px solid var(--glass-border);">Platform</th>
+                        <th style="padding: 1rem; text-align: left; color: var(--text-secondary); font-weight: 600; border-bottom: 1px solid var(--glass-border);">Status</th>
+                        <th style="padding: 1rem; text-align: left; color: var(--text-secondary); font-weight: 600; border-bottom: 1px solid var(--glass-border);">Risk Level</th>
+                        <th style="padding: 1rem; text-align: left; color: var(--text-secondary); font-weight: 600; border-bottom: 1px solid var(--glass-border);">Compliance Score</th>
+                        <th style="padding: 1rem; text-align: left; color: var(--text-secondary); font-weight: 600; border-bottom: 1px solid var(--glass-border);">Region</th>
+                        <th style="padding: 1rem; text-align: left; color: var(--text-secondary); font-weight: 600; border-bottom: 1px solid var(--glass-border);">Violation Details</th>
+                        <th style="padding: 1rem; text-align: left; color: var(--text-secondary); font-weight: 600; border-bottom: 1px solid var(--glass-border);">Date</th>
+                    </tr>
+                </thead>
+                <tbody>`;
+            
+            scans.forEach(scan => {
+                const results = JSON.parse(scan.results || "{}");
+                const statusBadge = scan.status === 'violation' ? 'status-violation' : 'status-clean';
+                const riskColor = getRiskLevelColor(scan.risk_level);
+                const formattedDate = new Date(scan.created_at).toLocaleString();
+                
+                html += `
+                <tr style="border-bottom: 1px solid rgba(255,255,255,0.05); transition: background 0.3s ease;" 
+                    onmouseover="this.style.background='rgba(255,255,255,0.03)'" 
+                    onmouseout="this.style.background='transparent'">
+                    <td style="padding: 1rem; color: var(--text-primary); font-weight: 500;">
+                        <div style="display: flex; align-items: center; gap: 0.5rem;">
+                            <span>${getPlatformIcon(scan.platform)}</span>
+                            ${scan.platform.charAt(0).toUpperCase() + scan.platform.slice(1)}
+                        </div>
+                    </td>
+                    <td style="padding: 1rem;">
+                        <span class="status-badge ${statusBadge}">${scan.status}</span>
+                    </td>
+                    <td style="padding: 1rem;">
+                        <span style="padding: 0.25rem 0.75rem; border-radius: 8px; font-size: 0.8rem; font-weight: 600; background: ${riskColor.bg}; color: ${riskColor.text};">
+                            ${scan.risk_level.toUpperCase()}
+                        </span>
+                    </td>
+                    <td style="padding: 1rem; color: var(--text-primary); font-weight: 600;">
+                        ${scan.compliance_score}%
+                    </td>
+                    <td style="padding: 1rem; color: var(--text-secondary);">
+                        ${scan.region || 'N/A'}
+                    </td>
+                    <td style="padding: 1rem; color: var(--text-secondary); max-width: 200px;">
+                        <div style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${results.description || 'No violation details'}">
+                            ${results.violation_type || 'Clean scan'}: ${results.description || 'No issues detected'}
+                        </div>
+                    </td>
+                    <td style="padding: 1rem; color: var(--text-secondary); font-size: 0.9rem;">
+                        ${formattedDate}
+                    </td>
+                </tr>`;
+            });
+            
+            html += "</tbody></table>";
+            tableContainer.innerHTML = html;
+        }
+
+        function getPlatformIcon(platform) {
+            const icons = {
+                'tiktok': '<img src="tiktok.png" alt="TikTok" style="width: 20px; height: 20px;">',
+                'instagram': '<img src="instagram.png" alt="Instagram" style="width: 20px; height: 20px;">',
+                'youtube': '<img src="youtube.png" alt="YouTube" style="width: 20px; height: 20px;">',
+                'facebook': '<img src="facebook.png" alt="Facebook" style="width: 20px; height: 20px;">',
+                'twitter': '<img src="twitter.png" alt="Twitter" style="width: 20px; height: 20px;">',
+                'snapchat': '<img src="snapchat.png" alt="Snapchat" style="width: 20px; height: 20px;">'
+            };
+            return icons[platform.toLowerCase()] || '<img src="icon-192.png" alt="Platform" style="width: 20px; height: 20px;">';
+        }
+
+        function getRiskLevelColor(riskLevel) {
+            const colors = {
+                'low': { bg: 'rgba(16, 185, 129, 0.2)', text: '#10b981' },
+                'medium': { bg: 'rgba(245, 158, 11, 0.2)', text: '#f59e0b' },
+                'high': { bg: 'rgba(239, 68, 68, 0.2)', text: '#ef4444' },
+                'critical': { bg: 'rgba(127, 29, 29, 0.3)', text: '#dc2626' }
+            };
+            return colors[riskLevel.toLowerCase()] || colors['low'];
+        }
+
+        function updateScanStats(scans) {
+            const totalScansEl = document.getElementById("totalScans");
+            const violationCountEl = document.getElementById("violationCount");
+            const cleanCountEl = document.getElementById("cleanCount");
+            const avgComplianceScoreEl = document.getElementById("avgComplianceScore");
+            
+            if (!scans.length) {
+                if (totalScansEl) totalScansEl.textContent = "0";
+                if (violationCountEl) violationCountEl.textContent = "0";
+                if (cleanCountEl) cleanCountEl.textContent = "0";
+                if (avgComplianceScoreEl) avgComplianceScoreEl.textContent = "0%";
+                return;
+            }
+            
+            const violations = scans.filter(scan => scan.status === 'violation').length;
+            const clean = scans.filter(scan => scan.status === 'clean').length;
+            const avgScore = scans.reduce((sum, scan) => sum + (scan.compliance_score || 0), 0) / scans.length;
+            
+            if (totalScansEl) totalScansEl.textContent = totalRecords.toLocaleString();
+            if (violationCountEl) violationCountEl.textContent = violations.toLocaleString();
+            if (cleanCountEl) cleanCountEl.textContent = clean.toLocaleString();
+            if (avgComplianceScoreEl) avgComplianceScoreEl.textContent = Math.round(avgScore) + "%";
+        }
+
+        function updatePaginationControls() {
+            const pageInfo = document.getElementById("pageInfo");
+            const prevBtn = document.getElementById("prevBtn");
+            const nextBtn = document.getElementById("nextBtn");
+            
+            const totalPages = Math.ceil(totalRecords / pageSize);
+            
+            if (pageInfo) {
+                pageInfo.textContent = `Page ${currentPage} of ${totalPages}`;
+            }
+            
+            if (prevBtn) {
+                prevBtn.disabled = currentPage <= 1;
+                prevBtn.style.opacity = currentPage <= 1 ? "0.5" : "1";
+            }
+            
+            if (nextBtn) {
+                nextBtn.disabled = currentPage >= totalPages;
+                nextBtn.style.opacity = currentPage >= totalPages ? "0.5" : "1";
+            }
+        }
+
+        async function applyScanFilters() {
+            currentFilters = {
+                platform: document.getElementById("platformFilter")?.value || "",
+                status: document.getElementById("statusFilter")?.value || "",
+                riskLevel: document.getElementById("riskFilter")?.value || "",
+                fromDate: document.getElementById("fromDate")?.value || "",
+                toDate: document.getElementById("toDate")?.value || ""
+            };
+            
+            currentPage = 1;
+            await loadEnhancedScanHistory();
+            showToast("Filters applied successfully");
+        }
+
+        async function refreshScanHistory() {
+            await loadEnhancedScanHistory();
+            showToast("Scan history refreshed");
+        }
+
+        async function prevPage() {
+            if (currentPage > 1) {
+                currentPage--;
+                await loadEnhancedScanHistory();
+            }
+        }
+
+        async function nextPage() {
+            const totalPages = Math.ceil(totalRecords / pageSize);
+            if (currentPage < totalPages) {
+                currentPage++;
+                await loadEnhancedScanHistory();
+            }
+        }
+
+        async function exportScanHistory() {
+            showToast("Preparing CSV export...", "success");
+            
+            try {
+                let query = ADMIN_SUPABASE_URL + "/rest/v1/scans?select=*";
+                
+                const filters = [];
+                if (currentFilters.platform) filters.push(`platform=eq.${currentFilters.platform}`);
+                if (currentFilters.status) filters.push(`status=eq.${currentFilters.status}`);
+                if (currentFilters.riskLevel) filters.push(`risk_level=eq.${currentFilters.riskLevel}`);
+                if (currentFilters.fromDate) filters.push(`created_at=gte.${currentFilters.fromDate}T00:00:00`);
+                if (currentFilters.toDate) filters.push(`created_at=lte.${currentFilters.toDate}T23:59:59`);
+                
+                if (filters.length > 0) {
+                    query += "&" + filters.join("&");
+                }
+                
+                query += "&order=created_at.desc&limit=10000";
+                
+                const response = await fetch(query, {
+                    headers: {
+                        "Authorization": "Bearer " + SUPABASE_KEY,
+                        "apikey": SUPABASE_KEY,
+                        "Content-Type": "application/json"
+                    }
+                });
+                
+                if (response.ok) {
+                    const allScans = await response.json();
+                    generateAndDownloadCSV(allScans);
+                    showToast(`CSV exported successfully! ${allScans.length} records exported.`);
+                } else {
+                    throw new Error("Failed to fetch export data");
+                }
+                
+            } catch (error) {
+                console.error("CSV export error:", error);
+                showToast("Failed to export CSV", "error");
+            }
+        }
+
+        function generateAndDownloadCSV(scans) {
+            const headers = [
+                "Platform", "Status", "Risk Level", "Compliance Score", "Region", 
+                "Violation Type", "Description", "Created Date", "Scan ID"
+            ];
+            
+            const csvRows = [headers.join(",")];
+            
+            scans.forEach(scan => {
+                const results = JSON.parse(scan.results || "{}");
+                const row = [
+                    `"${scan.platform}"`,
+                    `"${scan.status}"`,
+                    `"${scan.risk_level}"`,
+                    scan.compliance_score || 0,
+                    `"${scan.region || 'N/A'}"`,
+                    `"${results.violation_type || 'N/A'}"`,
+                    `"${(results.description || 'No issues detected').replace(/"/g, '""')}"`,
+                    `"${new Date(scan.created_at).toISOString()}"`,
+                    `"${scan.id}"`
+                ];
+                csvRows.push(row.join(","));
+            });
+            
+            const csvContent = csvRows.join("\n");
+            const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+            
+            const link = document.createElement("a");
+            const url = URL.createObjectURL(blob);
+            link.setAttribute("href", url);
+            
+            const today = new Date().toISOString().split('T')[0];
+            const filterSuffix = Object.values(currentFilters).filter(v => v).length > 0 ? "_filtered" : "";
+            link.setAttribute("download", `CheckReel_ScanHistory_${today}${filterSuffix}.csv`);
+            
+            link.style.visibility = "hidden";
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+        }
+
+        function startScanHistoryAutoRefresh() {
+            scanHistoryRefreshInterval = setInterval(async () => {
+                const modal = document.getElementById("scanHistoryModal");
+                if (modal && modal.classList.contains("active")) {
+                    console.log("Auto-refreshing scan history...");
+                    await loadEnhancedScanHistory();
+                }
+            }, 30000);
+        }
+
+        function stopScanHistoryAutoRefresh() {
+            if (scanHistoryRefreshInterval) {
+                clearInterval(scanHistoryRefreshInterval);
+                scanHistoryRefreshInterval = null;
+            }
+        }
+
+        // Override existing showScanHistory function
+        async function showScanHistory() {
+            console.log("Opening Enhanced Scan History...");
+            document.getElementById("scanHistoryModal").classList.add("active");
+            await loadEnhancedScanHistory();
+            startScanHistoryAutoRefresh();
+            showToast("Advanced Scan History opened - Auto-refresh enabled");
+        }
+
+        // Override closeModal to handle auto-refresh
+        const originalCloseModal = window.closeModal;
+        window.closeModal = function(modalId) {
+            if (modalId === 'scanHistoryModal') {
+                stopScanHistoryAutoRefresh();
+            }
+            document.getElementById(modalId).classList.remove("active");
+        };
 
         // LANGUAGE SYSTEM - COMPREHENSIVE ARABIC SUPPORT
         var languages = {
@@ -2111,59 +2022,6 @@
         });
 
         // CONTROL ACTIONS FUNCTIONS
-        async function showScanHistory() {
-            console.log("Opening Scan History...");
-            document.getElementById("scanHistoryModal").classList.add("active");
-            await loadAdminScanHistory();
-            showToast("Scan History opened - Live data loaded");
-        }
-
-        async function loadAdminScanHistory() {
-            const scansList = document.getElementById("scanHistoryList");
-            scansList.innerHTML = "<div class=\"rules-loading\">Loading scan history from database...</div>";
-            
-            try {
-                const response = await fetch(ADMIN_SUPABASE_URL + "/rest/v1/scans?select=*&order=created_at.desc.limit(50)", {
-                    headers: {
-                        "Authorization": "Bearer " + SUPABASE_KEY,
-                        "apikey": SUPABASE_KEY,
-                        "Content-Type": "application/json"
-                    }
-                });
-                
-                if (response.ok) {
-                    const scans = await response.json();
-                    displayAdminScanHistory(scans);
-                } else {
-                    scansList.innerHTML = "<div class=\"rules-loading\">Error loading scan history.</div>";
-                }
-            } catch (error) {
-                console.error("Scan history loading error:", error);
-                scansList.innerHTML = "<div class=\"rules-loading\">Database connection failed.</div>";
-            }
-        }
-
-        function displayAdminScanHistory(scans) {
-            const scansList = document.getElementById("scanHistoryList");
-            let html = "<h3>Live Scan History - " + scans.length + " Recent Records:</h3>";
-            
-            scans.forEach(scan => {
-                const results = JSON.parse(scan.results || "{}");
-                const statusBadge = scan.status === 'violation' ? 'status-violation' : 'status-clean';
-                html += `<div class="scan-item">
-                    <div>
-                        <strong>${scan.platform}</strong> - ${scan.region}<br>
-                        <small>Risk Level: ${scan.risk_level} | Score: ${scan.compliance_score}</small><br>
-                        <small>${results.violation_type || 'No violation'}: ${results.description || 'Clean scan'}</small>
-                    </div>
-                    <div class="status-badge ${statusBadge}">${scan.status}</div>
-                    <div>${new Date(scan.created_at).toLocaleDateString()}</div>
-                </div>`;
-            });
-            
-            scansList.innerHTML = html;
-        }
-
         async function showPlatformRules() {
             console.log("Opening Platform Rules...");
             document.getElementById("platformRulesModal").classList.add("active");
@@ -2187,10 +2045,6 @@
             console.log("Activating Emergency Mode...");
             document.getElementById("emergencyModal").classList.add("active");
             showToast("Emergency Mode activated - Use with caution!", "error");
-        }
-
-        function closeModal(modalId) {
-            document.getElementById(modalId).classList.remove("active");
         }
 
         async function loadPlatformRules() {
@@ -2236,7 +2090,7 @@
             }
         });
 
-        console.log('CheckReel Premium Admin Dashboard v5.0 - Million Dollar Design - All Systems Operational');
+        console.log('CheckReel Premium Admin Dashboard v6.0 - Enhanced Scan History - Production Ready');
     </script>
 
     <script>
@@ -2273,55 +2127,602 @@
         document.addEventListener("DOMContentLoaded", initRevenueChart);
     </script>
 </body>
-</html>scanHistoryModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2>📊 Scan History</h2>
-                <button class="close-btn" onclick="closeModal('scanHistoryModal')">Close</button>
-            </div>
-            <div class="scan-list" id="scanHistoryList">
-                <div class="rules-loading">Loading scan history from database...</div>
-            </div>
-        </div>
-    </div>
+</html>
+        }
 
-    <div class="control-modal" id="platformRulesModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2>📋 Platform Rules - Live System</h2>
-                <button class="close-btn" onclick="closeModal('platformRulesModal')">Close</button>
-            </div>
-            <div id="platformRulesContent">
-                <div class="rules-loading">Loading latest platform rules...</div>
-            </div>
-        </div>
-    </div>
+        .kpi-card:nth-child(1)::before { background: var(--accent-gradient); }
+        .kpi-card:nth-child(2)::before { background: var(--secondary-gradient); }
+        .kpi-card:nth-child(3)::before { background: var(--danger-gradient); }
+        .kpi-card:nth-child(4)::before { background: linear-gradient(135deg, #a78bfa 0%, #ec4899 100%); }
+        .kpi-card:nth-child(5)::before { background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%); }
+        .kpi-card:nth-child(6)::before { background: linear-gradient(135deg, #34d399 0%, #059669 100%); }
 
-    <div class="control-modal" id="systemSettingsModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2>⚙️ System Settings</h2>
-                <button class="close-btn" onclick="closeModal('systemSettingsModal')">Close</button>
-            </div>
-            <div class="setting-list">
-                <div class="setting-item">
-                    <div>
-                        <strong>🔍 Auto-Scan Enabled</strong><br>
-                        <small>Automatically scan new content</small>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+        .kpi-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
 
-    <div class="control-modal" id="supportCenterModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2>🆘 Support Center</h2>
-                <button class="close-btn" onclick="closeModal('supportCenterModal')">Close</button>
-            </div>
-            <div>Support content here...</div>
-        </div>
-    </div>
+        .kpi-title {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
 
-    <div class="control-modal" id="
+        .kpi-icon {
+            font-size: 2rem;
+            opacity: 0.8;
+            filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.2));
+        }
+
+        .kpi-value {
+            font-size: 3rem;
+            font-weight: 800;
+            color: var(--text-primary);
+            margin-bottom: 0.75rem;
+            line-height: 1;
+            letter-spacing: -0.02em;
+        }
+
+        .kpi-change {
+            font-size: 0.9rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .kpi-change.positive { 
+            color: #10b981;
+            text-shadow: 0 0 10px rgba(16, 185, 129, 0.3);
+        }
+        
+        .kpi-change.negative { 
+            color: #ef4444;
+            text-shadow: 0 0 10px rgba(239, 68, 68, 0.3);
+        }
+
+        .user-tier-management {
+            background: var(--glass-bg);
+            backdrop-filter: var(--blur-xl);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 2.5rem;
+            margin-bottom: 2.5rem;
+            box-shadow: var(--shadow-lg);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .user-tier-management::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--accent-gradient);
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            letter-spacing: -0.01em;
+        }
+
+        .tier-upgrade-form {
+            display: grid;
+            grid-template-columns: 2fr 1fr auto;
+            gap: 1.5rem;
+            align-items: end;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .form-label {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .form-input, .form-select {
+            padding: 1rem 1.5rem;
+            border-radius: 16px;
+            border: 1px solid var(--glass-border);
+            background: var(--glass-bg);
+            backdrop-filter: var(--blur-lg);
+            color: var(--text-primary);
+            font-size: 1rem;
+            font-weight: 500;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-input:focus, .form-select:focus {
+            outline: none;
+            border-color: rgba(102, 126, 234, 0.5);
+            background: rgba(255, 255, 255, 0.12);
+            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1), 0 8px 24px rgba(0, 0, 0, 0.15);
+        }
+
+        .form-input::placeholder {
+            color: var(--text-muted);
+        }
+
+        .form-select option {
+            background: #1f2937;
+            color: white;
+        }
+
+        .btn-upgrade {
+            background: var(--accent-gradient);
+            border: none;
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 16px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            box-shadow: 0 8px 32px rgba(67, 233, 123, 0.2);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .btn-upgrade:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 40px rgba(67, 233, 123, 0.3);
+        }
+
+        .btn-upgrade:active {
+            transform: translateY(-1px);
+        }
+
+        .charts-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 2.5rem;
+        }
+
+        .chart-container {
+            background: var(--glass-bg);
+            backdrop-filter: var(--blur-xl);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 2.5rem;
+            box-shadow: var(--shadow-lg);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .chart-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--secondary-gradient);
+        }
+
+        .chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .chart-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            letter-spacing: -0.01em;
+        }
+
+        .chart-controls {
+            display: flex;
+            gap: 0.75rem;
+        }
+
+        .chart-btn {
+            background: var(--glass-bg);
+            backdrop-filter: var(--blur-lg);
+            border: 1px solid var(--glass-border);
+            color: var(--text-secondary);
+            padding: 0.5rem 1rem;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .chart-btn.active, .chart-btn:hover {
+            background: rgba(255, 255, 255, 0.15);
+            color: var(--text-primary);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+        }
+
+        .analytics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2.5rem;
+            margin-top: 2.5rem;
+        }
+
+        .analytics-card {
+            background: var(--glass-bg);
+            backdrop-filter: var(--blur-xl);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 2rem;
+            box-shadow: var(--shadow-lg);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .analytics-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-xl);
+        }
+
+        .analytics-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            letter-spacing: -0.01em;
+        }
+
+        .metric-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            transition: all 0.3s ease;
+        }
+
+        .metric-item:hover {
+            background: rgba(255, 255, 255, 0.03);
+            margin: 0 -1rem;
+            padding: 1rem;
+            border-radius: 12px;
+        }
+
+        .metric-item:last-child {
+            border-bottom: none;
+        }
+
+        .metric-label {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            font-weight: 500;
+        }
+
+        .metric-value {
+            color: var(--text-primary);
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 2.5rem;
+        }
+
+        .sidebar-section {
+            background: var(--glass-bg);
+            backdrop-filter: var(--blur-xl);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 2rem;
+            box-shadow: var(--shadow-lg);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .sidebar-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            letter-spacing: -0.01em;
+        }
+
+        .quick-action, .activity-item, .alert-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            margin-bottom: 0.75rem;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            backdrop-filter: var(--blur-lg);
+        }
+
+        .quick-action:hover, .activity-item:hover {
+            background: rgba(255, 255, 255, 0.12);
+            transform: translateX(8px) translateY(-2px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+        }
+
+        .alert-item.critical {
+            border-left: 4px solid #ef4444;
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.1) 0%, var(--glass-bg) 100%);
+        }
+
+        .alert-item.warning {
+            border-left: 4px solid #f59e0b;
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.1) 0%, var(--glass-bg) 100%);
+        }
+
+        .alert-item.info {
+            border-left: 4px solid #3b82f6;
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, var(--glass-bg) 100%);
+        }
+
+        .action-icon, .activity-icon, .alert-icon {
+            font-size: 1.5rem;
+            filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.2));
+        }
+
+        .action-text, .activity-text, .alert-text {
+            color: var(--text-primary);
+            font-weight: 600;
+            flex: 1;
+        }
+
+        .activity-details, .alert-details {
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+        }
+
+        .activity-time, .alert-time {
+            color: var(--text-muted);
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: var(--blur-xl);
+            border-radius: 16px;
+            padding: 1.5rem 2rem;
+            box-shadow: var(--shadow-xl);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 1000;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .toast.success {
+            border-left: 4px solid #10b981;
+        }
+
+        .toast.error {
+            border-left: 4px solid #ef4444;
+        }
+
+        .toast-icon {
+            font-size: 1.5rem;
+        }
+
+        .toast-message {
+            color: #1f2937;
+            font-weight: 600;
+        }
+
+        .spinner {
+            border: 3px solid rgba(255, 255, 255, 0.2);
+            border-top-color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            animation: spin 0.8s linear infinite;
+            display: inline-block;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .control-display {
+            background: var(--glass-bg);
+            backdrop-filter: var(--blur-lg);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 2rem;
+            text-align: center;
+            height: 240px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .control-display:hover {
+            background: rgba(255, 255, 255, 0.12);
+            transform: scale(1.02);
+        }
+
+        .platform-stats {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .platform-item {
+            font-size: 1.2rem;
+            color: var(--text-primary);
+            padding: 0.75rem;
+            background: var(--glass-bg);
+            border-radius: 12px;
+            font-weight: 600;
+        }
+
+        .platform-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.75rem;
+            height: 200px;
+        }
+
+        .platform-box {
+            background: var(--glass-bg);
+            backdrop-filter: var(--blur-lg);
+            border-radius: 16px;
+            padding: 0.5rem;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 70px;
+            border: 1px solid var(--glass-border);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .platform-box:hover {
+            transform: translateY(-4px);
+            background: rgba(255, 255, 255, 0.12);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+        }
+
+        .platform-icon {
+            font-size: 20px;
+            margin-bottom: 0.25rem;
+            filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.2));
+        }
+
+        .platform-name {
+            display: none;
+        }
+
+        .platform-count {
+            font-size: 1.2rem;
+            font-weight: 800;
+            color: var(--text-primary);
+        }
+
+        #adminSection {
+            display: none;
+            background: var(--glass-bg);
+            backdrop-filter: var(--blur-xl);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 2.5rem;
+            margin-bottom: 2.5rem;
+            border-left: 4px solid #ef4444;
+            box-shadow: var(--shadow-lg);
+            position: relative;
+            overflow: hidden;
+        }
+
+        #adminSection::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--danger-gradient);
+        }
+
+        #adminSection.active {
+            display: block;
+            animation: slideInUp 0.5s ease;
+        }
+
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .control-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: var(--blur-lg);
+            z-index: 2000;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .control-modal.active {
+            display: flex;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal-content {
+            background: var(--glass-bg);
+            backdrop-filter: var(--blur-xl);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 2.5rem;
+            max-width: 900px;
+            width: 90%;
+            max-height: 80%;
+            overflow-y: auto;
+            color: var(--text-primary);
+            box-shadow: var(--shadow-xl);
