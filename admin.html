@@ -2411,13 +2411,14 @@ function filterRules() {
 }
 
 function addNewRule() {
-    currentEditingRule = null;
+    // Reset modal fields for new rule
     document.getElementById("ruleModalTitle").textContent = "Add New Rule";
     document.getElementById("rulePlatform").value = "";
     document.getElementById("ruleCategory").value = "content";
     document.getElementById("ruleText").value = "";
     document.getElementById("ruleSourceUrl").value = "";
     document.getElementById("ruleAdminNotes").value = "";
+    currentEditingRule = null;
     document.getElementById("ruleEditModal").style.display = "block";
 }
 
