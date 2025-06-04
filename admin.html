@@ -1104,6 +1104,32 @@
             0% { background-position: -200% 0; }
             100% { background-position: 200% 0; }
         }
+        /* Platform Rules Dropdown Styles */
+.platform-rules-select {
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    color: var(--text-primary);
+    padding: 0.5rem 1rem;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+}
+
+.platform-rules-select:hover {
+    background: rgba(255, 255, 255, 0.12);
+    border-color: #43e97b;
+}
+
+.platform-rules-select:focus {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: #43e97b;
+    box-shadow: 0 0 0 3px rgba(67, 233, 123, 0.2);
+    outline: none;
+}
+
+.platform-rules-select option {
+    background: #1f2937;
+    color: white;
+}
     </style>
 </head>
 <body>
@@ -2204,7 +2230,7 @@
             </div>
             
             <div style="display: flex; gap: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap;">
-                <select id="platformFilter" onchange="filterRules()" style="background: var(--glass-bg); border: 1px solid var(--glass-border); color: var(--text-primary); padding: 0.5rem 1rem; border-radius: 12px;">
+                <select id="rulesplatformFilter" onchange="filterRules()" class="platform-rules-select">
                     <option value="">All Platforms</option>
                     <option value="tiktok">TikTok</option>
                     <option value="instagram">Instagram</option>
@@ -2213,7 +2239,7 @@
                     <option value="twitter">Twitter</option>
                     <option value="snapchat">Snapchat</option>
                 </select>
-                <select id="categoryFilter" onchange="filterRules()" style="background: var(--glass-bg); border: 1px solid var(--glass-border); color: var(--text-primary); padding: 0.5rem 1rem; border-radius: 12px;">
+                <select id="categoryFilter" onchange="filterRules()" class="platform-rules-select">
                     <option value="">All Categories</option>
                     <option value="content">Content Guidelines</option>
                     <option value="technical">Technical Requirements</option>
@@ -2368,7 +2394,7 @@ function displayRulesTable(rules) {
 }
 
 function filterRules() {
-    const platformFilter = document.getElementById("platformFilter").value;
+    const platformFilter = document.getElementById("rulesplatformFilter").value;
     const categoryFilter = document.getElementById("categoryFilter").value;
     
     let filteredRules = allRules;
