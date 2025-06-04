@@ -2411,15 +2411,25 @@ function filterRules() {
 }
 
 function addNewRule() {
-    // Reset modal fields for new rule
-    document.getElementById("ruleModalTitle").textContent = "Add New Rule";
-    document.getElementById("rulePlatform").value = "";
-    document.getElementById("ruleCategory").value = "content";
-    document.getElementById("ruleText").value = "";
-    document.getElementById("ruleSourceUrl").value = "";
-    document.getElementById("ruleAdminNotes").value = "";
-    currentEditingRule = null;
-    document.getElementById("ruleEditModal").style.display = "block";
+    // Modal HTML here
+    const modalHTML = `
+        <div class="modal-overlay" onclick="closeAddModal()">
+            <div class="modal-content" onclick="event.stopPropagation()">
+                <!-- Modal content -->
+                <select id="newRulePlatform" required style="background: var(--glass-bg); border: 1px solid var(--glass-border); color: var(--text-primary); padding: 0.5rem; border-radius: 8px; width: 100%;">
+                    <option value="" style="background: #1f2937; color: white;">Select Platform</option>
+                    <option value="tiktok" style="background: #1f2937; color: white;">TikTok</option>
+                    <option value="instagram" style="background: #1f2937; color: white;">Instagram</option>
+                    <option value="youtube" style="background: #1f2937; color: white;">YouTube</option>
+                    <option value="facebook" style="background: #1f2937; color: white;">Facebook</option>
+                    <option value="twitter" style="background: #1f2937; color: white;">Twitter</option>
+                    <option value="snapchat" style="background: #1f2937; color: white;">Snapchat</option>
+                </select>
+            </div>
+        </div>
+    `;
+    
+    document.body.insertAdjacentHTML('beforeend', modalHTML);
 }
 
 function editRule(ruleId) {
