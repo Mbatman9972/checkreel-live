@@ -2193,40 +2193,100 @@
         }
 
         async function loadPlatformRules() {
-            const rulesContent = document.getElementById("platformRulesContent");
-            rulesContent.innerHTML = "<div class=\"rules-loading\">Loading latest platform rules...</div>";
+    const rulesContent = document.getElementById("platformRulesContent");
+    if (!rulesContent) return;
+    
+    rulesContent.innerHTML = `
+        <div style="margin-bottom: 2rem;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                <h3 style="color: var(--text-primary); margin: 0;">Platform Rules Management</h3>
+                <button onclick="addNewRule()" style="background: var(--accent-gradient); border: none; color: white; padding: 0.75rem 1.5rem; border-radius: 12px; cursor: pointer; font-weight: 600;">+ Add Rule</button>
+            </div>
             
-            try {
-                const response = await fetch(ADMIN_SUPABASE_URL + "/rest/v1/platform_rules?select=*&is_active=eq.true&order=platform,id", {
-                    headers: {
-                        "Authorization": "Bearer " + SUPABASE_KEY,
-                        "apikey": SUPABASE_KEY,
-                        "Content-Type": "application/json"
-                    }
-                });
+            <div style="display: flex; gap: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap;">
+                <select id="platformFilter" onchange="filterRules()" style="background: var(--glass-bg); border: 1px solid var(--glass-border); color: var(--text-primary); padding: 0.5rem 1rem; border-radius: 12px;">
+                    <option value="">All Platforms</option>
+                    <option value="tiktok">TikTok</option>
+                    <option value="instagram">Instagram</option>
+                    <option value="youtube">YouTube</option>
+                    <option value="facebook">Facebook</option>
+                    <option value="twitter">Twitter</option>
+                    <option value="snapchat">Snapchat</option>
+                </select>
+                <select id="categoryFilter" onchange="filterRules()" style="background: var(--glass-bg); border: 1px solid var(--glass-border); color: var(--text-primary); padding: 0.5rem 1rem; border-radius: 12px;">
+                    <option value="">All Categories</option>
+                    <option value="content">Content Guidelines</option>
+                    <option value="technical">Technical Requirements</option>
+                    <option value="copyright">Copyright Rules</option>
+                    <option value="community">Community Standards</option>
+                </select>
+                <button onclick="exportRules()" style="background: var(--secondary-gradient); border: none; color: white; padding: 0.5rem 1rem; border-radius: 12px; cursor: pointer; font-weight: 600;">📄 Export</button>
+            </div>
+        </div>
+        
+        <div id="rulesTableContainer" style="max-height: 400px; overflow-y: auto;">
+            <div class="rules-loading">Loading platform rules...</div>
+        </div>
+        
+        <!-- Add/Edit Rule Modal -->
+        <div id="ruleEditModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 3000; padding: 20px;">
+            <div style="background: var(--glass-bg); backdrop-filter: var(--blur-xl); border: 1px solid var(--glass-border); border-radius: 24px; padding: 2rem; max-width: 600px; margin: 50px auto; color: var(--text-primary);">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                    <h3 id="ruleModalTitle">Add New Rule</h3>
+                    <button onclick="closeRuleModal()" style="background: none; border: none; color: var(--text-primary); font-size: 1.5rem; cursor: pointer;">&times;</button>
+                </div>
                 
-                if (response.ok) {
-                    const rules = await response.json();
-                    displayPlatformRules(rules);
-                } else {
-                    rulesContent.innerHTML = "<div class=\"rules-loading\">No rules found in database.</div>";
-                }
-            } catch (error) {
-                console.error("Platform rules loading error:", error);
-                rulesContent.innerHTML = "<div class=\"rules-loading\">Error loading rules.</div>";
-            }
-        }
-
-        function displayPlatformRules(rules) {
-            const rulesContent = document.getElementById("platformRulesContent");
-            let html = "<h3>Live Platform Rules:</h3>";
-            
-            rules.forEach(rule => {
-                html += `<div class="scan-item"><div><strong>${rule.platform}</strong>: ${rule.rule_text}</div></div>`;
-            });
-            
-            rulesContent.innerHTML = html;
-        }
+                <div style="display: grid; gap: 1rem;">
+                    <div>
+                        <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Platform:</label>
+                        <select id="rulePlatform" required style="width: 100%; padding: 0.75rem; border-radius: 12px; border: 1px solid var(--glass-border); background: var(--glass-bg); color: var(--text-primary);">
+                            <option value="">Select Platform</option>
+                            <option value="tiktok">TikTok</option>
+                            <option value="instagram">Instagram</option>
+                            <option value="youtube">YouTube</option>
+                            <option value="facebook">Facebook</option>
+                            <option value="twitter">Twitter</option>
+                            <option value="snapchat">Snapchat</option>
+                        </select>
+                    </div>
+                    
+                    <div>
+                        <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Category:</label>
+                        <select id="ruleCategory" style="width: 100%; padding: 0.75rem; border-radius: 12px; border: 1px solid var(--glass-border); background: var(--glass-bg); color: var(--text-primary);">
+                            <option value="content">Content Guidelines</option>
+                            <option value="technical">Technical Requirements</option>
+                            <option value="copyright">Copyright Rules</option>
+                            <option value="community">Community Standards</option>
+                        </select>
+                    </div>
+                    
+                    <div>
+                        <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Rule Text:</label>
+                        <textarea id="ruleText" required rows="4" style="width: 100%; padding: 0.75rem; border-radius: 12px; border: 1px solid var(--glass-border); background: var(--glass-bg); color: var(--text-primary); resize: vertical;" placeholder="Enter the rule description..."></textarea>
+                    </div>
+                    
+                    <div>
+                        <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Source URL (optional):</label>
+                        <input type="url" id="ruleSourceUrl" style="width: 100%; padding: 0.75rem; border-radius: 12px; border: 1px solid var(--glass-border); background: var(--glass-bg); color: var(--text-primary);" placeholder="https://...">
+                    </div>
+                    
+                    <div>
+                        <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Admin Notes (optional):</label>
+                        <textarea id="ruleAdminNotes" rows="2" style="width: 100%; padding: 0.75rem; border-radius: 12px; border: 1px solid var(--glass-border); background: var(--glass-bg); color: var(--text-primary); resize: vertical;" placeholder="Internal notes..."></textarea>
+                    </div>
+                    
+                    <div style="display: flex; gap: 1rem; margin-top: 1rem;">
+                        <button onclick="saveRule()" style="flex: 1; background: var(--accent-gradient); border: none; color: white; padding: 0.75rem; border-radius: 12px; cursor: pointer; font-weight: 600;">Save Rule</button>
+                        <button onclick="closeRuleModal()" style="flex: 1; background: var(--glass-bg); border: 1px solid var(--glass-border); color: var(--text-primary); padding: 0.75rem; border-radius: 12px; cursor: pointer; font-weight: 600;">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    // Load rules data
+    await loadRulesData();
+}
 
         // Close modals when clicking outside
         window.addEventListener("click", function(event) {
@@ -2236,6 +2296,284 @@
         });
 
         console.log('CheckReel Premium Admin Dashboard v5.0 - Million Dollar Design - All Systems Operational');
+        // Platform Rules Management Functions
+let allRules = [];
+let currentEditingRule = null;
+
+async function loadRulesData() {
+    const container = document.getElementById("rulesTableContainer");
+    if (!container) return;
+    
+    try {
+        const response = await fetch(ADMIN_SUPABASE_URL + "/rest/v1/platform_rules?select=*&order=platform,category,id", {
+            headers: {
+                "Authorization": "Bearer " + SUPABASE_KEY,
+                "apikey": SUPABASE_KEY,
+                "Content-Type": "application/json"
+            }
+        });
+        
+        if (response.ok) {
+            allRules = await response.json();
+            displayRulesTable(allRules);
+        } else {
+            container.innerHTML = `<div class="rules-loading">No rules found. <button onclick="addSampleRules()" style="background: var(--accent-gradient); border: none; color: white; padding: 0.5rem 1rem; border-radius: 8px; margin-left: 1rem;">Add Sample Rules</button></div>`;
+        }
+    } catch (error) {
+        console.error("Rules loading error:", error);
+        container.innerHTML = `<div class="rules-loading">Error loading rules. <button onclick="addSampleRules()" style="background: var(--accent-gradient); border: none; color: white; padding: 0.5rem 1rem; border-radius: 8px; margin-left: 1rem;">Add Sample Rules</button></div>`;
+    }
+}
+
+function displayRulesTable(rules) {
+    const container = document.getElementById("rulesTableContainer");
+    if (!rules.length) {
+        container.innerHTML = `<div class="rules-loading">No rules found. <button onclick="addSampleRules()" style="background: var(--accent-gradient); border: none; color: white; padding: 0.5rem 1rem; border-radius: 8px; margin-left: 1rem;">Add Sample Rules</button></div>`;
+        return;
+    }
+    
+    let html = `<div style="background: var(--glass-bg); border-radius: 16px; overflow: hidden;">`;
+    
+    rules.forEach(rule => {
+        const isActive = rule.is_active;
+        const statusColor = isActive ? '#10b981' : '#6b7280';
+        const statusText = isActive ? 'Active' : 'Inactive';
+        
+        html += `
+            <div class="scan-item" style="margin-bottom: 0; border-bottom: 1px solid var(--glass-border); border-radius: 0;">
+                <div style="flex: 1;">
+                    <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 0.5rem;">
+                        <strong style="color: var(--text-primary); text-transform: capitalize;">${rule.platform}</strong>
+                        <span style="background: rgba(59, 130, 246, 0.2); color: #3b82f6; padding: 0.25rem 0.75rem; border-radius: 12px; font-size: 0.8rem; font-weight: 600;">${rule.category || 'General'}</span>
+                        <span style="color: ${statusColor}; font-size: 0.8rem; font-weight: 600;">${statusText}</span>
+                    </div>
+                    <div style="color: var(--text-secondary); margin-bottom: 0.5rem; line-height: 1.4;">${rule.rule_text}</div>
+                    ${rule.source_url ? `<div style="font-size: 0.8rem; color: var(--text-muted);"><a href="${rule.source_url}" target="_blank" style="color: #3b82f6;">📎 Source</a></div>` : ''}
+                    ${rule.admin_notes ? `<div style="font-size: 0.8rem; color: var(--text-muted); font-style: italic;">Notes: ${rule.admin_notes}</div>` : ''}
+                </div>
+                <div style="display: flex; flex-direction: column; gap: 0.5rem; align-items: flex-end;">
+                    <div style="font-size: 0.8rem; color: var(--text-muted);">${new Date(rule.last_updated).toLocaleDateString()}</div>
+                    <div style="display: flex; gap: 0.5rem;">
+                        <button onclick="editRule(${rule.id})" style="background: var(--secondary-gradient); border: none; color: white; padding: 0.4rem 0.8rem; border-radius: 8px; cursor: pointer; font-size: 0.8rem;">Edit</button>
+                        <button onclick="toggleRuleStatus(${rule.id}, ${!isActive})" style="background: ${isActive ? 'var(--danger-gradient)' : 'var(--accent-gradient)'}; border: none; color: white; padding: 0.4rem 0.8rem; border-radius: 8px; cursor: pointer; font-size: 0.8rem;">${isActive ? 'Disable' : 'Enable'}</button>
+                        <button onclick="deleteRule(${rule.id})" style="background: #dc3545; border: none; color: white; padding: 0.4rem 0.8rem; border-radius: 8px; cursor: pointer; font-size: 0.8rem;">Delete</button>
+                    </div>
+                </div>
+            </div>
+        `;
+    });
+    
+    html += `</div>`;
+    container.innerHTML = html;
+}
+
+function filterRules() {
+    const platformFilter = document.getElementById("platformFilter").value;
+    const categoryFilter = document.getElementById("categoryFilter").value;
+    
+    let filteredRules = allRules;
+    
+    if (platformFilter) {
+        filteredRules = filteredRules.filter(rule => rule.platform === platformFilter);
+    }
+    
+    if (categoryFilter) {
+        filteredRules = filteredRules.filter(rule => rule.category === categoryFilter);
+    }
+    
+    displayRulesTable(filteredRules);
+}
+
+function addNewRule() {
+    currentEditingRule = null;
+    document.getElementById("ruleModalTitle").textContent = "Add New Rule";
+    document.getElementById("rulePlatform").value = "";
+    document.getElementById("ruleCategory").value = "content";
+    document.getElementById("ruleText").value = "";
+    document.getElementById("ruleSourceUrl").value = "";
+    document.getElementById("ruleAdminNotes").value = "";
+    document.getElementById("ruleEditModal").style.display = "block";
+}
+
+function editRule(ruleId) {
+    const rule = allRules.find(r => r.id === ruleId);
+    if (!rule) return;
+    
+    currentEditingRule = rule;
+    document.getElementById("ruleModalTitle").textContent = "Edit Rule";
+    document.getElementById("rulePlatform").value = rule.platform;
+    document.getElementById("ruleCategory").value = rule.category || "content";
+    document.getElementById("ruleText").value = rule.rule_text;
+    document.getElementById("ruleSourceUrl").value = rule.source_url || "";
+    document.getElementById("ruleAdminNotes").value = rule.admin_notes || "";
+    document.getElementById("ruleEditModal").style.display = "block";
+}
+
+function closeRuleModal() {
+    document.getElementById("ruleEditModal").style.display = "none";
+    currentEditingRule = null;
+}
+
+async function saveRule() {
+    const platform = document.getElementById("rulePlatform").value;
+    const category = document.getElementById("ruleCategory").value;
+    const ruleText = document.getElementById("ruleText").value;
+    const sourceUrl = document.getElementById("ruleSourceUrl").value;
+    const adminNotes = document.getElementById("ruleAdminNotes").value;
+    
+    if (!platform || !ruleText.trim()) {
+        alert("Platform and Rule Text are required");
+        return;
+    }
+    
+    const ruleData = {
+        platform,
+        category,
+        rule_text: ruleText.trim(),
+        source_url: sourceUrl || null,
+        admin_notes: adminNotes || null,
+        is_active: true
+    };
+    
+    try {
+        let response;
+        
+        if (currentEditingRule) {
+            // Update existing rule
+            response = await fetch(ADMIN_SUPABASE_URL + `/rest/v1/platform_rules?id=eq.${currentEditingRule.id}`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + SUPABASE_KEY,
+                    'apikey': SUPABASE_KEY
+                },
+                body: JSON.stringify(ruleData)
+            });
+        } else {
+            // Create new rule
+            response = await fetch(ADMIN_SUPABASE_URL + '/rest/v1/platform_rules', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + SUPABASE_KEY,
+                    'apikey': SUPABASE_KEY
+                },
+                body: JSON.stringify(ruleData)
+            });
+        }
+        
+        if (response.ok) {
+            showToast(currentEditingRule ? 'Rule updated successfully' : 'Rule created successfully');
+            closeRuleModal();
+            await loadRulesData();
+        } else {
+            throw new Error('Failed to save rule');
+        }
+    } catch (error) {
+        console.error('Save rule error:', error);
+        showToast('Failed to save rule: ' + error.message, 'error');
+    }
+}
+
+async function toggleRuleStatus(ruleId, newStatus) {
+    try {
+        const response = await fetch(ADMIN_SUPABASE_URL + `/rest/v1/platform_rules?id=eq.${ruleId}`, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + SUPABASE_KEY,
+                'apikey': SUPABASE_KEY
+            },
+            body: JSON.stringify({ is_active: newStatus })
+        });
+        
+        if (response.ok) {
+            showToast(`Rule ${newStatus ? 'enabled' : 'disabled'} successfully`);
+            await loadRulesData();
+        } else {
+            throw new Error('Failed to update rule status');
+        }
+    } catch (error) {
+        console.error('Toggle rule status error:', error);
+        showToast('Failed to update rule status', 'error');
+    }
+}
+
+async function deleteRule(ruleId) {
+    if (!confirm('Are you sure you want to delete this rule?')) return;
+    
+    try {
+        const response = await fetch(ADMIN_SUPABASE_URL + `/rest/v1/platform_rules?id=eq.${ruleId}`, {
+            method: 'DELETE',
+            headers: {
+                'Authorization': 'Bearer ' + SUPABASE_KEY,
+                'apikey': SUPABASE_KEY
+            }
+        });
+        
+        if (response.ok) {
+            showToast('Rule deleted successfully');
+            await loadRulesData();
+        } else {
+            throw new Error('Failed to delete rule');
+        }
+    } catch (error) {
+        console.error('Delete rule error:', error);
+        showToast('Failed to delete rule', 'error');
+    }
+}
+
+async function addSampleRules() {
+    const sampleRules = [
+        { platform: 'tiktok', category: 'content', rule_text: 'Videos must be between 15 seconds and 10 minutes long', source_url: 'https://support.tiktok.com/en/using-tiktok/creating-videos/video-length' },
+        { platform: 'tiktok', category: 'community', rule_text: 'No violent or graphic content that could shock or disturb viewers', source_url: 'https://www.tiktok.com/community-guidelines' },
+        { platform: 'instagram', category: 'technical', rule_text: 'Stories must be in 9:16 aspect ratio for optimal display', source_url: 'https://help.instagram.com/1631821640426723' },
+        { platform: 'instagram', category: 'copyright', rule_text: 'Music clips longer than 30 seconds may be subject to copyright claims', source_url: 'https://help.instagram.com/126382251081970' },
+        { platform: 'youtube', category: 'content', rule_text: 'Thumbnails must accurately represent video content', source_url: 'https://support.google.com/youtube/answer/72431' },
+        { platform: 'facebook', category: 'community', rule_text: 'Posts must not contain misleading health information', source_url: 'https://www.facebook.com/communitystandards' }
+    ];
+    
+    try {
+        for (const rule of sampleRules) {
+            await fetch(ADMIN_SUPABASE_URL + '/rest/v1/platform_rules', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + SUPABASE_KEY,
+                    'apikey': SUPABASE_KEY
+                },
+                body: JSON.stringify({
+                    ...rule,
+                    is_active: true
+                })
+            });
+        }
+        
+        showToast('Sample rules added successfully');
+        await loadRulesData();
+    } catch (error) {
+        console.error('Add sample rules error:', error);
+        showToast('Failed to add sample rules', 'error');
+    }
+}
+
+function exportRules() {
+    const csvContent = "data:text/csv;charset=utf-8," + 
+        "Platform,Category,Rule Text,Source URL,Status,Last Updated,Admin Notes\n" +
+        allRules.map(rule => {
+            return `"${rule.platform}","${rule.category || ''}","${rule.rule_text.replace(/"/g, '""')}","${rule.source_url || ''}","${rule.is_active ? 'Active' : 'Inactive'}","${rule.last_updated}","${rule.admin_notes || ''}"`;
+        }).join("\n");
+    
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", `platform_rules_${new Date().toISOString().split('T')[0]}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    
+    showToast('Rules exported successfully');
+}
     </script>
 
     <script>
