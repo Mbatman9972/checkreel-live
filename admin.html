@@ -1700,7 +1700,6 @@
         
         function updateModalLanguage(lang, isRTL) {
             // Update modal headers
-            var scanModalHeader = document.querySelector('#scanHistoryModal h2');
             var rulesModalHeader = document.querySelector('#platformRulesModal h2');
             var settingsModalHeader = document.querySelector('#systemSettingsModal h2');
             var supportModalHeader = document.querySelector('#supportCenterModal h2');
@@ -2113,7 +2112,6 @@
         // CONTROL ACTIONS FUNCTIONS
         async function showScanHistory() {
             console.log("Opening Scan History...");
-            document.getElementById("scanHistoryModal").classList.add("active");
             await loadAdminScanHistory();
             showToast("Scan History opened - Live data loaded");
         }
@@ -2272,12 +2270,27 @@
         }
         document.addEventListener("DOMContentLoaded", initRevenueChart);
     </script>
-</body>
-</html>scanHistoryModal">
+    <!-- Control Action Modals -->
+    <div class="control-modal" id="scanHistoryModal">
         <div class="modal-content">
             <div class="modal-header">
-                <h2>📊 Scan History</h2>
+                <h2> Scan History</h2>
                 <button class="close-btn" onclick="closeModal('scanHistoryModal')">Close</button>
+            </div>
+            <div class="modal-filters" style="display: flex; gap: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap;">
+                <select id="platformFilter" style="background: var(--glass-bg); border: 1px solid var(--glass-border); color: var(--text-primary); padding: 0.5rem 1rem; border-radius: 12px;">
+                    <option value="">All Platforms</option>
+                    <option value="tiktok">TikTok</option>
+                    <option value="instagram">Instagram</option>
+                    <option value="youtube">YouTube</option>
+                    <option value="facebook">Facebook</option>
+                </select>
+                <select id="statusFilter" style="background: var(--glass-bg); border: 1px solid var(--glass-border); color: var(--text-primary); padding: 0.5rem 1rem; border-radius: 12px;">
+                    <option value="">All Status</option>
+                    <option value="clean">Clean</option>
+                    <option value="violation">Violation</option>
+                </select>
+                <button onclick="exportScanHistory()" style="background: var(--accent-gradient); border: none; color: white; padding: 0.5rem 1rem; border-radius: 12px; cursor: pointer; font-weight: 600;">📄 Export CSV</button>
             </div>
             <div class="scan-list" id="scanHistoryList">
                 <div class="rules-loading">Loading scan history from database...</div>
@@ -2288,7 +2301,7 @@
     <div class="control-modal" id="platformRulesModal">
         <div class="modal-content">
             <div class="modal-header">
-                <h2>📋 Platform Rules - Live System</h2>
+                <h2> Platform Rules</h2>
                 <button class="close-btn" onclick="closeModal('platformRulesModal')">Close</button>
             </div>
             <div id="platformRulesContent">
@@ -2300,28 +2313,21 @@
     <div class="control-modal" id="systemSettingsModal">
         <div class="modal-content">
             <div class="modal-header">
-                <h2>⚙️ System Settings</h2>
+                <h2> System Settings</h2>
                 <button class="close-btn" onclick="closeModal('systemSettingsModal')">Close</button>
             </div>
-            <div class="setting-list">
-                <div class="setting-item">
-                    <div>
-                        <strong>🔍 Auto-Scan Enabled</strong><br>
-                        <small>Automatically scan new content</small>
-                    </div>
-                </div>
-            </div>
+            <div>Settings content here...</div>
         </div>
     </div>
 
     <div class="control-modal" id="supportCenterModal">
         <div class="modal-content">
             <div class="modal-header">
-                <h2>🆘 Support Center</h2>
+                <h2> Support Center</h2>
                 <button class="close-btn" onclick="closeModal('supportCenterModal')">Close</button>
             </div>
             <div>Support content here...</div>
         </div>
     </div>
 
-    <div class="control-modal" id="
+</html>
