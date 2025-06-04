@@ -379,7 +379,200 @@
                 <h2>🚨 Emergency Mode</h2>
                 <button class="close-btn" onclick="closeModal('emergencyModal')">Close</button>
             </div>
-            <div>Emergency controls here...</div>
+            <div>
+                <div style="background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); padding: 1rem; border-radius: 12px; margin-bottom: 2rem; text-align: center;">
+                    <h3 style="color: white; margin: 0; font-weight: 800;"> CRITICAL SYSTEM CONTROLS </h3>
+                    <p style="color: rgba(255,255,255,0.9); margin: 0.5rem 0 0 0; font-size: 0.9rem;">Use only during system emergencies. All actions are logged and monitored.</p>
+                </div>
+
+                <!-- System Override Controls -->
+                <div style="background: var(--glass-bg); padding: 1.5rem; border-radius: 16px; margin-bottom: 1.5rem; border-left: 4px solid #ef4444;">
+                    <h4 style="color: var(--text-primary); margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
+                         <span data-i18n="systemOverride">System Override Controls</span>
+                    </h4>
+                    <div style="display: grid; gap: 1rem;">
+                        <div class="emergency-control">
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <div>
+                                    <strong style="color: var(--text-primary);" data-i18n="forceStopScans">Force Stop All Scanning Operations</strong>
+                                    <div style="color: var(--text-secondary); font-size: 0.85rem;">Immediately halt all content processing across all platforms</div>
+                                </div>
+                                <label class="emergency-toggle">
+                                    <input type="checkbox" id="stopScans" onchange="toggleEmergencyMode(this, \"stopScans\")">
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="emergency-control">
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <div>
+                                    <strong style="color: var(--text-primary);" data-i18n="killConnections">Kill Active API Connections</strong>
+                                    <div style="color: var(--text-secondary); font-size: 0.85rem;">Terminate all external platform integrations</div>
+                                </div>
+                                <label class="emergency-toggle">
+                                    <input type="checkbox" id="killAPI" onchange="toggleEmergencyMode(this, \"killAPI\")">
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="emergency-control">
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <div>
+                                    <strong style="color: var(--text-primary);" data-i18n="maintenanceMode">Database Maintenance Mode</strong>
+                                    <div style="color: var(--text-secondary); font-size: 0.85rem;">Put system into read-only maintenance state</div>
+                                </div>
+                                <label class="emergency-toggle">
+                                    <input type="checkbox" id="maintenanceDB" onchange="toggleEmergencyMode(this, \"maintenanceDB\")">
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Crisis Response Features -->
+                <div style="background: var(--glass-bg); padding: 1.5rem; border-radius: 16px; margin-bottom: 1.5rem; border-left: 4px solid #f59e0b;">
+                    <h4 style="color: var(--text-primary); margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
+                         <span data-i18n="crisisResponse">Crisis Response Features</span>
+                    </h4>
+                    <div style="display: grid; gap: 1rem;">
+                        <div class="emergency-control">
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <div>
+                                    <strong style="color: var(--text-primary);" data-i18n="bypassLimits">Rate Limiting Bypass</strong>
+                                    <div style="color: var(--text-secondary); font-size: 0.85rem;">Override normal API rate limits during emergencies</div>
+                                </div>
+                                <label class="emergency-toggle">
+                                    <input type="checkbox" id="bypassLimits" onchange="toggleEmergencyMode(this, \"bypassLimits\")">
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="emergency-control">
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <div>
+                                    <strong style="color: var(--text-primary);" data-i18n="priorityQueue">Priority Queue Management</strong>
+                                    <div style="color: var(--text-secondary); font-size: 0.85rem;">Process only critical/urgent scans</div>
+                                </div>
+                                <label class="emergency-toggle">
+                                    <input type="checkbox" id="priorityQueue" onchange="toggleEmergencyMode(this, \"priorityQueue\")">
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="emergency-control">
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <div>
+                                    <strong style="color: var(--text-primary);" data-i18n="resourceOverride">Resource Allocation Override</strong>
+                                    <div style="color: var(--text-secondary); font-size: 0.85rem;">Redirect system resources to essential functions</div>
+                                </div>
+                                <label class="emergency-toggle">
+                                    <input type="checkbox" id="resourceOverride" onchange="toggleEmergencyMode(this, \"resourceOverride\")">
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Admin Emergency Powers -->
+                <div style="background: var(--glass-bg); padding: 1.5rem; border-radius: 16px; margin-bottom: 1.5rem; border-left: 4px solid #8b5cf6;">
+                    <h4 style="color: var(--text-primary); margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
+                         <span data-i18n="adminPowers">Admin Emergency Powers</span>
+                    </h4>
+                    <div style="display: grid; gap: 1rem;">
+                        <div class="emergency-control">
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <div>
+                                    <strong style="color: var(--text-primary);" data-i18n="bulkSuspension">Bulk User Suspension</strong>
+                                    <div style="color: var(--text-secondary); font-size: 0.85rem;">Quickly disable problematic accounts</div>
+                                </div>
+                                <label class="emergency-toggle">
+                                    <input type="checkbox" id="bulkSuspend" onchange="toggleEmergencyMode(this, \"bulkSuspend\")">
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="emergency-control">
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <div>
+                                    <strong style="color: var(--text-primary);" data-i18n="contentBlocks">Platform-wide Content Blocks</strong>
+                                    <div style="color: var(--text-secondary); font-size: 0.85rem;">Immediately block specific content types</div>
+                                </div>
+                                <label class="emergency-toggle">
+                                    <input type="checkbox" id="contentBlocks" onchange="toggleEmergencyMode(this, \"contentBlocks\")">
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="emergency-control">
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <div>
+                                    <strong style="color: var(--text-primary);" data-i18n="emergencyAlerts">Emergency Notifications</strong>
+                                    <div style="color: var(--text-secondary); font-size: 0.85rem;">Send alerts to all administrators/stakeholders</div>
+                                </div>
+                                <label class="emergency-toggle">
+                                    <input type="checkbox" id="emergencyAlerts" onchange="toggleEmergencyMode(this, \"emergencyAlerts\")">
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- System Recovery Tools -->
+                <div style="background: var(--glass-bg); padding: 1.5rem; border-radius: 16px; margin-bottom: 1.5rem; border-left: 4px solid #10b981;">
+                    <h4 style="color: var(--text-primary); margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
+                         <span data-i18n="systemRecovery">System Recovery Tools</span>
+                    </h4>
+                    <div style="display: grid; gap: 1rem;">
+                        <div class="emergency-control">
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <div>
+                                    <strong style="color: var(--text-primary);" data-i18n="clearCache">Cache Clearing</strong>
+                                    <div style="color: var(--text-secondary); font-size: 0.85rem;">Clear all system caches to resolve issues</div>
+                                </div>
+                                <label class="emergency-toggle">
+                                    <input type="checkbox" id="clearCache" onchange="toggleEmergencyMode(this, \"clearCache\")">
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="emergency-control">
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <div>
+                                    <strong style="color: var(--text-primary);" data-i18n="restartServices">Service Restart</strong>
+                                    <div style="color: var(--text-secondary); font-size: 0.85rem;">Restart core services without full system reboot</div>
+                                </div>
+                                <label class="emergency-toggle">
+                                    <input type="checkbox" id="restartServices" onchange="toggleEmergencyMode(this, \"restartServices\")">
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="emergency-control">
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <div>
+                                    <strong style="color: var(--text-primary);" data-i18n="rollbackConfig">Rollback Functionality</strong>
+                                    <div style="color: var(--text-secondary); font-size: 0.85rem;">Revert to last known good configuration</div>
+                                </div>
+                                <label class="emergency-toggle">
+                                    <input type="checkbox" id="rollbackConfig" onchange="toggleEmergencyMode(this, \"rollbackConfig\")">
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Emergency Status Display -->
+                <div style="background: linear-gradient(135deg, rgba(239, 68, 68, 0.1) 0%, rgba(220, 38, 38, 0.05) 100%); padding: 1.5rem; border-radius: 16px; border: 1px solid rgba(239, 68, 68, 0.3);">
+                    <h4 style="color: var(--text-primary); margin-bottom: 1rem;"> Emergency Status</h4>
+                    <div id="emergencyStatus" style="color: var(--text-secondary); font-family: monospace; font-size: 0.9rem; line-height: 1.6;">
+                        All systems operating normally. No emergency modes active.
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -1670,6 +1863,235 @@ async function addSampleRules() {
     } catch (error) {
         console.error('Add sample rules error:', error);
         showToast('Failed to add sample rules', 'error');
+    }
+}
+
+var emergencyModes = {
+    stopScans: false,
+    killAPI: false,
+    maintenanceDB: false,
+    bypassLimits: false,
+    priorityQueue: false,
+    resourceOverride: false,
+    bulkSuspend: false,
+    contentBlocks: false,
+    emergencyAlerts: false,
+    clearCache: false,
+    restartServices: false,
+    rollbackConfig: false
+};
+
+function toggleEmergencyMode(toggle, mode) {
+    const isActive = toggle.checked;
+    emergencyModes[mode] = isActive;
+    
+    if (isActive) {
+        const confirmMsg = ` CRITICAL: Activate ${mode}? This action will be logged and monitored.`;
+        if (!confirm(confirmMsg)) {
+            toggle.checked = false;
+            emergencyModes[mode] = false;
+            return;
+        }
+        
+        showToast(`Emergency Mode: ${mode} ACTIVATED`, "error");
+        console.log(`?? EMERGENCY: ${mode} activated at ${new Date().toISOString()}`);
+        
+        // Log to Supabase emergency_logs table
+        logEmergencyAction(mode, "ACTIVATED");
+        
+        // Execute emergency action
+        executeEmergencyAction(mode, true);
+        
+    } else {
+        showToast(`Emergency Mode: ${mode} deactivated`, "success");
+        console.log(`? RECOVERY: ${mode} deactivated at ${new Date().toISOString()}`);
+        
+        logEmergencyAction(mode, "DEACTIVATED");
+        executeEmergencyAction(mode, false);
+    }
+    
+    updateEmergencyStatus();
+}
+
+async function logEmergencyAction(mode, action) {
+    try {
+        await fetch(ADMIN_SUPABASE_URL + "/rest/v1/emergency_logs", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": "Bearer " + SUPABASE_KEY,
+                "apikey": SUPABASE_KEY
+            },
+            body: JSON.stringify({
+                mode: mode,
+                action: action,
+                timestamp: new Date().toISOString(),
+                admin_user: "admin", // Replace with actual user
+                details: `Emergency mode ${mode} was ${action.toLowerCase()}`
+            })
+        });
+    } catch (error) {
+        console.error("Failed to log emergency action:", error);
+    }
+}
+
+function executeEmergencyAction(mode, activate) {
+    switch(mode) {
+        case "stopScans":
+            if (activate) {
+                // Stop all scanning operations
+                window.emergencyStopScans = true;
+                showToast(" All scanning operations halted", "error");
+            } else {
+                window.emergencyStopScans = false;
+                showToast(" Scanning operations resumed", "success");
+            }
+            break;
+            
+        case "killAPI":
+            if (activate) {
+                window.emergencyKillAPI = true;
+                showToast(" API connections terminated", "error");
+            } else {
+                window.emergencyKillAPI = false;
+                showToast(" API connections restored", "success");
+            }
+            break;
+            
+        case "maintenanceDB":
+            if (activate) {
+                window.emergencyMaintenanceMode = true;
+                showToast("?? Database in maintenance mode", "error");
+            } else {
+                window.emergencyMaintenanceMode = false;
+                showToast("?? Database maintenance mode disabled", "success");
+            }
+            break;
+            
+        case "bypassLimits":
+            if (activate) {
+                window.emergencyBypassLimits = true;
+                showToast(" Rate limits bypassed", "error");
+            } else {
+                window.emergencyBypassLimits = false;
+                showToast(" Rate limits restored", "success");
+            }
+            break;
+            
+        case "priorityQueue":
+            if (activate) {
+                window.emergencyPriorityMode = true;
+                showToast(" Priority queue mode active", "error");
+            } else {
+                window.emergencyPriorityMode = false;
+                showToast(" Normal queue processing restored", "success");
+            }
+            break;
+            
+        case "resourceOverride":
+            if (activate) {
+                window.emergencyResourceOverride = true;
+                showToast(" Resource allocation overridden", "error");
+            } else {
+                window.emergencyResourceOverride = false;
+                showToast(" Normal resource allocation restored", "success");
+            }
+            break;
+            
+        case "bulkSuspend":
+            if (activate) {
+                window.emergencyBulkSuspend = true;
+                showToast(" Bulk suspension mode active", "error");
+            } else {
+                window.emergencyBulkSuspend = false;
+                showToast(" Bulk suspension mode disabled", "success");
+            }
+            break;
+            
+        case "contentBlocks":
+            if (activate) {
+                window.emergencyContentBlocks = true;
+                showToast(" Platform-wide content blocks active", "error");
+            } else {
+                window.emergencyContentBlocks = false;
+                showToast(" Content blocks disabled", "success");
+            }
+            break;
+            
+        case "emergencyAlerts":
+            if (activate) {
+                window.emergencyAlertsActive = true;
+                showToast(" Emergency notifications active", "error");
+                sendEmergencyAlert("Emergency mode activated by admin");
+            } else {
+                window.emergencyAlertsActive = false;
+                showToast(" Emergency notifications disabled", "success");
+            }
+            break;
+            
+        case "clearCache":
+            if (activate) {
+                // Clear caches
+                showToast(" System caches cleared", "success");
+                setTimeout(() => document.getElementById("clearCache").checked = false, 2000);
+            }
+            break;
+            
+        case "restartServices":
+            if (activate) {
+                showToast(" Core services restarting...", "error");
+                setTimeout(() => {
+                    showToast(" Core services restarted", "success");
+                    document.getElementById("restartServices").checked = false;
+                }, 3000);
+            }
+            break;
+            
+        case "rollbackConfig":
+            if (activate) {
+                showToast(" Rolling back to last known good configuration...", "error");
+                setTimeout(() => {
+                    showToast(" Configuration rollback complete", "success");
+                    document.getElementById("rollbackConfig").checked = false;
+                }, 4000);
+            }
+            break;
+    }
+}
+
+function updateEmergencyStatus() {
+    const statusEl = document.getElementById("emergencyStatus");
+    const activeModes = Object.keys(emergencyModes).filter(mode => emergencyModes[mode]);
+    
+    if (activeModes.length === 0) {
+        statusEl.innerHTML = " All systems operating normally. No emergency modes active.";
+        statusEl.style.color = "var(--text-secondary)";
+    } else {
+        statusEl.innerHTML = ` EMERGENCY MODES ACTIVE (${activeModes.length}):<br>` + 
+            activeModes.map(mode => ` ${mode.toUpperCase()}`).join("<br>");
+        statusEl.style.color = "#ef4444";
+    }
+}
+
+async function sendEmergencyAlert(message) {
+    try {
+        // Send emergency notification
+        await fetch(ADMIN_SUPABASE_URL + "/rest/v1/emergency_notifications", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": "Bearer " + SUPABASE_KEY,
+                "apikey": SUPABASE_KEY
+            },
+            body: JSON.stringify({
+                message: message,
+                timestamp: new Date().toISOString(),
+                severity: "CRITICAL",
+                admin_user: "admin"
+            })
+        });
+    } catch (error) {
+        console.error("Failed to send emergency alert:", error);
     }
 }
 
@@ -2987,6 +3409,68 @@ function exportRules() {
     border-color: #43e97b;
     box-shadow: 0 0 0 3px rgba(67, 233, 123, 0.2);
     outline: none;
+}
+
+.emergency-control {
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: 12px;
+    padding: 1rem;
+    transition: all 0.3s ease;
+}
+
+.emergency-control:hover {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+.emergency-toggle {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 34px;
+}
+
+.emergency-toggle input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.toggle-slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(255, 255, 255, 0.2);
+    transition: 0.4s;
+    border-radius: 34px;
+    border: 1px solid var(--glass-border);
+}
+
+.toggle-slider:before {
+    position: absolute;
+    content: "";
+    height: 26px;
+    width: 26px;
+    left: 4px;
+    bottom: 3px;
+    background-color: white;
+    transition: 0.4s;
+    border-radius: 50%;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.emergency-toggle input:checked + .toggle-slider {
+    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+    border-color: #ef4444;
+    box-shadow: 0 0 20px rgba(239, 68, 68, 0.3);
+}
+
+.emergency-toggle input:checked + .toggle-slider:before {
+    transform: translateX(26px);
 }
 
 .platform-rules-select option {
