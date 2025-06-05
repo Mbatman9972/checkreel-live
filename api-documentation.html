@@ -1,0 +1,1305 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CheckReel API Documentation</title>
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+        
+        :root {
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            --glass-bg: rgba(255, 255, 255, 0.08);
+            --glass-border: rgba(255, 255, 255, 0.18);
+            --text-primary: rgba(255, 255, 255, 0.95);
+            --text-secondary: rgba(255, 255, 255, 0.7);
+            --text-muted: rgba(255, 255, 255, 0.5);
+            --blur-lg: blur(16px);
+            --shadow-lg: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--primary-gradient);
+            background-attachment: fixed;
+            min-height: 100vh;
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 20% 20%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(255, 118, 117, 0.3) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        [dir="rtl"] {
+            direction: rtl;
+            text-align: right;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: var(--blur-lg);
+            border-bottom: 1px solid var(--glass-border);
+            padding: 1.5rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .logo {
+            font-size: 2rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #fff 0%, #f0f0f0 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .header-controls {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .language-selector {
+            background: var(--glass-bg);
+            backdrop-filter: var(--blur-lg);
+            border: 1px solid var(--glass-border);
+            color: var(--text-primary);
+            padding: 0.75rem 1.5rem;
+            border-radius: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .language-selector:hover {
+            background: rgba(255, 255, 255, 0.12);
+        }
+
+        .back-btn {
+            background: var(--glass-bg);
+            backdrop-filter: var(--blur-lg);
+            border: 1px solid var(--glass-border);
+            color: var(--text-primary);
+            padding: 0.75rem 1.5rem;
+            border-radius: 16px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .back-btn:hover {
+            background: rgba(255, 255, 255, 0.12);
+            transform: translateY(-2px);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .doc-content {
+            background: var(--glass-bg);
+            backdrop-filter: var(--blur-lg);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 3rem;
+            box-shadow: var(--shadow-lg);
+        }
+
+        h1 {
+            font-size: 3rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #fff 0%, #f0f0f0 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            margin-bottom: 3rem;
+        }
+
+        .toc {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .toc h2 {
+            margin-bottom: 1.5rem;
+            color: var(--text-primary);
+        }
+
+        .toc ul {
+            list-style: none;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 0.5rem;
+        }
+
+        .toc a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            display: block;
+        }
+
+        .toc a:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text-primary);
+        }
+
+        .section {
+            margin-bottom: 4rem;
+        }
+
+        h2 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            color: var(--text-primary);
+        }
+
+        h3 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        h4 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+            color: var(--text-primary);
+        }
+
+        p {
+            margin-bottom: 1rem;
+            color: var(--text-secondary);
+        }
+
+        .code-block {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            overflow-x: auto;
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+
+        .code-block pre {
+            margin: 0;
+            color: #f8f8f2;
+        }
+
+        .endpoint {
+            background: rgba(67, 233, 123, 0.1);
+            border: 1px solid rgba(67, 233, 123, 0.3);
+            border-radius: 12px;
+            padding: 1rem;
+            margin: 1rem 0;
+            font-family: monospace;
+            color: #43e97b;
+            font-weight: 600;
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+            margin: 1.5rem 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        th, td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        th {
+            background: rgba(255, 255, 255, 0.1);
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        td {
+            color: var(--text-secondary);
+        }
+
+        .status-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .status-success {
+            background: rgba(16, 185, 129, 0.2);
+            color: #10b981;
+        }
+
+        .status-warning {
+            background: rgba(245, 158, 11, 0.2);
+            color: #f59e0b;
+        }
+
+        .status-error {
+            background: rgba(239, 68, 68, 0.2);
+            color: #ef4444;
+        }
+
+        .note {
+            background: rgba(59, 130, 246, 0.1);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .warning {
+            background: rgba(245, 158, 11, 0.1);
+            border: 1px solid rgba(245, 158, 11, 0.3);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 2rem;
+            color: var(--text-muted);
+            border-top: 1px solid var(--glass-border);
+            margin-top: 4rem;
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                padding: 1rem;
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .container {
+                padding: 1rem;
+            }
+
+            .doc-content {
+                padding: 2rem;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            .toc ul {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="logo">📋 CheckReel API Documentation</div>
+        <div class="header-controls">
+            <select id="languageSelector" class="language-selector">
+                <option value="en">🇺🇸 English</option>
+                <option value="ar">🇸🇦 العربية</option>
+            </select>
+            <a href="admin.html" class="back-btn" data-i18n="backToDashboard">← Back to Dashboard</a>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="doc-content">
+            <h1 data-i18n="apiTitle">CheckReel API Documentation</h1>
+            <p class="subtitle">
+                <span data-i18n="apiSubtitle">Version: 1.0 | Base URL: https://api.checkreel.com/v1 | Al Wafer Media - Content Compliance API</span>
+            </p>
+
+            <div class="toc">
+                <h2 data-i18n="tableOfContents">Table of Contents</h2>
+                <ul>
+                    <li><a href="#authentication" data-i18n="tocAuth">Authentication</a></li>
+                    <li><a href="#content-scanning" data-i18n="tocScanning">Content Scanning</a></li>
+                    <li><a href="#tier-management" data-i18n="tocTier">Tier Management</a></li>
+                    <li><a href="#platform-rules" data-i18n="tocRules">Platform Rules</a></li>
+                    <li><a href="#emergency-controls" data-i18n="tocEmergency">Emergency Controls</a></li>
+                    <li><a href="#analytics" data-i18n="tocAnalytics">Analytics & KPIs</a></li>
+                    <li><a href="#error-handling" data-i18n="tocErrors">Error Handling</a></li>
+                    <li><a href="#rate-limiting" data-i18n="tocRateLimit">Rate Limiting</a></li>
+                    <li><a href="#webhooks" data-i18n="tocWebhooks">Webhooks</a></li>
+                    <li><a href="#sdks" data-i18n="tocSDKs">SDKs & Libraries</a></li>
+                </ul>
+            </div>
+
+            <div class="section" id="authentication">
+                <h2 data-i18n="authTitle">🔐 Authentication</h2>
+                <p data-i18n="authDesc">CheckReel API uses Bearer Token authentication with role-based access control.</p>
+
+                <h3 data-i18n="adminAccess">Admin Dashboard Access</h3>
+                <div class="endpoint">POST /auth/admin</div>
+                <div class="code-block">
+                    <pre>Content-Type: application/json
+
+{
+  "password": "MM7268",
+  "session_type": "admin_dashboard"
+}</pre>
+                </div>
+
+                <p data-i18n="responseLabel"><strong>Response:</strong></p>
+                <div class="code-block">
+                    <pre>{
+  "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+  "token_type": "Bearer",
+  "expires_in": 3600,
+  "scope": "admin:dashboard emergency:controls tier:management",
+  "user": {
+    "role": "admin",
+    "permissions": ["scan:unlimited", "tier:modify", "emergency:activate"]
+  }
+}</pre>
+                </div>
+
+                <h3 data-i18n="userSession">User Session Management</h3>
+                <div class="endpoint">POST /auth/signin</div>
+                <div class="code-block">
+                    <pre>{
+  "email": "user@example.com",
+  "language": "en|fr|ar",
+  "ip_address": "192.168.1.100"
+}</pre>
+                </div>
+
+                <h4 data-i18n="requiredHeaders">Headers Required</h4>
+                <div class="code-block">
+                    <pre>Authorization: Bearer {access_token}
+Content-Type: application/json
+Accept: application/json
+X-API-Version: 1.0</pre>
+                </div>
+            </div>
+
+            <div class="section" id="content-scanning">
+                <h2 data-i18n="scanTitle">🔍 Content Scanning</h2>
+                
+                <h3 data-i18n="initiateScan">Initiate Content Scan</h3>
+                <p data-i18n="scanDesc">Analyze content for platform compliance across multiple regions and platforms.</p>
+                
+                <div class="endpoint">POST /scan</div>
+                <div class="code-block">
+                    <pre>Authorization: Bearer {token}
+Content-Type: multipart/form-data
+
+file: [binary content]
+platform: ["tiktok", "youtube", "instagram", "facebook", "twitter", "snapchat"]
+region: "middle-east|global|europe|mena"
+country: "uae|saudi|usa|uk|france"
+priority: "normal|high|critical"</pre>
+                </div>
+
+                <h4 data-i18n="supportedFiles">Supported File Types</h4>
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th data-i18n="fileType">File Type</th>
+                                <th data-i18n="formats">Formats</th>
+                                <th data-i18n="sizeLimit">Size Limit</th>
+                                <th data-i18n="durationLimit">Duration Limit</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong data-i18n="video">Video</strong></td>
+                                <td>MP4, MOV, AVI</td>
+                                <td>100MB</td>
+                                <td>10 minutes</td>
+                            </tr>
+                            <tr>
+                                <td><strong data-i18n="audio">Audio</strong></td>
+                                <td>MP3, WAV</td>
+                                <td>50MB</td>
+                                <td>15 minutes</td>
+                            </tr>
+                            <tr>
+                                <td><strong data-i18n="image">Image</strong></td>
+                                <td>JPG, PNG</td>
+                                <td>25MB</td>
+                                <td>N/A</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h3 data-i18n="getScanResults">Get Scan Results</h3>
+                <div class="endpoint">GET /scan/{scan_id}</div>
+                <div class="code-block">
+                    <pre>{
+  "scan_id": "scn_9876543210",
+  "status": "completed",
+  "compliance_score": 85,
+  "risk_level": "low|medium|high|critical",
+  "created_at": "2025-06-05T14:30:00Z",
+  "platforms": {
+    "tiktok": {
+      "score": 90,
+      "status": "approved",
+      "issues": [],
+      "recommendations": [...]
+    }
+  },
+  "ai_insights": {
+    "content_type": "entertainment",
+    "engagement_prediction": "high",
+    "optimal_posting_time": "19:00-21:00 GST"
+  }
+}</pre>
+                </div>
+            </div>
+
+            <div class="section" id="tier-management">
+                <h2 data-i18n="tierTitle">⚡ Tier Management</h2>
+                
+                <h3 data-i18n="getUserTier">Get User Tier Status</h3>
+                <div class="endpoint">GET /tier/status</div>
+                <div class="code-block">
+                    <pre>{
+  "user_id": "usr_abc123",
+  "current_tier": "plus",
+  "scans_used": 12,
+  "scans_limit": 20,
+  "scans_remaining": 8,
+  "renewal_date": "2025-07-05T00:00:00Z",
+  "features": {
+    "scan_history": true,
+    "detailed_insights": true,
+    "multi_platform": false,
+    "api_access": false,
+    "priority_support": true
+  }
+}</pre>
+                </div>
+
+                <div class="warning">
+                    <p><strong data-i18n="adminOnlyNote">⚠️ Admin Only:</strong> <span data-i18n="adminOnlyDesc">The following endpoints require admin authentication with MM7268 password.</span></p>
+                </div>
+
+                <h3 data-i18n="upgradeTier">Upgrade User Tier (Admin Only)</h3>
+                <div class="endpoint">POST /tier/upgrade</div>
+                <div class="code-block">
+                    <pre>{
+  "email": "user@example.com",
+  "tier": "plus|premium",
+  "payment_method": "stripe|admin_override",
+  "duration": "monthly|yearly"
+}</pre>
+                </div>
+            </div>
+
+            <div class="section" id="platform-rules">
+                <h2 data-i18n="rulesTitle">📋 Platform Rules</h2>
+                
+                <h3 data-i18n="getPlatformRules">Get Platform Rules</h3>
+                <div class="endpoint">GET /rules</div>
+                <p data-i18n="rulesQueryDesc">Query Parameters: platform, category, region, active_only</p>
+                
+                <div class="code-block">
+                    <pre>{
+  "rules": [
+    {
+      "rule_id": "rule_001",
+      "platform": "tiktok",
+      "category": "violence",
+      "rule_text": "Videos must not contain graphic violence",
+      "source_url": "https://www.tiktok.com/community-guidelines",
+      "is_active": true,
+      "last_updated": "2025-06-01T00:00:00Z"
+    }
+  ],
+  "total": 145
+}</pre>
+                </div>
+
+                <h3 data-i18n="createRule">Create Platform Rule (Admin Only)</h3>
+                <div class="endpoint">POST /rules</div>
+                <div class="code-block">
+                    <pre>{
+  "platform": "tiktok",
+  "category": "violence",
+  "rule_text": "No violent or graphic content",
+  "source_url": "https://www.tiktok.com/community-guidelines",
+  "admin_notes": "Based on latest platform update",
+  "is_active": true
+}</pre>
+                </div>
+            </div>
+
+            <div class="section" id="emergency-controls">
+                <h2 data-i18n="emergencyTitle">🚨 Emergency Controls</h2>
+                
+                <div class="warning">
+                    <p><strong data-i18n="criticalWarning">⚠️ CRITICAL SYSTEM CONTROLS</strong> - <span data-i18n="emergencyWarning">Admin access required. All actions logged and monitored.</span></p>
+                </div>
+
+                <h3 data-i18n="activateEmergency">Activate Emergency Mode</h3>
+                <div class="endpoint">POST /emergency/activate</div>
+                <div class="code-block">
+                    <pre>{
+  "mode": "stop_scans|kill_api|maintenance_db|bypass_limits|priority_queue",
+  "reason": "System overload detected",
+  "estimated_duration": "30m"
+}</pre>
+                </div>
+
+                <h3 data-i18n="emergencyStatus">Emergency Status</h3>
+                <div class="endpoint">GET /emergency/status</div>
+                <div class="code-block">
+                    <pre>{
+  "active_modes": [
+    {
+      "mode": "priority_queue",
+      "activated_at": "2025-06-05T14:25:00Z",
+      "reason": "High violation rate detected"
+    }
+  ],
+  "system_status": "emergency_active",
+  "affected_services": ["content_scanning"]
+}</pre>
+                </div>
+            </div>
+
+            <div class="section" id="analytics">
+                <h2 data-i18n="analyticsTitle">📊 Analytics & KPIs</h2>
+                
+                <h3 data-i18n="dashboardKPIs">Dashboard KPIs</h3>
+                <div class="endpoint">GET /analytics/kpis</div>
+                <div class="code-block">
+                    <pre>{
+  "realtime_metrics": {
+    "active_scans": 2845,
+    "today_revenue": 24847.50,
+    "violations_detected": 89,
+    "paying_subscribers": 1247,
+    "avg_response_time": "143ms",
+    "ai_accuracy": 97.2
+  },
+  "platform_distribution": {
+    "tiktok": 1247,
+    "instagram": 892,
+    "youtube": 634,
+    "facebook": 423,
+    "twitter": 287,
+    "snapchat": 156
+  },
+  "violation_categories": {
+    "inappropriate_language": 34.2,
+    "violence_gore": 18.7,
+    "spam_scam": 23.1,
+    "copyright": 24.0
+  }
+}</pre>
+                </div>
+
+                <h3 data-i18n="userAnalytics">User Analytics</h3>
+                <div class="endpoint">GET /analytics/users</div>
+                <p data-i18n="analyticsParams">Query Parameters: timeframe (24h|7d|30d|1y), breakdown (tier|region|platform)</p>
+            </div>
+
+            <div class="section" id="error-handling">
+                <h2 data-i18n="errorTitle">❌ Error Handling</h2>
+                
+                <h3 data-i18n="httpCodes">HTTP Status Codes</h3>
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th data-i18n="code">Code</th>
+                                <th data-i18n="description">Description</th>
+                                <th data-i18n="whenOccurs">When It Occurs</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><span class="status-badge status-success">200</span></td>
+                                <td data-i18n="ok">OK</td>
+                                <td data-i18n="requestSuccessful">Request successful</td>
+                            </tr>
+                            <tr>
+                                <td><span class="status-badge status-warning">400</span></td>
+                                <td data-i18n="badRequest">Bad Request</td>
+                                <td data-i18n="invalidParams">Invalid request parameters</td>
+                            </tr>
+                            <tr>
+                                <td><span class="status-badge status-error">401</span></td>
+                                <td data-i18n="unauthorized">Unauthorized</td>
+                                <td data-i18n="invalidAuth">Invalid or missing authentication</td>
+                            </tr>
+                            <tr>
+                                <td><span class="status-badge status-error">403</span></td>
+                                <td data-i18n="forbidden">Forbidden</td>
+                                <td data-i18n="insufficientPerms">Insufficient permissions</td>
+                            </tr>
+                            <tr>
+                                <td><span class="status-badge status-error">429</span></td>
+                                <td data-i18n="tooManyRequests">Too Many Requests</td>
+                                <td data-i18n="rateLimitExceeded">Rate limit exceeded</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h3 data-i18n="errorFormat">Error Response Format</h3>
+                <div class="code-block">
+                    <pre>{
+  "error": {
+    "code": "SCAN_LIMIT_EXCEEDED",
+    "message": "You have reached your scan limit for this billing period",
+    "details": {
+      "current_tier": "free",
+      "scans_used": 3,
+      "scans_limit": 3,
+      "reset_date": "2025-07-01T00:00:00Z"
+    },
+    "suggestion": "Upgrade to Plus tier for 20 scans per month",
+    "documentation": "https://docs.checkreel.com/guide#scan-limits"
+  },
+  "request_id": "req_123456789"
+}</pre>
+                </div>
+            </div>
+
+            <div class="section" id="rate-limiting">
+                <h2 data-i18n="rateLimitTitle">⏱️ Rate Limiting</h2>
+                
+                <h3 data-i18n="standardLimits">Standard Rate Limits</h3>
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th data-i18n="tier">Tier</th>
+                                <th data-i18n="scansPerHour">Scans/Hour</th>
+                                <th data-i18n="apiCallsPerMin">API Calls/Minute</th>
+                                <th data-i18n="burstAllowance">Burst Allowance</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td data-i18n="free">Free</td>
+                                <td>3/month</td>
+                                <td>30/min</td>
+                                <td>10 calls</td>
+                            </tr>
+                            <tr>
+                                <td data-i18n="plus">Plus</td>
+                                <td>20/month</td>
+                                <td>60/min</td>
+                                <td>20 calls</td>
+                            </tr>
+                            <tr>
+                                <td data-i18n="premium">Premium</td>
+                                <td>40/month</td>
+                                <td>120/min</td>
+                                <td>50 calls</td>
+                            </tr>
+                            <tr>
+                                <td data-i18n="admin">Admin</td>
+                                <td data-i18n="unlimited">Unlimited</td>
+                                <td>300/min</td>
+                                <td>100 calls</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h3 data-i18n="rateLimitHeaders">Rate Limit Headers</h3>
+                <div class="code-block">
+                    <pre>X-RateLimit-Limit: 60
+X-RateLimit-Remaining: 45
+X-RateLimit-Reset: 1622547600
+X-RateLimit-Burst: 20</pre>
+                </div>
+            </div>
+
+            <div class="section" id="webhooks">
+                <h2 data-i18n="webhooksTitle">🔗 Webhooks</h2>
+                
+                <h3 data-i18n="configureWebhook">Configure Webhook</h3>
+                <div class="endpoint">POST /webhooks</div>
+                <div class="code-block">
+                    <pre>{
+  "url": "https://your-app.com/webhooks/checkreel",
+  "events": ["scan.completed", "scan.failed", "tier.upgraded"],
+  "secret": "your_webhook_secret",
+  "active": true
+}</pre>
+                </div>
+
+                <h3 data-i18n="webhookEvents">Webhook Events</h3>
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th data-i18n="event">Event</th>
+                                <th data-i18n="description">Description</th>
+                                <th data-i18n="payload">Payload</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>scan.completed</code></td>
+                                <td data-i18n="scanFinished">Scan finished successfully</td>
+                                <td data-i18n="scanResults">Scan results</td>
+                            </tr>
+                            <tr>
+                                <td><code>scan.failed</code></td>
+                                <td data-i18n="scanFailed">Scan processing failed</td>
+                                <td data-i18n="errorDetails">Error details</td>
+                            </tr>
+                            <tr>
+                                <td><code>tier.upgraded</code></td>
+                                <td data-i18n="tierChanged">User tier changed</td>
+                                <td data-i18n="newTierInfo">New tier info</td>
+                            </tr>
+                            <tr>
+                                <td><code>emergency.activated</code></td>
+                                <td data-i18n="emergencyTriggered">Emergency mode triggered</td>
+                                <td data-i18n="emergencyDetails">Emergency details</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h3 data-i18n="webhookPayload">Webhook Payload Example</h3>
+                <div class="code-block">
+                    <pre>{
+  "event": "scan.completed",
+  "timestamp": "2025-06-05T14:30:00Z",
+  "data": {
+    "scan_id": "scn_9876543210",
+    "user_id": "usr_abc123",
+    "compliance_score": 85,
+    "status": "completed",
+    "platforms": ["tiktok", "instagram"]
+  },
+  "signature": "sha256=a8b7c6d5e4f3..."
+}</pre>
+                </div>
+            </div>
+
+            <div class="section" id="sdks">
+                <h2 data-i18n="sdksTitle">🛠️ SDKs & Libraries</h2>
+                
+                <h3 data-i18n="officialSDKs">Official SDKs</h3>
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th data-i18n="language">Language</th>
+                                <th data-i18n="installation">Installation</th>
+                                <th data-i18n="status">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>JavaScript/Node.js</strong></td>
+                                <td><code>npm install checkreel-sdk</code></td>
+                                <td><span class="status-badge status-success" data-i18n="available">Available</span></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Python</strong></td>
+                                <td><code>pip install checkreel-sdk</code></td>
+                                <td><span class="status-badge status-success" data-i18n="available">Available</span></td>
+                            </tr>
+                            <tr>
+                                <td><strong>PHP</strong></td>
+                                <td><code>composer require checkreel/sdk</code></td>
+                                <td><span class="status-badge status-warning" data-i18n="comingSoon">Coming Soon</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h3 data-i18n="jsExample">JavaScript SDK Example</h3>
+                <div class="code-block">
+                    <pre>import CheckReel from 'checkreel-sdk';
+
+const client = new CheckReel({
+  apiKey: 'your_api_key',
+  environment: 'production' // or 'sandbox'
+});
+
+// Scan content
+const scan = await client.scan({
+  file: fileBuffer,
+  platforms: ['tiktok', 'instagram'],
+  region: 'middle-east',
+  country: 'uae'
+});
+
+console.log('Compliance Score:', scan.compliance_score);</pre>
+                </div>
+
+                <h3 data-i18n="pythonExample">Python SDK Example</h3>
+                <div class="code-block">
+                    <pre>from checkreel import CheckReel
+
+client = CheckReel(api_key='your_api_key')
+
+# Scan content
+with open('video.mp4', 'rb') as file:
+    scan = client.scan(
+        file=file,
+        platforms=['tiktok', 'instagram'],
+        region='middle-east',
+        country='uae'
+    )
+
+print(f"Compliance Score: {scan.compliance_score}")</pre>
+                </div>
+            </div>
+
+            <div class="section" id="quick-start">
+                <h2 data-i18n="quickStartTitle">🚀 Quick Start</h2>
+                
+                <div class="note">
+                    <h4 data-i18n="quickStartSteps">5-Minute Setup</h4>
+                    <ol>
+                        <li data-i18n="step1"><strong data-i18n="getAccess">Get API Access:</strong> <span data-i18n="signUpAt">Sign up at</span> <a href="https://admin.checkreel.com" target="_blank">CheckReel Dashboard</a></li>
+                        <li data-i18n="step2"><strong data-i18n="authenticate">Authenticate:</strong> <span data-i18n="useEmailToken">Use your email to get session token</span></li>
+                        <li data-i18n="step3"><strong data-i18n="scanContent">Scan Content:</strong> <span data-i18n="uploadWithSelection">Upload file with platform/region selection</span></li>
+                        <li data-i18n="step4"><strong data-i18n="getResults">Get Results:</strong> <span data-i18n="retrieveCompliance">Retrieve compliance score and recommendations</span></li>
+                        <li data-i18n="step5"><strong data-i18n="upgrade">Upgrade Tier:</strong> <span data-i18n="accessAdvanced">Access advanced features with Plus/Premium</span></li>
+                    </ol>
+                </div>
+
+                <h3 data-i18n="completeExample">Complete Example</h3>
+                <div class="code-block">
+                    <pre># 1. Authenticate
+curl -X POST https://api.checkreel.com/v1/auth/signin \
+  -H "Content-Type: application/json" \
+  -d '{"email": "user@example.com"}'
+
+# 2. Scan content
+curl -X POST https://api.checkreel.com/v1/scan \
+  -H "Authorization: Bearer YOUR_TOKEN" \
+  -F "file=@video.mp4" \
+  -F "platform=tiktok" \
+  -F "region=middle-east" \
+  -F "country=uae"
+
+# 3. Get results
+curl -X GET https://api.checkreel.com/v1/scan/scn_9876543210 \
+  -H "Authorization: Bearer YOUR_TOKEN"</pre>
+                </div>
+            </div>
+
+            <div class="footer">
+                <p data-i18n="supportInfo">
+                    <strong data-i18n="supportTitle">Support:</strong>
+                    <span data-i18n="docsLink">Documentation:</span> <a href="https://docs.checkreel.com">docs.checkreel.com</a> |
+                    <span data-i18n="emailSupport">Email:</span> checkreel99@gmail.com |
+                    <span data-i18n="responseTime">Response Time:</span> <span data-i18n="responseHours">12-24 hours</span>
+                </p>
+                <p data-i18n="copyright">© 2025 CheckReel - Al Wafer Media. All rights reserved.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Language System - Matches your admin.html language system
+        var currentLanguage = "en";
+
+        var translations = {
+            en: {
+                // Header
+                backToDashboard: "← Back to Dashboard",
+                
+                // Main Title
+                apiTitle: "CheckReel API Documentation",
+                apiSubtitle: "Version: 1.0 | Base URL: https://api.checkreel.com/v1 | Al Wafer Media - Content Compliance API",
+                
+                // Table of Contents
+                tableOfContents: "Table of Contents",
+                tocAuth: "Authentication",
+                tocScanning: "Content Scanning",
+                tocTier: "Tier Management",
+                tocRules: "Platform Rules",
+                tocEmergency: "Emergency Controls",
+                tocAnalytics: "Analytics & KPIs",
+                tocErrors: "Error Handling",
+                tocRateLimit: "Rate Limiting",
+                tocWebhooks: "Webhooks",
+                tocSDKs: "SDKs & Libraries",
+                
+                // Authentication
+                authTitle: "🔐 Authentication",
+                authDesc: "CheckReel API uses Bearer Token authentication with role-based access control.",
+                adminAccess: "Admin Dashboard Access",
+                userSession: "User Session Management",
+                requiredHeaders: "Headers Required",
+                responseLabel: "Response:",
+                
+                // Content Scanning
+                scanTitle: "🔍 Content Scanning",
+                initiateScan: "Initiate Content Scan",
+                scanDesc: "Analyze content for platform compliance across multiple regions and platforms.",
+                supportedFiles: "Supported File Types",
+                fileType: "File Type",
+                formats: "Formats",
+                sizeLimit: "Size Limit",
+                durationLimit: "Duration Limit",
+                video: "Video",
+                audio: "Audio",
+                image: "Image",
+                getScanResults: "Get Scan Results",
+                
+                // Tier Management
+                tierTitle: "⚡ Tier Management",
+                getUserTier: "Get User Tier Status",
+                adminOnlyNote: "⚠️ Admin Only:",
+                adminOnlyDesc: "The following endpoints require admin authentication with MM7268 password.",
+                upgradeTier: "Upgrade User Tier (Admin Only)",
+                
+                // Platform Rules
+                rulesTitle: "📋 Platform Rules",
+                getPlatformRules: "Get Platform Rules",
+                rulesQueryDesc: "Query Parameters: platform, category, region, active_only",
+                createRule: "Create Platform Rule (Admin Only)",
+                
+                // Emergency Controls
+                emergencyTitle: "🚨 Emergency Controls",
+                criticalWarning: "⚠️ CRITICAL SYSTEM CONTROLS",
+                emergencyWarning: "Admin access required. All actions logged and monitored.",
+                activateEmergency: "Activate Emergency Mode",
+                emergencyStatus: "Emergency Status",
+                
+                // Analytics
+                analyticsTitle: "📊 Analytics & KPIs",
+                dashboardKPIs: "Dashboard KPIs",
+                userAnalytics: "User Analytics",
+                analyticsParams: "Query Parameters: timeframe (24h|7d|30d|1y), breakdown (tier|region|platform)",
+                
+                // Error Handling
+                errorTitle: "❌ Error Handling",
+                httpCodes: "HTTP Status Codes",
+                code: "Code",
+                description: "Description",
+                whenOccurs: "When It Occurs",
+                ok: "OK",
+                badRequest: "Bad Request",
+                unauthorized: "Unauthorized",
+                forbidden: "Forbidden",
+                tooManyRequests: "Too Many Requests",
+                requestSuccessful: "Request successful",
+                invalidParams: "Invalid request parameters",
+                invalidAuth: "Invalid or missing authentication",
+                insufficientPerms: "Insufficient permissions",
+                rateLimitExceeded: "Rate limit exceeded",
+                errorFormat: "Error Response Format",
+                
+                // Rate Limiting
+                rateLimitTitle: "⏱️ Rate Limiting",
+                standardLimits: "Standard Rate Limits",
+                tier: "Tier",
+                scansPerHour: "Scans/Hour",
+                apiCallsPerMin: "API Calls/Minute",
+                burstAllowance: "Burst Allowance",
+                free: "Free",
+                plus: "Plus",
+                premium: "Premium",
+                admin: "Admin",
+                unlimited: "Unlimited",
+                rateLimitHeaders: "Rate Limit Headers",
+                
+                // Webhooks
+                webhooksTitle: "🔗 Webhooks",
+                configureWebhook: "Configure Webhook",
+                webhookEvents: "Webhook Events",
+                event: "Event",
+                payload: "Payload",
+                scanFinished: "Scan finished successfully",
+                scanFailed: "Scan processing failed",
+                tierChanged: "User tier changed",
+                emergencyTriggered: "Emergency mode triggered",
+                scanResults: "Scan results",
+                errorDetails: "Error details",
+                newTierInfo: "New tier info",
+                emergencyDetails: "Emergency details",
+                webhookPayload: "Webhook Payload Example",
+                
+                // SDKs
+                sdksTitle: "🛠️ SDKs & Libraries",
+                officialSDKs: "Official SDKs",
+                language: "Language",
+                installation: "Installation",
+                status: "Status",
+                available: "Available",
+                comingSoon: "Coming Soon",
+                jsExample: "JavaScript SDK Example",
+                pythonExample: "Python SDK Example",
+                
+                // Quick Start
+                quickStartTitle: "🚀 Quick Start",
+                quickStartSteps: "5-Minute Setup",
+                step1: "Get API Access:",
+                step2: "Authenticate:",
+                step3: "Scan Content:",
+                step4: "Get Results:",
+                step5: "Upgrade Tier:",
+                getAccess: "Get API Access:",
+                signUpAt: "Sign up at",
+                authenticate: "Authenticate:",
+                useEmailToken: "Use your email to get session token",
+                scanContent: "Scan Content:",
+                uploadWithSelection: "Upload file with platform/region selection",
+                getResults: "Get Results:",
+                retrieveCompliance: "Retrieve compliance score and recommendations",
+                upgrade: "Upgrade Tier:",
+                accessAdvanced: "Access advanced features with Plus/Premium",
+                completeExample: "Complete Example",
+                
+                // Footer
+                supportInfo: "Support",
+                supportTitle: "Support:",
+                docsLink: "Documentation:",
+                emailSupport: "Email:",
+                responseTime: "Response Time:",
+                responseHours: "12-24 hours",
+                copyright: "© 2025 CheckReel - Al Wafer Media. All rights reserved."
+            },
+            ar: {
+                // Header
+                backToDashboard: "← العودة إلى لوحة التحكم",
+                
+                // Main Title
+                apiTitle: "وثائق CheckReel API",
+                apiSubtitle: "الإصدار: 1.0 | الرابط الأساسي: https://api.checkreel.com/v1 | الوافر ميديا - واجهة برمجة امتثال المحتوى",
+                
+                // Table of Contents
+                tableOfContents: "جدول المحتويات",
+                tocAuth: "المصادقة",
+                tocScanning: "فحص المحتوى",
+                tocTier: "إدارة المستويات",
+                tocRules: "قواعد المنصات",
+                tocEmergency: "ضوابط الطوارئ",
+                tocAnalytics: "التحليلات والمؤشرات",
+                tocErrors: "معالجة الأخطاء",
+                tocRateLimit: "حدود المعدل",
+                tocWebhooks: "الويب هوكس",
+                tocSDKs: "SDKs والمكتبات",
+                
+                // Authentication
+                authTitle: "🔐 المصادقة",
+                authDesc: "تستخدم واجهة CheckReel API مصادقة Bearer Token مع التحكم في الوصول القائم على الأدوار.",
+                adminAccess: "الوصول إلى لوحة الإدارة",
+                userSession: "إدارة جلسة المستخدم",
+                requiredHeaders: "الرؤوس المطلوبة",
+                responseLabel: "الاستجابة:",
+                
+                // Content Scanning
+                scanTitle: "🔍 فحص المحتوى",
+                initiateScan: "بدء فحص المحتوى",
+                scanDesc: "تحليل المحتوى لامتثال المنصة عبر مناطق ومنصات متعددة.",
+                supportedFiles: "أنواع الملفات المدعومة",
+                fileType: "نوع الملف",
+                formats: "التنسيقات",
+                sizeLimit: "حد الحجم",
+                durationLimit: "حد المدة",
+                video: "فيديو",
+                audio: "صوت",
+                image: "صورة",
+                getScanResults: "الحصول على نتائج الفحص",
+                
+                // Tier Management
+                tierTitle: "⚡ إدارة المستويات",
+                getUserTier: "الحصول على حالة مستوى المستخدم",
+                adminOnlyNote: "⚠️ للإدارة فقط:",
+                adminOnlyDesc: "تتطلب النقاط التالية مصادقة الإدارة بكلمة مرور MM7268.",
+                upgradeTier: "ترقية مستوى المستخدم (للإدارة فقط)",
+                
+                // Platform Rules
+                rulesTitle: "📋 قواعد المنصات",
+                getPlatformRules: "الحصول على قواعد المنصة",
+                rulesQueryDesc: "معاملات الاستعلام: المنصة، الفئة، المنطقة، النشط فقط",
+                createRule: "إنشاء قاعدة منصة (للإدارة فقط)",
+                
+                // Emergency Controls
+                emergencyTitle: "🚨 ضوابط الطوارئ",
+                criticalWarning: "⚠️ ضوابط النظام الحرجة",
+                emergencyWarning: "مطلوب الوصول للإدارة. جميع الإجراءات مسجلة ومراقبة.",
+                activateEmergency: "تفعيل وضع الطوارئ",
+                emergencyStatus: "حالة الطوارئ",
+                
+                // Analytics
+                analyticsTitle: "📊 التحليلات والمؤشرات",
+                dashboardKPIs: "مؤشرات لوحة التحكم",
+                userAnalytics: "تحليلات المستخدم",
+                analyticsParams: "معاملات الاستعلام: الإطار الزمني (24ساعة|7أيام|30يوم|سنة)، التفصيل (المستوى|المنطقة|المنصة)",
+                
+                // Error Handling
+                errorTitle: "❌ معالجة الأخطاء",
+                httpCodes: "رموز حالة HTTP",
+                code: "الرمز",
+                description: "الوصف",
+                whenOccurs: "متى يحدث",
+                ok: "موافق",
+                badRequest: "طلب سيء",
+                unauthorized: "غير مصرح",
+                forbidden: "ممنوع",
+                tooManyRequests: "طلبات كثيرة جداً",
+                requestSuccessful: "الطلب ناجح",
+                invalidParams: "معاملات طلب غير صالحة",
+                invalidAuth: "مصادقة غير صالحة أو مفقودة",
+                insufficientPerms: "صلاحيات غير كافية",
+                rateLimitExceeded: "تم تجاوز حد المعدل",
+                errorFormat: "تنسيق استجابة الخطأ",
+                
+                // Rate Limiting
+                rateLimitTitle: "⏱️ حدود المعدل",
+                standardLimits: "حدود المعدل القياسية",
+                tier: "المستوى",
+                scansPerHour: "فحوصات/ساعة",
+                apiCallsPerMin: "استدعاءات API/دقيقة",
+                burstAllowance: "بدل الذروة",
+                free: "مجاني",
+                plus: "بلس",
+                premium: "مميز",
+                admin: "إدارة",
+                unlimited: "غير محدود",
+                rateLimitHeaders: "رؤوس حد المعدل",
+                
+                // Webhooks
+                webhooksTitle: "🔗 الويب هوكس",
+                configureWebhook: "تكوين الويب هوك",
+                webhookEvents: "أحداث الويب هوك",
+                event: "الحدث",
+                payload: "الحمولة",
+                scanFinished: "انتهى الفحص بنجاح",
+                scanFailed: "فشل معالجة الفحص",
+                tierChanged: "تغير مستوى المستخدم",
+                emergencyTriggered: "تم تشغيل وضع الطوارئ",
+                scanResults: "نتائج الفحص",
+                errorDetails: "تفاصيل الخطأ",
+                newTierInfo: "معلومات المستوى الجديد",
+                emergencyDetails: "تفاصيل الطوارئ",
+                webhookPayload: "مثال حمولة الويب هوك",
+                
+                // SDKs
+                sdksTitle: "🛠️ SDKs والمكتبات",
+                officialSDKs: "SDKs الرسمية",
+                language: "اللغة",
+                installation: "التثبيت",
+                status: "الحالة",
+                available: "متاح",
+                comingSoon: "قريباً",
+                jsExample: "مثال JavaScript SDK",
+                pythonExample: "مثال Python SDK",
+                
+                // Quick Start
+                quickStartTitle: "🚀 البداية السريعة",
+                quickStartSteps: "إعداد 5 دقائق",
+                step1: "الحصول على وصول API:",
+                step2: "المصادقة:",
+                step3: "فحص المحتوى:",
+                step4: "الحصول على النتائج:",
+                step5: "ترقية المستوى:",
+                getAccess: "الحصول على وصول API:",
+                signUpAt: "اشترك في",
+                authenticate: "المصادقة:",
+                useEmailToken: "استخدم بريدك الإلكتروني للحصول على رمز الجلسة",
+                scanContent: "فحص المحتوى:",
+                uploadWithSelection: "رفع الملف مع اختيار المنصة/المنطقة",
+                getResults: "الحصول على النتائج:",
+                retrieveCompliance: "استرداد نقاط الامتثال والتوصيات",
+                upgrade: "ترقية المستوى:",
+                accessAdvanced: "الوصول إلى الميزات المتقدمة مع بلس/مميز",
+                completeExample: "مثال كامل",
+                
+                // Footer
+                supportInfo: "الدعم",
+                supportTitle: "الدعم:",
+                docsLink: "الوثائق:",
+                emailSupport: "البريد الإلكتروني:",
+                responseTime: "وقت الاستجابة:",
+                responseHours: "12-24 ساعة",
+                copyright: "© 2025 CheckReel - الوافر ميديا. جميع الحقوق محفوظة."
+            }
+        };
+
+        function updateLanguage() {
+            var lang = translations[currentLanguage];
+            var isRTL = currentLanguage === "ar";
+            
+            // Update body direction
+            document.documentElement.dir = isRTL ? "rtl" : "ltr";
+            document.body.className = isRTL ? "rtl" : "";
+            
+            // Update all elements with data-i18n attributes
+            document.querySelectorAll('[data-i18n]').forEach(function(element) {
+                var key = element.getAttribute('data-i18n');
+                if (lang[key]) {
+                    element.textContent = lang[key];
+                }
+            });
+        }
+
+        // Language selector event listener
+        document.getElementById('languageSelector').addEventListener('change', function() {
+            currentLanguage = this.value;
+            updateLanguage();
+            localStorage.setItem('checkreel_language', currentLanguage);
+        });
+
+        // Initialize language on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            var savedLanguage = localStorage.getItem('checkreel_language');
+            if (savedLanguage && translations[savedLanguage]) {
+                currentLanguage = savedLanguage;
+                document.getElementById('languageSelector').value = currentLanguage;
+            }
+            updateLanguage();
+        });
+    </script>
+</body>
+</html>
