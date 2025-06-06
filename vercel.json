@@ -1,13 +1,7 @@
-﻿{
+{
   "version": 2,
   "cleanUrls": false,
   "trailingSlash": false,
-  "rewrites": [
-    {
-      "source": "/api-documentation",
-      "destination": "/api-documentation.html"
-    }
-  ],
   "headers": [
     {
       "source": "/(.*)\\.html",
