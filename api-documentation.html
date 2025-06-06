@@ -1,9 +1,7 @@
 <!DOCTYPE html>
-<!-- CheckReel API Documentation -->
 <html lang="en" dir="ltr">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CheckReel API Documentation</title>
     <link rel="icon" type="image/x-icon" href="images/favicon.ico">
@@ -84,7 +82,7 @@
             gap: 1rem;
         }
 
-        .language-selector {
+        .language-selector, .back-btn {
             background: var(--glass-bg);
             backdrop-filter: var(--blur-lg);
             border: 1px solid var(--glass-border);
@@ -94,25 +92,10 @@
             cursor: pointer;
             transition: all 0.3s ease;
             font-weight: 500;
-        }
-
-        .language-selector:hover {
-            background: rgba(255, 255, 255, 0.12);
-        }
-
-        .back-btn {
-            background: var(--glass-bg);
-            backdrop-filter: var(--blur-lg);
-            border: 1px solid var(--glass-border);
-            color: var(--text-primary);
-            padding: 0.75rem 1.5rem;
-            border-radius: 16px;
             text-decoration: none;
-            transition: all 0.3s ease;
-            font-weight: 500;
         }
 
-        .back-btn:hover {
+        .language-selector:hover, .back-btn:hover {
             background: rgba(255, 255, 255, 0.12);
             transform: translateY(-2px);
         }
