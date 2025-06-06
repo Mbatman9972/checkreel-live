@@ -1,7 +1,0 @@
-[33mde178a1[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m Restore working dashboard.html - complete payment system with translations
-[33mdceab4c[m Fix JavaScript variables - restore missing global variables
-[33m06916d9[m Fix Start Content Check button spacing
-[33ma87412c[m Add complete payment system with Stripe integration ready
-[33m951823b[m Fix pre-selection - require user clicks for region/platform
-[33m0692529[m Add collapsible scan history section
-[33m586e11c[m Fix dashboard.html with complete translation system - EN/AR/FR
