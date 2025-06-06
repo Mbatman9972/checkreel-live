@@ -1,14 +1,11 @@
 ﻿{
   "version": 2,
-  "builds": [
+  "cleanUrls": false,
+  "trailingSlash": false,
+  "rewrites": [
     {
-      "src": "**",
-      "use": "@vercel/static"
-    }
-  ],
-  "routes": [
-    {
-      "handle": "filesystem"
+      "source": "/api-documentation",
+      "destination": "/api-documentation.html"
     }
   ],
   "headers": [
@@ -18,24 +15,10 @@
         {
           "key": "Content-Type",
           "value": "text/html; charset=utf-8"
-        }
-      ]
-    },
-    {
-      "source": "/(.*)\\.js",
-      "headers": [
+        },
         {
-          "key": "Content-Type",
-          "value": "application/javascript; charset=utf-8"
-        }
-      ]
-    },
-    {
-      "source": "/(.*)\\.css",
-      "headers": [
-        {
-          "key": "Content-Type",
-          "value": "text/css; charset=utf-8"
+          "key": "Cache-Control",
+          "value": "no-cache, no-store, must-revalidate"
         }
       ]
     }
