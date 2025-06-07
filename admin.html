@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -728,7 +728,7 @@ body::before {
             window.outerWidth - window.innerWidth > 200) {
             if (!devtools.open) {
                 devtools.open = true;
-                console.clear();
+                // console.clear();
                 console.log('%c??? CheckReel Security Active', 'color: #ef4444; font-size: 20px; font-weight: bold;');
             }
         } else {
@@ -742,7 +742,7 @@ body::before {
     // Source code protection
     document.addEventListener('contextmenu', function(e) {
         if (!window.location.hostname.includes('localhost')) {
-            e.preventDefault();
+            // e.preventDefault();
             console.log('?? Right-click disabled for security');
         }
     });
@@ -1505,7 +1505,7 @@ function sanitizeInput(input) {
 
         // FORM HANDLERS
         function handleTierUpgradeForm(e) {
-            e.preventDefault();
+            // e.preventDefault();
             console.log('Tier upgrade form submitted');
             
             var userEmail = document.getElementById('userEmail');
