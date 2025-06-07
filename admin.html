@@ -57,12 +57,12 @@
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
                     <div>
                         <h4 style="color: var(--text-primary); margin-bottom: 1rem; font-weight: 700;">Plus Tier Management</h4>
-                        <input type="email" id="plusEmailInput" placeholder="user@example.com" style="width: 100%; padding: 1rem; margin-bottom: 0.75rem; border-radius: 16px; border: 1px solid var(--glass-border); background: var(--glass-bg); color: var(--text-primary); backdrop-filter: var(--blur-lg);">
+                        <input type="email" id="plusEmailInput" name="plusEmail" placeholder="user@example.com" style="width: 100%; padding: 1rem; margin-bottom: 0.75rem; border-radius: 16px; border: 1px solid var(--glass-border); background: var(--glass-bg); color: var(--text-primary); backdrop-filter: var(--blur-lg);">
                         <button onclick="addTierUser('plus')" style="background: var(--accent-gradient); border: none; color: white; padding: 0.75rem 1.5rem; border-radius: 12px; cursor: pointer; font-weight: 600; transition: all 0.3s ease;">Add Plus User</button>
                     </div>
                     <div>
                         <h4 style="color: var(--text-primary); margin-bottom: 1rem; font-weight: 700;">Premium Tier Management</h4>
-                        <input type="email" id="premiumEmailInput" placeholder="user@example.com" style="width: 100%; padding: 1rem; margin-bottom: 0.75rem; border-radius: 16px; border: 1px solid var(--glass-border); background: var(--glass-bg); color: var(--text-primary); backdrop-filter: var(--blur-lg);">
+                        <input type="email" id="premiumEmailInput" name="premiumEmail" placeholder="user@example.com" style="width: 100%; padding: 1rem; margin-bottom: 0.75rem; border-radius: 16px; border: 1px solid var(--glass-border); background: var(--glass-bg); color: var(--text-primary); backdrop-filter: var(--blur-lg);">
                         <button onclick="addTierUser('premium')" style="background: var(--accent-gradient); border: none; color: white; padding: 0.75rem 1.5rem; border-radius: 12px; cursor: pointer; font-weight: 600; transition: all 0.3s ease;">Add Premium User</button>
                     </div>
                 </div>
@@ -132,7 +132,7 @@
                 <form class="tier-upgrade-form" id="tierUpgradeForm">
                     <div class="form-group">
                         <label class="form-label" for="userEmail" data-i18n="userEmail">User Email</label>
-                        <input type="email" class="form-input" id="userEmail" placeholder="user@example.com" required>
+                        <input type="email" class="form-input" id="userEmail" name="userEmail" placeholder="user@example.com" required>
                     </div>
                     <div class="form-group">
                         <label class="form-label" for="tierSelect" data-i18n="selectTier">Select Tier</label>
@@ -412,7 +412,7 @@
                                     <div style="color: var(--text-secondary); font-size: 0.85rem;">Immediately halt all content processing across all platforms</div>
                                 </div>
                                 <label class="emergency-toggle">
-                                    <input type="checkbox" id="stopScans" onchange="toggleEmergencyMode(this, 'stopScans')">
+                                    <input type="checkbox" id="stopScans" name="stopScans" onchange="toggleEmergencyMode(this, 'stopScans')">
                                     <span class="toggle-slider"></span>
                                 </label>
                             </div>
@@ -424,7 +424,7 @@
                                     <div style="color: var(--text-secondary); font-size: 0.85rem;">Terminate all external platform integrations</div>
                                 </div>
                                 <label class="emergency-toggle">
-                                    <input type="checkbox" id="killAPI" onchange="toggleEmergencyMode(this, 'killAPI')">
+                                    <input type="checkbox" id="killAPI" name="killAPI" onchange="toggleEmergencyMode(this, 'killAPI')">
                                     <span class="toggle-slider"></span>
                                 </label>
                             </div>
@@ -436,7 +436,7 @@
                                     <div style="color: var(--text-secondary); font-size: 0.85rem;">Put system into read-only maintenance state</div>
                                 </div>
                                 <label class="emergency-toggle">
-                                    <input type="checkbox" id="maintenanceDB" onchange="toggleEmergencyMode(this, 'maintenanceDB')">
+                                    <input type="checkbox" id="maintenanceDB" name="maintenanceDB" onchange="toggleEmergencyMode(this, 'maintenanceDB')">
                                     <span class="toggle-slider"></span>
                                 </label>
                             </div>
@@ -457,7 +457,7 @@
                                     <div style="color: var(--text-secondary); font-size: 0.85rem;">Override normal API rate limits during emergencies</div>
                                 </div>
                                 <label class="emergency-toggle">
-                                    <input type="checkbox" id="bypassLimits" onchange="toggleEmergencyMode(this, 'bypassLimits')">
+                                    <input type="checkbox" id="bypassLimits" name="bypassLimits" onchange="toggleEmergencyMode(this, 'bypassLimits')">
                                     <span class="toggle-slider"></span>
                                 </label>
                             </div>
@@ -469,7 +469,7 @@
                                     <div style="color: var(--text-secondary); font-size: 0.85rem;">Process only critical/urgent scans</div>
                                 </div>
                                 <label class="emergency-toggle">
-                                    <input type="checkbox" id="priorityQueue" onchange="toggleEmergencyMode(this, 'priorityQueue')">
+                                    <input type="checkbox" id="priorityQueue" name="priorityQueue" onchange="toggleEmergencyMode(this, 'priorityQueue')">
                                     <span class="toggle-slider"></span>
                                 </label>
                             </div>
@@ -481,7 +481,7 @@
                                     <div style="color: var(--text-secondary); font-size: 0.85rem;">Redirect system resources to essential functions</div>
                                 </div>
                                 <label class="emergency-toggle">
-                                    <input type="checkbox" id="resourceOverride" onchange="toggleEmergencyMode(this, 'resourceOverride')">
+                                    <input type="checkbox" id="resourceOverride" name="resourceOverride" onchange="toggleEmergencyMode(this, 'resourceOverride')">
                                     <span class="toggle-slider"></span>
                                 </label>
                             </div>
@@ -502,7 +502,7 @@
                                     <div style="color: var(--text-secondary); font-size: 0.85rem;">Quickly disable problematic accounts</div>
                                 </div>
                                 <label class="emergency-toggle">
-                                    <input type="checkbox" id="bulkSuspend" onchange="toggleEmergencyMode(this, 'bulkSuspend')">
+                                    <input type="checkbox" id="bulkSuspend" name="bulkSuspend" onchange="toggleEmergencyMode(this, 'bulkSuspend')">
                                     <span class="toggle-slider"></span>
                                 </label>
                             </div>
