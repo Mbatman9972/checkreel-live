@@ -46,7 +46,42 @@ if ('serviceWorker' in navigator) {
 </script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
-</style>
+
+/* ANTI-COPY PROTECTION */
+body {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    -webkit-touch-callout: none;
+    -webkit-tap-highlight-color: transparent;
+}
+
+/* Print protection */
+@media print {
+    body { display: none !important; }
+}
+
+/* Screenshot protection overlay */
+body::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: transparent;
+    z-index: 999999;
+    pointer-events: none;
+    opacity: 0.01;
+    background-image: repeating-linear-gradient(
+        45deg,
+        transparent,
+        transparent 10px,
+        rgba(255,255,255,0.001) 10px,
+        rgba(255,255,255,0.001) 20px
+    );
+}</style>
 </head>
 <body>
     <header class="header">
@@ -712,22 +747,7 @@ if ('serviceWorker' in navigator) {
         }
     });
     
-    // Keyboard shortcuts protection
-    document.addEventListener('keydown', function(e) {
-        if (!window.location.hostname.includes('localhost')) {
-            if (e.key === 'F12' || 
-                (e.ctrlKey && e.shiftKey && e.key === 'I') ||
-                (e.ctrlKey && e.shiftKey && e.key === 'C') ||
-                (e.ctrlKey && e.key === 'u')) {
-                e.preventDefault();
-                console.log('?? Developer tools access blocked');
-                return false;
-            }
-        }
-    });
     
-    console.log('?? Security monitoring active');
-})();
         var logoClickCount = 0;
         var isAdminMode = false;
 
@@ -3719,6 +3739,7 @@ function exportRules() {
     background: #1f2937;
     color: white;
 }
+
 
 
 
