@@ -3557,35 +3557,32 @@ function exportRules() {
 
     <script>
         async function initRevenueChart() {
-            try {
-                console.log("Revenue chart disabled - no subscriptions table");
-                return;
-                
-                const monthlyRevenue = {};
-                data.forEach(sub => {
-                    const month = new Date(sub.created_at).toLocaleString("default", {month: "short"});
-                    const revenue = sub.tier === "premium" ? 9.99 : 4.99;
-                    monthlyRevenue[month] = (monthlyRevenue[month] || 0) + revenue;
+    try {
+        // Dashboard uses static displays, not charts
+        // Update the display values instead
+        const revenueDisplay = document.getElementById("revenueValue");
+        if (revenueDisplay) {
+            // Fetch real revenue data from Supabase
+            const response = await fetch(ADMIN_SUPABASE_URL + '/rest/v1/subscriptions?select=tier,created_at', {
+                headers: {
+                    'Authorization': 'Bearer ' + SUPABASE_KEY,
+                    'apikey': SUPABASE_KEY
+                }
+            });
+            
+            if (response.ok) {
+                const subs = await response.json();
+                let totalRevenue = 0;
+                subs.forEach(sub => {
+                    totalRevenue += sub.tier === 'premium' ? 9.99 : 4.99;
                 });
-                
-                new Chart(document.getElementById("revenueChart"), {
-                    type: "line",
-                    data: {
-                        labels: Object.keys(monthlyRevenue),
-                        datasets: [{
-                            label: "Revenue ($)",
-                            data: Object.values(monthlyRevenue),
-                            borderColor: "#667eea",
-                            backgroundColor: "rgba(102, 126, 234, 0.1)",
-                            tension: 0.4
-                        }]
-                    },
-                    options: { responsive: true, maintainAspectRatio: false }
-                });
-            } catch (error) {
-                console.error("Revenue chart error:", error);
+                revenueDisplay.textContent = '$' + totalRevenue.toFixed(2);
             }
         }
+    } catch (error) {
+        console.error("Revenue update error:", error);
+    }
+}
         document.addEventListener("DOMContentLoaded", initRevenueChart);
         
         // Export Scan History Function
