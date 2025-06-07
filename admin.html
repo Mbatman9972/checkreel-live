@@ -1275,7 +1275,11 @@
                 console.error('Analytics loading error:', error);
             }
         }
-
+// ADMIN AUTHENTICATION
+        async function validateAdminCredentials(password) {
+            // TODO: Move to server-side validation
+            return password === "MM7286CR";
+        }
         // ADMIN PANEL TOGGLE
         async function toggleAdmin() {
             var password = prompt("Enter admin password:");
